@@ -2,7 +2,6 @@ package com.example.stack.welearn;
 
 import android.app.Application;
 import android.content.Context;
-import android.widget.Toast;
 
 import com.androidnetworking.AndroidNetworking;
 
