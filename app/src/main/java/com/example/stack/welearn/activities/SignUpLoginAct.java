@@ -27,7 +27,7 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import events.AccEvent;
+import com.example.stack.welearn.events.AccEvent;
 
 /**
  * Created by stack on 2018/1/2.

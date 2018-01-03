@@ -1,4 +1,4 @@
-package events;
+package com.example.stack.welearn.events;
 
 /**
  * Created by stack on 2018/1/2.
