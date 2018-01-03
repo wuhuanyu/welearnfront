@@ -43,6 +43,7 @@
                     android:layout_height="wrap_content"
                     android:drawableTint="#FF4081"
                     android:singleLine="true"
+                    android:id="@+id/edit_username"
                     android:hint="User Name"
                     android:inputType="textEmailAddress" />
             </android.support.design.widget.TextInputLayout>

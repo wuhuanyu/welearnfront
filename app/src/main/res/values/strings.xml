@@ -5,4 +5,9 @@
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="saved_info">saved_info</string>
+    <string name="saved_username">saved_username</string>
+    <string name="saved_type">saved_type</string>
+    <string name="saved_password">saved_password</string>
+    <string name="saved_id">save_id</string>
 </resources>
