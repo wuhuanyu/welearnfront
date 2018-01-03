@@ -24,7 +24,7 @@ public class SplashActivity extends AppCompatActivity{
         setContentView(R.layout.activity_splash);
         // check if user info exist,if not exits, to login page
         if(!checkInfo()){
-            startAct(LoginAct.class);
+            startAct(SignUpLoginAct.class);
             ToastUtils.getInstance(this).showMsgShort("Login first please");
         }
         else{

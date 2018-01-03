@@ -5,17 +5,16 @@ import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.EditText;
-import android.widget.Toast;
+import android.widget.TextView;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.stack.welearn.R;
-import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.ToastUtils;
 
@@ -29,39 +28,87 @@ import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
 import events.AccEvent;
-import events.BaseEvent;
 
 /**
  * Created by stack on 2018/1/2.
  */
 
-public class LoginAct extends AppCompatActivity {
+public class SignUpLoginAct extends AppCompatActivity {
+    private boolean login=true;
     @BindView(R.id.edit_password) EditText EditPass;
     @BindView(R.id.edit_username) EditText EditName;
-    @BindView(R.id.ckBox_ifteacher)
-    CheckBox ckBoxIfTeacher;
+    @BindView(R.id.ckBox_ifteacher) CheckBox ckBoxIfTeacher;
+    @BindView(R.id.text_signup) TextView TextSignUp;
+    @BindView(R.id.btn_sign) Button BtnSignIn;
 
-    private static String TAG="[LoginAct]:";
+    private static String TAG="[SignUpLoginAct]:";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.act_login);
+        setContentView(R.layout.act_signup_login);
         ButterKnife.bind(this);
+        initView();
     }
 
+    private void initView(){
+
+    }
+
+    @OnClick(R.id.text_signup)
+        //todo add animation
+    void switchMode(View v){
+        this.login=false;
+        TextSignUp.setVisibility(View.INVISIBLE);
+        BtnSignIn.setText("Sign Up");
+    }
     @OnClick(R.id.btn_sign)
     void signIn(View v){
-//        Log.i(TAG,"Click sign in");
-        doSignIn();
+        if(login)
+            doLogin();
+        else
+            doSignUp();
     }
-    private void doSignIn() {
 
+    private  void doSignUp(){
         String name=EditName.getText().toString();
         String pass=EditPass.getText().toString();
-        String url= Constants.Net.API_URL+"/acc";
+        // post /acc/tea
+        String url=Constants.Net.API_URL+"/acc"+(ckBoxIfTeacher.isChecked()?"/tea":"/stu");
 
+        new Thread(()->{
+            AndroidNetworking.post(url)
+                    .addBodyParameter("name",name)
+                    .addBodyParameter("password",pass)
+                    .addBodyParameter("gender",""+Constants.MALE)
+                    .build().getAsJSONObject(new JSONObjectRequestListener() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try {
+                        //{result:id,msg:msg}
+                        int id=response.getInt("result");
+                        EventBus.getDefault().post(new AccEvent(AccEvent.ACC_SIGNUP,200,id));
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                @Override
+                public void onError(ANError anError) {
+                    if(anError.getErrorCode()!=0){
+                        EventBus.getDefault().post(new AccEvent(AccEvent.ACC_SIGNUP,anError.getErrorCode(),""));
+                    }
+                }
+            });
+        }).start();
+    }
+    //do actual work,sign in
+    private void doLogin() {
+        String name=EditName.getText().toString();
+        String pass=EditPass.getText().toString();
+        String url=Constants.Net.API_URL+"/acc";
         int type=(ckBoxIfTeacher.isChecked()?Constants.ACC_T_Tea:Constants.ACC_T_Stu);
+
         new Thread(()->{
             AndroidNetworking.post(url)
                     .addBodyParameter("name",name)
@@ -121,8 +168,39 @@ public class LoginAct extends AppCompatActivity {
                 ToastUtils.getInstance(this).showMsgShort("Wrong password");
             }
         }
-        return;
+        if(event.type==AccEvent.ACC_SIGNUP){
+            if(event.id!=-1){
+                //login success
+                ToastUtils.getInstance(this).showMsgShort("Sign Up Successfully");
+                //save information
+//                SharedPreferences sharePre=getSharedPreferences(getString(R.string.saved_info), Context.MODE_PRIVATE);
+//                sharePre.edit()
+//                        .putString(getString(R.string.saved_username),EditName.getText().toString())
+//                        .putString(getString(R.string.saved_password),EditPass.getText().toString())
+//                        .putInt(getString(R.string.saved_type),ckBoxIfTeacher.isChecked()?Constants.ACC_T_Tea:Constants.ACC_T_Stu)
+//                        .putInt(getString(R.string.saved_id),event.id)
+//                        .apply();
+
+            }
+            else if(event.result==400){
+                ToastUtils.getInstance(this).showMsgShort("Name exists");
+
+            }
+
+        }
     }
 
+    @Override
+    public void onBackPressed(){
+        if(login){
+//            super.finish();test
+            this.finish();
+        }
+        else{
+            this.login=true;
+            TextSignUp.setVisibility(View.VISIBLE);
+            BtnSignIn.setText("Login");
+        }
+    }
 }
 
