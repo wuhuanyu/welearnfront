@@ -33,6 +33,7 @@ dependencies {
     compile 'com.android.support:design:26.0.2'
     compile 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
     compile 'com.youth.banner:banner:1.4.10'
+    compile 'de.hdodenhof:circleimageview:2.2.0'
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     compile project(":library-debug")
 

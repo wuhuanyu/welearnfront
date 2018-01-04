@@ -2,6 +2,8 @@ package com.example.stack.welearn.activities;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.ActionMenuView;
+import android.view.Menu;
 import android.widget.Toolbar;
 
 import com.example.stack.welearn.R;
@@ -24,8 +26,9 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.bottom)BottomNavigationViewEx bottomNav;
 
     @BindView(R.id.main_toolbar)
-    Toolbar mToolbar;
-
+    android.support.v7.widget.Toolbar mToolbar;
+//    @BindView(R.id.)
+//    ActionMenuView mActionMenuView;
     private HashMap<String,Fragment> fragmentHashMap=new HashMap<>();
 
     @Override
@@ -65,8 +68,16 @@ public class MainActivity extends BaseActivity {
             transaction.commit();
             return false;
         }));
+        setSupportActionBar(mToolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
+    public boolean onCreateOptionsMenu(Menu menu){
+        getMenuInflater().inflate(R.menu.main,menu);
+        return true;
+
+    }
     @Override
     public int getLayout() {
         return R.layout.act_main;
