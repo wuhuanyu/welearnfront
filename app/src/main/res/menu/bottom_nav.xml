@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/bottom_course"
+        android:title="课程"
+        android:icon="@drawable/ic_book"
+        />
+    <item android:id="@+id/bottom_question"
+        android:title="作业"
+        android:icon="@drawable/ic_work_white_24px"/>
+    <item android:icon="@drawable/ic_me"
+        android:title="我"
+        android:id="@+id/bottom_me"/>
+</menu>
