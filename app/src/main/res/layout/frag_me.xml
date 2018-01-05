@@ -7,14 +7,14 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_avtar"
-        android:layout_width="130dp"
-        app:civ_border_width="2dp"
-        app:civ_border_color="@android:color/darker_gray"
-        android:layout_height="130dp"
-        android:layout_marginStart="8dp"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:layout_marginStart="36dp"
         android:layout_marginTop="16dp"
         android:scaleType="centerCrop"
         android:src="@drawable/avatar2"
+        app:civ_border_color="@android:color/darker_gray"
+        app:civ_border_width="2dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -23,7 +23,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="24dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="20dp"
         android:text="环环环环等等我"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintStart_toEndOf="@+id/iv_avtar"
@@ -42,11 +42,9 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="152dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/button6"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
@@ -54,10 +52,10 @@
         android:id="@+id/button"
         style="@android:style/Widget.Material.Light.Button.Borderless"
         android:layout_width="340dp"
-        android:layout_height="47dp"
-        android:text="已完成的课程"
-        android:gravity="start"
-
+        android:layout_height="50dp"
+        android:gravity="start|center_vertical"
+        android:text="   已完成的课程"
+        android:drawableLeft="@drawable/ic_course"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/button6" />
@@ -70,8 +68,9 @@
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:gravity="start"
-        android:text="我的评论"
+        android:drawableLeft="@drawable/ic_comment"
+        android:gravity="start|center_vertical"
+        android:text="   我的评论"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
@@ -79,44 +78,98 @@
     <View
         android:id="@+id/view2"
         android:layout_width="match_parent"
-        android:layout_height="9dp"
+        android:layout_height="1dp"
         android:layout_marginTop="252dp"
-        android:background="@color/colorPrimary"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp" />
 
     <View
         android:id="@+id/view3"
-        android:layout_width="match_parent"
-        android:layout_height="9dp"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
+        android:background="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="@+id/view"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toBottomOf="@+id/button4" />
+
+    <View
+        android:id="@+id/view4"
+        android:layout_width="0dp"
+        android:layout_height="1dp"
         android:layout_marginTop="252dp"
-        android:background="@color/colorPrimary"
-        app:layout_constraintTop_toTopOf="parent"
-        tools:layout_editor_absoluteX="0dp" />
+        android:background="@android:color/darker_gray"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/view"
+        app:layout_constraintTop_toTopOf="parent" />
 
     <Button
         android:id="@+id/button7"
         style="@android:style/Widget.Material.Light.Button.Borderless"
         android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
-        android:text="Button"
-        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_height="51dp"
+        android:gravity="start|center_vertical"
+        android:text="    关于"
+        android:drawableLeft="@drawable/ic_info"
+        app:layout_constraintEnd_toEndOf="@+id/button6"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/button6"
+        app:layout_constraintTop_toBottomOf="@+id/view3" />
+
+    <Button
+        android:id="@+id/button4"
+        style="@android:style/Widget.Material.Light.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="   待续"
+        android:gravity="start"
+        app:layout_constraintEnd_toEndOf="@+id/button6"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/button6"
+        app:layout_constraintTop_toBottomOf="@+id/button3" />
+
+    <Button
+        android:id="@+id/button3"
+        style="@android:style/Widget.Material.Light.Button.Borderless"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:text="   待续"
+        android:gravity="start"
+        app:layout_constraintEnd_toEndOf="@+id/button6"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="@+id/button6"
         app:layout_constraintTop_toBottomOf="@+id/button8" />
 
     <Button
         android:id="@+id/button8"
         style="@android:style/Widget.Material.Light.Button.Borderless"
         android:layout_width="0dp"
+        android:layout_height="48dp"
+        android:gravity="start"
+        android:text="   待续"
+        app:layout_constraintEnd_toEndOf="@+id/button6"
+        app:layout_constraintStart_toStartOf="@+id/button6"
+        app:layout_constraintTop_toBottomOf="@+id/view2" />
+
+    <RatingBar
+        android:id="@+id/ratingBar"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:text="Button"
+        android:layout_marginTop="28dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/view2" />
+        app:layout_constraintTop_toBottomOf="@+id/button7" />
+
+    <Button
+        android:id="@+id/button5"
+        style="@android:style/Widget.DeviceDefault.Light.Button.Borderless.Small"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="60dp"
+        android:drawableLeft="@drawable/ic_right_arrow"
+        android:gravity="center_vertical|center_horizontal"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
 
 </android.support.constraint.ConstraintLayout>

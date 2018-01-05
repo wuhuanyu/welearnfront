@@ -33,7 +33,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void doRegister() {
-        ButterKnife.bind(this);
+//        ButterKnife.bind(this);
     }
 
     @Override
@@ -70,13 +70,12 @@ public class MainActivity extends BaseActivity {
         }));
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(false);
-//        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.main,menu);
         return true;
-
     }
     @Override
     public int getLayout() {

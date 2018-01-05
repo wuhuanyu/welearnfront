@@ -17,6 +17,10 @@ public class Question {
         this.ans = ans;
     }
 
+    public Question(String id,int cId,String body){
+        this(id,cId,body,null);
+    }
+
     public String getId() {
 
         return id;

@@ -4,6 +4,7 @@ import android.app.Application;
 import android.content.Context;
 
 import com.androidnetworking.AndroidNetworking;
+import com.squareup.leakcanary.LeakCanary;
 
 /**
  * Created by stack on 2018/1/2.
@@ -47,6 +48,10 @@ public class WeLearnApp extends Application {
         //set up networking
 //        AndroidNetworking.setParserFactory(new JacksonParserFactory());
         AndroidNetworking.initialize(WeLearnApp.context);
+        if(LeakCanary.isInAnalyzerProcess(this))
+            return;
+        LeakCanary.install(this);
+
     }
 
 
