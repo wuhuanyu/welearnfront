@@ -12,8 +12,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.QuestionsActivity"
+            android:name=".activities.QuestionEditActivity"
             android:label="@string/app_name"
+            android:windowSoftInputMode="adjustResize|stateHidden"
             android:theme="@style/AppTheme">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />

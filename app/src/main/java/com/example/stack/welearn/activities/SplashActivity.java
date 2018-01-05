@@ -28,7 +28,7 @@ public class SplashActivity extends AppCompatActivity{
             ToastUtils.getInstance(this).showMsgShort("Login first please");
         }
         else{
-            startAct(_MainActivity.class);
+            startAct(MainActivity.class);
         }
     }
 
