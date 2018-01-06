@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/toolbar_favor"
+        android:title="选择"
+        android:checkable="true"
+        app:showAsAction="ifRoom"/>
+        <!--android:icon="@drawable/favorite"/>-->
+    <item
+        android:id="@+id/toolbar_info"
+        android:icon="@drawable/ic_message"
+        android:title="消息"
+        app:showAsAction="ifRoom" />
+
+    <!--<item-->
+    <!--android:title="点子"-->
+    <!--android:id="@+id/toolbar_bulb"-->
+    <!--android:icon="@drawable/ic_bulb"-->
+    <!--app:showAsAction="ifRoom"/>-->
+</menu>

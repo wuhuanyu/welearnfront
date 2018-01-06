@@ -44,27 +44,35 @@
         android:id="@+id/linearLayout2"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:background="@color/colorAccent"
+        android:background="@color/colorPrimary"
         android:gravity="center_vertical"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent">
 
-        <Button
-            android:id="@+id/button2"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Button"
-            tools:layout_editor_absoluteX="54dp"
-            tools:layout_editor_absoluteY="609dp" />
-
-        <Button
+        <ImageButton
+            android:id="@+id/imageButton"
+            style="@style/Widget.AppCompat.ImageButton"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:text="Button" />
+            app:srcCompat="@android:drawable/ic_menu_camera" />
+
+        <View
+            android:layout_width="10dp"
+            android:background="@android:color/darker_gray"
+            android:layout_gravity="center_vertical"
+            android:layout_height="40dp"/>
+
+        <ImageButton
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            app:srcCompat="@android:drawable/btn_star" />
+
     </LinearLayout>
 
 

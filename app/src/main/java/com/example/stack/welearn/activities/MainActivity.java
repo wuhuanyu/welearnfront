@@ -2,20 +2,17 @@ package com.example.stack.welearn.activities;
 
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.ActionMenuView;
 import android.view.Menu;
-import android.widget.Toolbar;
 
 import com.example.stack.welearn.R;
-import com.example.stack.welearn.fragments.QuestionFragment;
-import com.example.stack.welearn.fragments.CourseFragment;
+import com.example.stack.welearn.fragments.QuestionsFragment;
+import com.example.stack.welearn.fragments.CoursesFragment;
 import com.example.stack.welearn.fragments.MeFragment;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
 import java.util.HashMap;
 
 import butterknife.BindView;
-import butterknife.ButterKnife;
 
 /**
  * Created by stack on 2018/1/4.
@@ -38,7 +35,7 @@ public class MainActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        Fragment courseFragment=new CourseFragment();
+        Fragment courseFragment=new CoursesFragment();
         fragmentHashMap.put("course",courseFragment);
         getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,fragmentHashMap.get("course")).commit();
 
@@ -53,7 +50,7 @@ public class MainActivity extends BaseActivity {
 
                 case R.id.bottom_question:
                     if(!fragmentHashMap.containsKey("question"))
-                        fragmentHashMap.put("question",new QuestionFragment());
+                        fragmentHashMap.put("question",new QuestionsFragment());
                     selectedFrag=fragmentHashMap.get("question");
                     item.setChecked(true);
                     break;

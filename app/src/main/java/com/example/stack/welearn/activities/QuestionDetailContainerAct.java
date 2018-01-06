@@ -25,7 +25,7 @@ import github.chenupt.springindicator.SpringIndicator;
  * Created by stack on 2018/1/5.
  */
 //TODO:add pager indicator
-public class QuestionsActivity extends BaseActivity implements CommentDialog.CommentDialogListener {
+public class QuestionDetailContainerAct extends BaseActivity implements CommentDialog.CommentDialogListener {
     int current;
     @BindView(R.id.my_toolbar)
     Toolbar mToolbar;

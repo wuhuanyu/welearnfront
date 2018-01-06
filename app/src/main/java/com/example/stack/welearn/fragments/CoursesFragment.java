@@ -17,7 +17,7 @@ import butterknife.BindView;
  * Created by stack on 2018/1/4.
  */
 
-public class CourseFragment extends BaseFragment {
+public class CoursesFragment extends BaseFragment {
     private LinearLayoutManager  mLayoutManager;
     CourseAdapter mAdapter;
 

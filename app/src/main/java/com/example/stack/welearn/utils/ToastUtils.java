@@ -22,6 +22,8 @@ public class ToastUtils {
         this.toast=Toast.makeText(context,"",Toast.LENGTH_SHORT);
     }
 
+
+
     public void showMsgLong(String msg){
         if(toast==null){
             return;
@@ -38,5 +40,6 @@ public class ToastUtils {
         toast.setText(msg);
         toast.show();
     }
+
 
 }
