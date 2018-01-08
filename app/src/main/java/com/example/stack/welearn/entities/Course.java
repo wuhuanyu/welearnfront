@@ -1,4 +1,4 @@
-package com.example.stack.welearn.models;
+package com.example.stack.welearn.entities;
 
 import java.util.List;
 

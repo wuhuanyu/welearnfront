@@ -1,11 +1,7 @@
-package com.example.stack.welearn.models;
+package com.example.stack.welearn.entities;
 
 import android.os.Parcel;
 import android.os.Parcelable;
-
-import com.example.stack.welearn.test.FakeAble;
-
-import java.util.Date;
 
 /**
  * Created by stack on 2018/1/4.

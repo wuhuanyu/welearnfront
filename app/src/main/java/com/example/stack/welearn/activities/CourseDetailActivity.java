@@ -2,22 +2,17 @@ package com.example.stack.welearn.activities;
 
 
 import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.RecyclerView.OnScrollListener;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.stack.welearn.R;
-import com.example.stack.welearn.adapters.CommentAdapter;
 import com.example.stack.welearn.adapters.CommentQuickAdapter;
-import com.example.stack.welearn.models.Comment;
-import com.example.stack.welearn.models.Course;
+import com.example.stack.welearn.entities.Comment;
 import com.example.stack.welearn.test.DataServer;
 import com.example.stack.welearn.utils.ToastUtils;
 
@@ -54,7 +49,7 @@ public class CourseDetailActivity extends BaseActivity  {
 
         rvComments.setLayoutManager(manager);
 
-         mCommentAdapter=new CommentQuickAdapter(R.layout.comment, DataServer.getData(5));
+         mCommentAdapter=new CommentQuickAdapter(R.layout.item_comment, DataServer.getData(5));
         mCommentAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
             public void onLoadMoreRequested() {
@@ -104,7 +99,7 @@ public class CourseDetailActivity extends BaseActivity  {
     private void loadMore(){
         List<Comment> comments=new ArrayList<>();
         for(int i=0;i<3;i++){
-            comments.add(new Comment(""+i,"This is comment"+i,"Author"+i,"上午九点"));
+            comments.add(new Comment(""+i,"This is item_comment"+i,"Author"+i,"上午九点"));
         }
 
         new Handler(getMainLooper()).postDelayed(()->{

@@ -1,4 +1,4 @@
-package com.example.stack.welearn.models;
+package com.example.stack.welearn.entities;
 
 /**
  * Created by stack on 2018/1/4.

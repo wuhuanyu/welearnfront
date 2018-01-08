@@ -1,19 +1,16 @@
 package com.example.stack.welearn.adapters;
 
 import android.support.v7.widget.RecyclerView;
-import android.text.Layout;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.example.stack.welearn.R;
-import com.example.stack.welearn.models.Comment;
+import com.example.stack.welearn.entities.Comment;
 
 import java.util.ArrayList;
 
-import butterknife.BindBitmap;
-import butterknife.BindInt;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 
@@ -29,7 +26,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.VH> {
 
     @Override
     public VH onCreateViewHolder(ViewGroup parent, int viewType) {
-        View v=LayoutInflater.from(parent.getContext()).inflate(R.layout.comment,parent,false);
+        View v=LayoutInflater.from(parent.getContext()).inflate(R.layout.item_comment,parent,false);
         return new VH(v);
     }
 

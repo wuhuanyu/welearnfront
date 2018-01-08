@@ -3,15 +3,13 @@ package com.example.stack.welearn.fragments;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.widget.Adapter;
 import android.widget.TextView;
 
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.adapters.CommentAdapter;
-import com.example.stack.welearn.models.Comment;
+import com.example.stack.welearn.entities.Comment;
 
 import java.util.ArrayList;
-import java.util.List;
 
 import butterknife.BindView;
 

@@ -6,7 +6,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.stack.welearn.R;
-import com.example.stack.welearn.models.Comment;
+import com.example.stack.welearn.entities.Comment;
 
 import java.util.List;
 
