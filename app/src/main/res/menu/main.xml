@@ -2,13 +2,16 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
     <item
-        android:id="@+id/toolbar_info"
-        android:icon="@drawable/ic_message"
-        android:title="消息"
-        app:showAsAction="ifRoom" />
-    <item
-        android:title="点子"
         android:id="@+id/toolbar_bulb"
         android:icon="@drawable/ic_bulb"
-        app:showAsAction="ifRoom"/>
+        android:orderInCategory="1"
+        android:title="点子"
+        app:showAsAction="always" />
+    <item
+        android:id="@+id/toolbar_info"
+        android:actionLayout="@layout/bulletion_notification"
+        android:icon="@drawable/ic_message"
+        app:actionLayout="@layout/bulletion_notification"
+        android:title="消息"
+        app:showAsAction="always" />
 </menu>

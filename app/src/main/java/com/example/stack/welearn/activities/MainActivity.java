@@ -1,8 +1,12 @@
 package com.example.stack.welearn.activities;
 
+import android.content.Intent;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v7.widget.ActionMenuView;
 import android.view.Menu;
+import android.view.View;
+import android.widget.TextView;
 
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.fragments.QuestionsFragment;
@@ -25,9 +29,10 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.main_toolbar)
     android.support.v7.widget.Toolbar mToolbar;
 //    @BindView(R.id.)
-//    ActionMenuView mActionMenuView;
+    ActionMenuView mActionMenuView;
     private HashMap<String,Fragment> fragmentHashMap=new HashMap<>();
 
+    TextView tvBulletinCount;
     @Override
     public void doRegister() {
 //        ButterKnife.bind(this);
@@ -73,6 +78,12 @@ public class MainActivity extends BaseActivity {
 
     public boolean onCreateOptionsMenu(Menu menu){
         getMenuInflater().inflate(R.menu.main,menu);
+        View notifications  =menu.findItem(R.id.toolbar_info).getActionView();
+        tvBulletinCount=(TextView) notifications.findViewById(R.id.text_bulletin_count);
+        tvBulletinCount.setOnClickListener((v)->{
+            Intent intent=new Intent(this,BulletinActivity.class);
+            startActivity(intent);
+        });
         return true;
     }
     @Override

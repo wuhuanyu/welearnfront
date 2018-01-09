@@ -87,7 +87,14 @@ public class CoursesFragment extends BaseFragment {
         mBanner.setOnBannerListener(new OnBannerListener() {
             @Override
             public void OnBannerClick(int position) {
-                ToastUtils.getInstance(WeLearnApp.getContext()).showMsgShort("click "+position);
+//                ToastUtils.getInstance(getActivity(),)
+                Intent intent=new Intent(getContext(),CourseDetailActivity.class);
+
+                Bundle bundle =new Bundle();
+                bundle.putInt("course_id",1);
+                intent.putExtras(bundle);
+                startActivity(intent);
+//                ToastUtils.getInstance(WeLearnApp.getContext()).showMsgShort("click "+position);
             }
         });
         mBanner.start();

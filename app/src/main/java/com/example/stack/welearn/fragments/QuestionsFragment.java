@@ -1,15 +1,18 @@
 package com.example.stack.welearn.fragments;
 
+import android.content.Intent;
 import android.service.autofill.Dataset;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.WeLearnApp;
+import com.example.stack.welearn.activities.QuestionDetailContainerAct;
 import com.example.stack.welearn.adapters.CategorizedQuestionAdapter;
 import com.example.stack.welearn.adapters.GlideImageLoader;
 import com.example.stack.welearn.adapters.TestPaperAdapter;
 import com.example.stack.welearn.entities.CategorizedQuestionCourse;
+import com.example.stack.welearn.entities.Question;
 import com.example.stack.welearn.entities.TestPaper;
 import com.example.stack.welearn.test.DataServer;
 import com.example.stack.welearn.utils.ToastUtils;
@@ -65,6 +68,11 @@ public class QuestionsFragment extends BaseFragment {
 
         mBanner.start();
         mAdapter=new CategorizedQuestionAdapter(R.layout.item_categorized_question,courses);
+        mAdapter.setOnItemClickListener((baseQuickAdapter,view,postiion)->{
+//            Intent intent=new Intent(this, QuestionDetailContainerAct.class);
+            Intent intent=new Intent(getActivity(), QuestionDetailContainerAct.class);
+            startActivity(intent);
+        });
         mQuestions.setLayoutManager(mManager);
         mQuestions.setAdapter(mAdapter);
 

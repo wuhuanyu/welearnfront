@@ -90,7 +90,7 @@ public class QuestionDetailContainerAct extends BaseActivity implements CommentD
 
     @Override
     public void onDialogNegetiveClick(DialogFragment dialog) {
-
+        dialog.dismiss();
     }
 }
 class QuestionPagerAdapter extends FragmentStatePagerAdapter{

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    style="@android:style/Widget.ActionButton"
+    android:background="@android:color/transparent"
+    android:clickable="true"
+    android:focusable="true"
+    >
+
+    <ImageView
+        android:id="@+id/im_bulletin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/ic_message" />
+
+    <TextView
+        android:id="@+id/text_bulletin_count"
+        android:layout_width="18dp"
+        android:layout_height="18dp"
+        android:layout_marginBottom="12dp"
+        android:layout_marginStart="12dp"
+        android:background="@drawable/badge_background"
+        android:gravity="center"
+        android:text="3"
+        android:textColor="@android:color/white"
+        android:textSize="12sp"
+        app:layout_constraintBottom_toBottomOf="@+id/im_bulletin"
+        app:layout_constraintStart_toStartOf="@+id/im_bulletin" />
+</android.support.constraint.ConstraintLayout>

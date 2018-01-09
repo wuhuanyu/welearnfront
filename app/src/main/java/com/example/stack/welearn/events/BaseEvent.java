@@ -8,6 +8,4 @@ public class BaseEvent {
     public  int type;
     public String msg;
     public int result;
-
-
 }

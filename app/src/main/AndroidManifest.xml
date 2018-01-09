@@ -12,7 +12,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity
-            android:name=".activities.BulletinActivity"
+            android:name=".activities.MainActivity"
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan|stateHidden"
             android:theme="@style/AppTheme">
@@ -23,6 +23,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".activities.CourseDetailActivity"/>
+        <activity android:name=".activities.BulletinActivity"/>
+        <activity android:name=".activities.QuestionDetailContainerAct"/>
     </application>
 
 </manifest>

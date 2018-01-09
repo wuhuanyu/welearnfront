@@ -38,12 +38,20 @@ dependencies {
 
     compile 'cn.jiguang.imui:messagelist:0.5.8'
     compile 'cn.jiguang.imui:chatinput:0.6.2'
+    compile 'com.github.vlonjatg:progress-activity:v2.0.3'
 
 
 
     annotationProcessor 'com.jakewharton:butterknife-compiler:8.8.1'
     implementation 'com.github.bumptech.glide:glide:4.5.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
+    implementation 'com.mikepenz:actionitembadge:3.3.2@aar'
+
+    //SUB-DEPENDENCIES
+    //Android-Iconics - used to provide an easy API for icons
+    implementation 'com.mikepenz:iconics-core:3.0.0@aar'
+
+    //appcompat
 //    compile 'com.github.nkzawa:socket.io-client:0.3.0'
     compile ('io.socket:socket.io-client:1.0.0') {
         // excluding org.json which is provided by Android
