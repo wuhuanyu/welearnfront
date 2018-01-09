@@ -43,11 +43,6 @@ public class TestPaperAdapter extends BaseQuickAdapter<TestPaper,BaseViewHolder>
             break;
             case 3: image=R.drawable.art1;
             break;
-////            case 0:baseViewHolder.setImageResource(id,R.drawable.art_icon);break;
-////            case 1:baseViewHolder.setImageResource(id,R.drawable.greek); break;
-////            case 2:baseViewHolder.setImageResource(id,R.drawable.avatar2); break;
-////            case 3:baseViewHolder.setImageResource(id,R.drawable.math2); break;
-//            default:break;
         }
 
         ((ImageView)baseViewHolder.getView(id)).setImageResource(image);

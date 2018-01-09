@@ -25,6 +25,6 @@ public class MessageSectionAdapter extends BaseSectionQuickAdapter<MessageSectio
     @Override
     protected void convert(BaseViewHolder baseViewHolder, MessageSection messageSection) {
         Message message= messageSection.t;
-        baseViewHolder.setText(R.id.text_msg_body,message.getBody());
+//        baseViewHolder.setText(R.id.text_msg_body,message.getBody());
     }
 }

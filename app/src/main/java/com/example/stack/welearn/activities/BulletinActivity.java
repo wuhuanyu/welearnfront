@@ -1,13 +1,18 @@
 package com.example.stack.welearn.activities;
 
+import android.graphics.Canvas;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 
+import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.adapters.MessageSectionAdapter;
+import com.example.stack.welearn.adapters.BulletinsAdapter;
+import com.example.stack.welearn.entities.Bulletin;
 import com.example.stack.welearn.entities.MessageSection;
 import com.example.stack.welearn.test.DataServer;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -17,11 +22,34 @@ import butterknife.BindView;
  */
 
 public class BulletinActivity extends BaseActivity {
-    @BindView(R.id.rv_messages)
-    RecyclerView rvMessages;
-    MessageSectionAdapter mAdapter;
+    @BindView(R.id.rv_bulletins)
+    RecyclerView rvBulletins;
+    BulletinsAdapter mDragableAdapter;
+
     LinearLayoutManager mLayoutManager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
-    List<MessageSection> mData= DataServer.getMessage(3,5);
+
+    OnItemSwipeListener onMessageSwipeListener=new OnItemSwipeListener() {
+        @Override
+        public void onItemSwipeStart(RecyclerView.ViewHolder viewHolder, int i) {
+
+        }
+
+        @Override
+        public void clearView(RecyclerView.ViewHolder viewHolder, int i) {
+
+        }
+
+        @Override
+        public void onItemSwiped(RecyclerView.ViewHolder viewHolder, int i) {
+
+        }
+
+        @Override
+        public void onItemSwipeMoving(Canvas canvas, RecyclerView.ViewHolder viewHolder, float v, float v1, boolean b) {
+
+        }
+    };
+
     @Override
     public void doRegister() {
 
@@ -29,9 +57,9 @@ public class BulletinActivity extends BaseActivity {
 
     @Override
     public void initView() {
-       mAdapter=new MessageSectionAdapter(R.layout.item_bulletin,R.layout.message_section_header,mData);
-       rvMessages.setLayoutManager(mLayoutManager);
-       rvMessages.setAdapter(mAdapter);
+        mDragableAdapter=new BulletinsAdapter(R.layout.item_bulletin,generateData(4));
+        rvBulletins.setLayoutManager(mLayoutManager);
+        rvBulletins.setAdapter(mDragableAdapter);
     }
 
     @Override
@@ -39,4 +67,13 @@ public class BulletinActivity extends BaseActivity {
         return R.layout.act_bulletin;
     }
 
+
+
+    private List<Bulletin> generateData(int len){
+        List<Bulletin> bulletins=new ArrayList<>();
+        for(int i=0;i<len;i++){
+           bulletins.add(new Bulletin(i,"袁寿其","昨天下午3:46","后天15:46开会"));
+        }
+        return bulletins;
+    }
 }

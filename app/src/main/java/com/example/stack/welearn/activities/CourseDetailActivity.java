@@ -1,6 +1,7 @@
 package com.example.stack.welearn.activities;
 
 
+import android.os.Bundle;
 import android.os.Handler;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -28,14 +29,16 @@ import static com.example.stack.welearn.WeLearnApp.getContext;
  */
 
 public class CourseDetailActivity extends BaseActivity  {
+
     public static final String TAG= CourseDetailActivity.class.getSimpleName();
     private boolean isChecked=false;
     @BindView(R.id.tb_course_detail)
     Toolbar mToolbar;
     @BindView(R.id.rv_course_detail_comment)
     RecyclerView rvComments;
-
     CommentQuickAdapter mCommentAdapter;
+
+
     @Override
     public void doRegister() {
 
@@ -43,6 +46,10 @@ public class CourseDetailActivity extends BaseActivity  {
 
     @Override
     public void initView() {
+
+        Bundle bundle=getIntent().getExtras();
+        Log.i(TAG,""+bundle.getInt("course_id"));
+//        ToastUtils.getInstance(this).showMsgShort(""+bundle.getInt("course_id"));
         setSupportActionBar(mToolbar);
 
         LinearLayoutManager manager=new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);

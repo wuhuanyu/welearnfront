@@ -35,7 +35,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.VH> {
         Comment comment=mData.get(position);
         holder.author.setText(comment.getAuthor());
         holder.body.setText(comment.getBody());
-        holder.lou.setText(position+"楼");
+//        holder.lou.setText(position+"楼");
         holder.time.setText(comment.getTime());
     }
 
@@ -45,7 +45,7 @@ public class CommentAdapter extends RecyclerView.Adapter<CommentAdapter.VH> {
     }
 
     public static class VH extends RecyclerView.ViewHolder{
-        @BindView(R.id.text_comment_lou) TextView   lou;
+//        @BindView(R.id.text_comment_lou) TextView   lou;
         @BindView(R.id.text_comment_body) TextView body;
         @BindView(R.id.text_comment_author) TextView author;
         @BindView(R.id.text_comment_time) TextView time;

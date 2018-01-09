@@ -34,6 +34,6 @@ public class CommentQuickAdapter extends BaseQuickAdapter<Comment,BaseViewHolder
         ((TextView)baseViewHolder.getView(R.id.text_comment_author)).setText(comment.getAuthor());
         ((TextView)baseViewHolder.getView(R.id.text_comment_time)).setText(comment.getTime());
         ((TextView)baseViewHolder.getView(R.id.text_comment_body)).setText(comment.getBody());
-        ((TextView)baseViewHolder.getView(R.id.text_comment_lou)).setText(baseViewHolder.getLayoutPosition()+"楼");
+//        ((TextView)baseViewHolder.getView(R.id.text_comment_lou)).setText(baseViewHolder.getLayoutPosition()+"楼");
     }
 }

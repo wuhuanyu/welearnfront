@@ -32,14 +32,14 @@
                 app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
-                app:srcCompat="@drawable/art1" />
+                app:srcCompat="@drawable/art2" />
 
             <TextView
                 android:id="@+id/text_course_detail_desc"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:background="@color/colorPrimary"
+                android:textSize="16sp"
                 android:text="@string/demo_question_body"
                 app:layout_constraintEnd_toEndOf="@+id/iv_course_detail_main"
                 app:layout_constraintHorizontal_bias="0.0"
@@ -61,7 +61,7 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:text="肖秀荣"
+                android:text="zzw"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView11"
                 app:layout_constraintStart_toEndOf="@+id/textView11" />
 
@@ -72,8 +72,9 @@
 
                 android:layout_marginTop="8dp"
                 app:layout_constraintEnd_toEndOf="@+id/text_course_detail_desc"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="@+id/text_course_detail_desc"
-                app:layout_constraintTop_toBottomOf="@id/text_course_detail_desc" />
+                app:layout_constraintTop_toBottomOf="@+id/textView15" />
 
             <TextView
                 android:id="@+id/textView4"
@@ -92,6 +93,37 @@
                 android:text="下个星期一"
                 app:layout_constraintBaseline_toBaselineOf="@+id/textView4"
                 app:layout_constraintStart_toEndOf="@+id/textView4" />
+
+            <TextView
+                android:id="@+id/textView15"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="8dp"
+                android:text="评论更精彩"
+                app:layout_constraintStart_toStartOf="@+id/textView19"
+                app:layout_constraintTop_toBottomOf="@+id/textView19" />
+
+            <TextView
+                android:id="@+id/textView19"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="8dp"
+                android:text="阅读量"
+                app:layout_constraintStart_toStartOf="@+id/text_course_detail_desc"
+                app:layout_constraintTop_toBottomOf="@+id/text_course_detail_desc" />
+
+            <TextView
+                android:id="@+id/textView20"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="8dp"
+                android:text="512"
+                app:layout_constraintBaseline_toBaselineOf="@+id/textView19"
+                app:layout_constraintStart_toEndOf="@+id/textView19" />
+
+
+
         </android.support.constraint.ConstraintLayout>
     </ScrollView>
 </LinearLayout>

@@ -58,8 +58,8 @@ public class ACache {
 	private ACacheManager mCache;
 
 	public static ACache get(Context ctx) {
-		return get(ctx, "ACache");
-	}
+			return get(ctx, "ACache");
+		}
 
 	public static ACache get(Context ctx, String cacheName) {
 		File f = new File(ctx.getCacheDir(), cacheName);
@@ -216,8 +216,10 @@ public class ACache {
 	 * 读取JSONObject数据
 	 * 
 	 * @param key
-	 * @return JSONObject数据
-	 */
+	 * @return JSONObject数op[']
+	 * \kml;'
+	 *
+	 * */
 	public JSONObject getAsJSONObject(String key) {
 		String JSONString = getAsString(key);
 		try {

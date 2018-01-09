@@ -18,7 +18,7 @@ import com.example.stack.welearn.utils.ToastUtils;
 
 public class SplashActivity extends AppCompatActivity{
     @Override
-    protected void onCreate(@Nullable Bundle savedInstanceState) {
+    public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         //TODO gif location
         setContentView(R.layout.activity_splash);
@@ -31,6 +31,8 @@ public class SplashActivity extends AppCompatActivity{
             startAct(MainActivity.class);
         }
     }
+
+
 
     private void startAct(Class<? extends Activity> clz){
         Handler handler=new Handler();
