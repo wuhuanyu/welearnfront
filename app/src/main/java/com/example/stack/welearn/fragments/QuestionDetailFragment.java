@@ -49,7 +49,7 @@ public class QuestionDetailFragment extends BaseFragment {
 //        textQuestionBody.setText(body);
         //set up comments
         ArrayList<Comment> comments=new ArrayList<>();
-        for(int i=0;i<10;i++){
+        for(int i=0;i<4;i++){
             comments.add(new Comment(""+i,"This is comment"+i,"Author"+i,"上午九点"));
         }
         CommentAdapter adapter=new CommentAdapter(comments);

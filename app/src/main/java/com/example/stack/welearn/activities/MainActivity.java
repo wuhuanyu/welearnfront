@@ -29,13 +29,11 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.main_toolbar)
     android.support.v7.widget.Toolbar mToolbar;
 //    @BindView(R.id.)
-    ActionMenuView mActionMenuView;
     private HashMap<String,Fragment> fragmentHashMap=new HashMap<>();
 
     TextView tvBulletinCount;
     @Override
     public void doRegister() {
-//        ButterKnife.bind(this);
     }
 
     @Override

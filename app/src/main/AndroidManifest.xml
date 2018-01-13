@@ -3,6 +3,11 @@
     package="com.example.stack.welearn">
     <uses-permission android:name="android.permission.INTERNET"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_PHONE_STATE" />
+
     <application
         android:allowBackup="true"
         android:name=".WeLearnApp"
@@ -25,6 +30,7 @@
         <activity android:name=".activities.CourseDetailActivity"/>
         <activity android:name=".activities.BulletinActivity"/>
         <activity android:name=".activities.QuestionDetailContainerAct"/>
+        <service android:name="org.eclipse.paho.android.service.MqttService" />
     </application>
 
 </manifest>

@@ -39,6 +39,8 @@ dependencies {
     compile 'cn.jiguang.imui:messagelist:0.5.8'
     compile 'cn.jiguang.imui:chatinput:0.6.2'
     compile 'com.github.vlonjatg:progress-activity:v2.0.3'
+    compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'
+    compile 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
 
 
 
@@ -46,6 +48,7 @@ dependencies {
     implementation 'com.github.bumptech.glide:glide:4.5.0'
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
     implementation 'com.mikepenz:actionitembadge:3.3.2@aar'
+    compile 'com.cleveroad:slidingtutorial:1.0.8'
 
     //SUB-DEPENDENCIES
     //Android-Iconics - used to provide an easy API for icons

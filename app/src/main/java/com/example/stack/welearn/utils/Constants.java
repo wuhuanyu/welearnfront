@@ -20,7 +20,9 @@ public final class Constants {
     public static final int QA=32;
 
     public static final class Net{
-       public static final String API_URL="http://10.0.3.2:3000/api/v1";
+        public static final String HOST="10.0.3.2";
+        public static final String PORT="3000";
+        public static final String API_URL="http://"+HOST+":"+PORT+"/api/v1";
     }
 
 
