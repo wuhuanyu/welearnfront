@@ -91,7 +91,6 @@ public class CoursesFragment extends BaseFragment {
                     } catch (Exception e) {
                         e.printStackTrace();
                         EventBus.getDefault().post(new Event<List<Course>>(Event.MY_COURSE_FETCH_FAIL, ""));
-
                     }
                     mCache.put("mycourse", data);
                     List<Course> courses = Course.toCourses(data);

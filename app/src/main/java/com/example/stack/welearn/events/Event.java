@@ -31,9 +31,6 @@ public class Event<T>{
     public static final int NEW_QUESTION=21;
 
 
-
-
-
     private int code;
     private T data;
     private String msg;

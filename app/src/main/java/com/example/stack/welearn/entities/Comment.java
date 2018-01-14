@@ -130,7 +130,7 @@ public class Comment implements Parcelable {
                 "id='" + id + '\'' +
                 ", body='" + body + '\'' +
                 ", author='" + author + '\'' +
-                ", time='" + time + '\'' +
+                ", updateTime='" + time + '\'' +
                 ", authorType=" + authorType +
                 ", isAuthorTeacher=" + isAuthorTeacher +
                 '}';

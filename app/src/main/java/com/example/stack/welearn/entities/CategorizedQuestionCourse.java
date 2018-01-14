@@ -1,14 +1,12 @@
 package com.example.stack.welearn.entities;
 
-import java.util.Date;
-
 /**
  * Created by stack on 2018/1/8.
  */
 
 public class CategorizedQuestionCourse {
     String courseImage;
-    Date time=new Date();
+    String updateTime;
     int count;
     int courseId;
     String courseName;
@@ -21,21 +19,21 @@ public class CategorizedQuestionCourse {
         this.courseName = courseName;
     }
 
-    public CategorizedQuestionCourse(String courseImage, Date time, int count, int courseId, String courseName) {
+    public CategorizedQuestionCourse(String courseImage, String updateTime, int count, int courseId, String courseName) {
 
         this.courseImage = courseImage;
-        this.time = time;
+        this.updateTime = updateTime;
         this.count = count;
         this.courseId = courseId;
         this.courseName = courseName;
     }
 
-    public Date getTime() {
-        return time;
+    public String getUpdateTime() {
+        return updateTime;
     }
 
-    public void setTime(Date time) {
-        this.time = time;
+    public void setUpdateTime(String updateTime) {
+        this.updateTime = updateTime;
     }
 
     public String getCourseImage() {
@@ -61,4 +59,5 @@ public class CategorizedQuestionCourse {
     public void setCourseId(int courseId) {
         this.courseId = courseId;
     }
+
 }

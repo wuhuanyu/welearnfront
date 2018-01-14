@@ -36,7 +36,7 @@ import java.util.List;
            return sections;
        }
 
-       public static CategorizedQuestionCourse categorizedQuestionCourse=new CategorizedQuestionCourse("",new Date(),5,1,"数学");
+       public static CategorizedQuestionCourse categorizedQuestionCourse=new CategorizedQuestionCourse("",new Date().toString(),5,1,"数学");
        public static List<CategorizedQuestionCourse> getCategorizedQuestions(int len){
            List<CategorizedQuestionCourse> courses=new ArrayList<>();
            for(int i=0;i<len;i++){

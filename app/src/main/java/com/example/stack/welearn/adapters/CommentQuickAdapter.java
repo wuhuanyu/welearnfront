@@ -39,7 +39,5 @@ public class CommentQuickAdapter extends BaseQuickAdapter<Comment,BaseViewHolder
         ((TextView)baseViewHolder.getView(R.id.text_comment_is_teacher)).setVisibility(
                 comment.isAuthorTeacher()?View.VISIBLE:View.GONE
         );
-
-//        ((TextView)baseViewHolder.getView(R.id.text_comment_lou)).setText(baseViewHolder.getLayoutPosition()+"楼");
     }
 }

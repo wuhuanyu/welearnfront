@@ -27,6 +27,8 @@ import com.example.stack.welearn.adapters.CommentQuickAdapter;
 import com.example.stack.welearn.entities.Comment;
 import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.events.Event;
+import com.example.stack.welearn.tasks.CourseCommentsTask;
+import com.example.stack.welearn.tasks.CourseDetailTask;
 import com.example.stack.welearn.test.DataServer;
 import com.example.stack.welearn.utils.ACache;
 import com.example.stack.welearn.utils.Constants;
@@ -56,6 +58,7 @@ import static com.example.stack.welearn.WeLearnApp.getContext;
 public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener  {
 
     public static final String TAG= CourseDetailActivity.class.getSimpleName();
+    private int courseId;
     private boolean isChecked=false;
     private boolean toRefresh=false;
     private boolean toRefreshComments=false;
@@ -66,6 +69,7 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     RecyclerView rvComments;
     CommentQuickAdapter mCommentAdapter;
     CourseDetailTask mCourseDetailTask;
+    CourseCommentsTask mCourseCommentsTask;
 
     @BindView(R.id.iv_course_detail_main)
     ImageView courseImage;
@@ -88,11 +92,13 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     public void initView() {
 
         Bundle bundle=getIntent().getExtras();
-        Log.i(TAG,""+bundle.getInt("course_id"));
+//        Log.i(TAG,""+bundle.getInt("course_id"));
+        courseId=bundle.getInt("course_id");
         //单例获取
-        mCourseDetailTask=CourseDetailTask.instance(bundle.getInt("course_id"));
-        ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getGetCourseDetailTask());
-        ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseCommentsTask());
+        mCourseDetailTask=CourseDetailTask.instance(courseId);
+        mCourseCommentsTask=CourseCommentsTask.instance(courseId);
+        ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail());
+        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments());
         setSupportActionBar(mToolbar);
 
         LinearLayoutManager manager=new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
@@ -111,10 +117,9 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         rvComments.setAdapter(mCommentAdapter);
         mSwipeRefresh.setOnRefreshListener(this);
         mCommentRefresh.setOnClickListener((v)->{
-            this.toRefreshComments=true;
-            mCourseDetailTask.setToRefreshComments(this.toRefreshComments);
+            mCourseCommentsTask.setToRefresh(true);
             ThreadPoolManager.getInstance().getService().execute(
-                    mCourseDetailTask.getCourseCommentsTask()
+                    mCourseCommentsTask.getCourseComments()
             );
         });
 
@@ -210,129 +215,12 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
 
     @Override
     public void onRefresh() {
-        this.toRefresh=true;
-        mCourseDetailTask.setToRefreshComments(true);
-        mCourseDetailTask.setToRefreshDetail(true);
-        ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseCommentsTask);
-        ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetailTask);
+        mCourseCommentsTask.setToRefresh(true);
+        mCourseDetailTask.setToRefresh(true);
+        ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail());
+        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments());
     }
 
-    private static class  CourseDetailTask{
-        private int courseId;
-        private static CourseDetailTask INSTANCE;
-        private boolean toRefreshComments=false;
-        private boolean toRefreshDetail=false;
-        public void setCourseId(int id){
-            this.courseId=id;
-        }
-
-        public void setToRefreshComments(boolean toRefreshComments) {
-            this.toRefreshComments = toRefreshComments;
-        }
-
-        public void setToRefreshDetail(boolean toRefreshDetail) {
-            this.toRefreshDetail = toRefreshDetail;
-        }
-
-        public boolean isToRefreshComments() {
-            return toRefreshComments;
-        }
-
-        public boolean isToRefreshDetail() {
-            return toRefreshDetail;
-        }
-
-        public int getCourseId(){
-            return this.courseId;
-        }
-        private CourseDetailTask(int courseId){
-            this.courseId=courseId;
-        }
-
-        public  static CourseDetailTask instance(int courseId){
-            if(INSTANCE==null){
-                INSTANCE=new CourseDetailTask(courseId);
-            }
-            INSTANCE.setCourseId(courseId);
-            return INSTANCE;
-        }
-        public static CourseDetailTask instance(int courseId,boolean toRefreshDetail,boolean toRefreshComments){
-            CourseDetailTask task=instance(courseId);
-            task.setToRefreshComments(toRefreshComments);
-            task.setToRefreshDetail(toRefreshDetail);
-            return task;
-        }
-        private Runnable getCourseDetailTask=()->{
-            JSONObject courseDetailJSON=WeLearnApp.cache().getAsJSONObject("course_detail-"+getCourseId());
-            if(courseDetailJSON==null||isToRefreshDetail()){
-                //网络请求
-                AndroidNetworking.get(Constants.Net.API_URL+"/course/"+getCourseId())
-                        .build().getAsJSONObject(new JSONObjectRequestListener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            Course course=Course.toCourse(response.getJSONObject("data"));
-                            WeLearnApp.cache().put("course_detail-"+getCourseId(),response.getJSONObject("data"));
-                            EventBus.getDefault().post(new Event<Course>(Event.COURSE_DETAIL_FETCH_OK,course));
-                            setToRefreshDetail(false);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-                    @Override
-                    public void onError(ANError anError) {
-                        EventBus.getDefault().post(new Event<Course>(Event.COURSE_DETAIL_FETCH_FAIL,anError.getErrorBody()));
-                        setToRefreshDetail(false);
-                    }
-                });
-            }
-            else{
-                EventBus.getDefault().post(new Event<Course>(Event.COURSE_DETAIL_FETCH_OK,Course.toCourse(courseDetailJSON)));
-            }
-        };
-
-
-        public Runnable getGetCourseDetailTask(){
-            return getCourseDetailTask;
-        }
-
-        private Runnable getCourseCommentsTask=()->{
-            JSONArray cachedComments=WeLearnApp.cache().getAsJSONArray("course_detail-"+getCourseId()+"-comments");
-            if(cachedComments==null||isToRefreshComments()){
-                AndroidNetworking.get(Constants.Net.API_URL+"/course/"+getCourseId()+"/comment")
-                        .build()
-                        .getAsJSONObject(new JSONObjectRequestListener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray commentsJSONS=response.getJSONArray("data");
-                            List<Comment>  comments=Comment.toComments(commentsJSONS);
-                            Log.i(TAG,commentsJSONS.toString());
-                            WeLearnApp.cache().put("course_detail-"+getCourseId()+"-comments",commentsJSONS);
-                            EventBus.getDefault().post(new Event<List<Comment>>(Event.COURSE_COMMENT_FETCH_OK,comments));
-                            setToRefreshComments(false);
-                        } catch (JSONException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    @Override
-                    public void onError(ANError anError) {
-                        Log.e(TAG,anError.getErrorBody());
-                        EventBus.getDefault().post(new Event<List<Comment>>(Event.COURSE_COMMENT_FETCH_FAIL,anError.getErrorBody()));
-                        setToRefreshComments(false);
-                    }
-                });
-            }
-            else {
-                EventBus.getDefault().post(new Event<List<Comment>>(Event.COURSE_COMMENT_FETCH_OK,Comment.toComments(cachedComments)));
-            }
-        };
-
-        public Runnable getCourseCommentsTask(){
-            return getCourseCommentsTask;
-        }
-    }
 }
 
 
