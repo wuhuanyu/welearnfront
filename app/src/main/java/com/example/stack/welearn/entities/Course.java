@@ -64,6 +64,15 @@ public class Course {
         this.images = images;
     }
 
+    @Override
+    public String toString() {
+        return "Course{" +
+                "name='" + name + '\'' +
+                ", desc='" + desc + '\'' +
+                ", images=" + images +
+                ", id=" + id +
+                '}';
+    }
 
     @Nullable
     public static Course toCourse(JSONObject object){

@@ -32,7 +32,7 @@ public class UserGuideFragment extends TutorialSupportFragment implements OnTuto
         @NonNull
         @Override
         public PageOptions provide(int position) {
-
+            return null;
         }
     };
 
