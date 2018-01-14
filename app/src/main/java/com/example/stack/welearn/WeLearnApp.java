@@ -1,9 +1,11 @@
 package com.example.stack.welearn;
 
+import android.app.Activity;
 import android.app.Application;
 import android.content.Context;
 
 import com.androidnetworking.AndroidNetworking;
+import com.example.stack.welearn.utils.ACache;
 import com.squareup.leakcanary.LeakCanary;
 
 /**
@@ -40,21 +42,22 @@ public class WeLearnApp extends Application {
     public static void setUserType(int userType) {
         WeLearnApp.userType = userType;
     }
+    private static ACache mCache;
 
     @Override
     public void onCreate() {
         super.onCreate();
         WeLearnApp.context=getApplicationContext();
-        //set up networking
-//        AndroidNetworking.setParserFactory(new JacksonParserFactory());
         AndroidNetworking.initialize(WeLearnApp.context);
+        mCache=ACache.get(this);
         if(LeakCanary.isInAnalyzerProcess(this))
             return;
         LeakCanary.install(this);
 
     }
-
-
+    public static ACache cache(){
+       return mCache;
+    }
     public static Context getContext(){
         return WeLearnApp.context;
     }

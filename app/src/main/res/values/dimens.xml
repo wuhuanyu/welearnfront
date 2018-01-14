@@ -8,5 +8,6 @@
     <dimen name="indicator_size">10dp</dimen>
     <dimen name="indicator_spacing">2dp</dimen>
     <dimen name="text_size_large">28sp</dimen>
-
+    <dimen name="divider">0.1px</dimen>
+    <dimen name="card_avaletion">1dp</dimen>
 </resources>

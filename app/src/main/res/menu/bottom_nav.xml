@@ -8,6 +8,11 @@
     <item android:id="@+id/bottom_question"
         android:title="作业"
         android:icon="@drawable/ic_work_white_24px"/>
+
+    <item android:id="@+id/bottom_chat"
+        android:title="聊天"
+        android:icon="@drawable/ic_message"/>
+
     <item android:icon="@drawable/ic_me"
         android:title="我"
         android:id="@+id/bottom_me"/>

@@ -1,12 +1,14 @@
 package com.example.stack.welearn.adapters;
 
 import android.support.annotation.Nullable;
+import android.view.View;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.entities.Comment;
+import com.example.stack.welearn.utils.TimeUtils;
 
 import java.util.List;
 
@@ -32,8 +34,12 @@ public class CommentQuickAdapter extends BaseQuickAdapter<Comment,BaseViewHolder
     @Override
     protected void convert(BaseViewHolder baseViewHolder, Comment comment) {
         ((TextView)baseViewHolder.getView(R.id.text_comment_author)).setText(comment.getAuthor());
-        ((TextView)baseViewHolder.getView(R.id.text_comment_time)).setText(comment.getTime());
+        ((TextView)baseViewHolder.getView(R.id.text_comment_time)).setText(TimeUtils.dateDiff(comment.getTime())+"天前");
         ((TextView)baseViewHolder.getView(R.id.text_comment_body)).setText(comment.getBody());
+        ((TextView)baseViewHolder.getView(R.id.text_comment_is_teacher)).setVisibility(
+                comment.isAuthorTeacher()?View.VISIBLE:View.GONE
+        );
+
 //        ((TextView)baseViewHolder.getView(R.id.text_comment_lou)).setText(baseViewHolder.getLayoutPosition()+"楼");
     }
 }

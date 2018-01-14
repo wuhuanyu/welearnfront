@@ -18,18 +18,21 @@ public class Course {
     private String desc;
     private List<String> images;
     private int id;
+    private String teacher;
 
-    public Course(String name, String desc, int id) {
+    public Course(String name, String desc, int id,String teacheer) {
         this.name = name;
         this.desc = desc;
         this.id = id;
+        this.teacher=teacheer;
     }
 
-    public Course(String name, String desc, List<String> images, int id) {
+    public Course(String name, String desc, List<String> images, int id,String teacher) {
         this.name = name;
         this.desc = desc;
         this.images = images;
         this.id = id;
+        this.teacher=teacher;
     }
 
     public int getId() {
@@ -64,6 +67,14 @@ public class Course {
         this.images = images;
     }
 
+    public String getTeacher() {
+        return teacher;
+    }
+
+    public void setTeacher(String teacher) {
+        this.teacher = teacher;
+    }
+
     @Override
     public String toString() {
         return "Course{" +
@@ -71,6 +82,7 @@ public class Course {
                 ", desc='" + desc + '\'' +
                 ", images=" + images +
                 ", id=" + id +
+                ", teacher='" + teacher + '\'' +
                 '}';
     }
 
@@ -80,12 +92,18 @@ public class Course {
             int id= (int) object.get("id");
             String desc=(String) object.get("desc");
             String name=(String) object.get("name");
+            String teacher=null;
+            if(object.has("teacher")&&!object.isNull("teacher")){
+                teacher=object.getString("teacher");
+            }
+//            String teacher=(String) object.get("teacher",);
             JSONArray imageArray=object.getJSONArray("images");
+
             List<String> images=new ArrayList<>();
             for(int i=0;i<imageArray.length();i++){
                 images.add(imageArray.getString(i));
             }
-            Course course=new Course(name,desc,images,id);
+            Course course=new Course(name,desc,images,id,teacher);
             return course;
         } catch (JSONException e) {
             e.printStackTrace();

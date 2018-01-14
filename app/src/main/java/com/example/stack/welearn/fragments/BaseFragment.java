@@ -28,4 +28,9 @@ public abstract class BaseFragment extends Fragment {
         doRegister();
         return view;
     }
+
+    @Override
+    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
+        super.onViewStateRestored(savedInstanceState);
+    }
 }

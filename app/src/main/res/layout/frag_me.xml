@@ -46,7 +46,7 @@
     <View
         android:id="@+id/view"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider"
         android:layout_marginTop="152dp"
         android:background="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="@+id/button6"
@@ -83,7 +83,7 @@
     <View
         android:id="@+id/view2"
         android:layout_width="match_parent"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider"
         android:layout_marginTop="252dp"
         app:layout_constraintTop_toTopOf="parent"
         tools:layout_editor_absoluteX="0dp" />
@@ -91,7 +91,7 @@
     <View
         android:id="@+id/view3"
         android:layout_width="0dp"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider"
         android:background="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="@+id/view"
         app:layout_constraintStart_toStartOf="@+id/view"
@@ -100,7 +100,7 @@
     <View
         android:id="@+id/view4"
         android:layout_width="0dp"
-        android:layout_height="1dp"
+        android:layout_height="@dimen/divider"
         android:layout_marginTop="252dp"
         android:background="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="parent"

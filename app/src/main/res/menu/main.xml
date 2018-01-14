@@ -10,7 +10,7 @@
     <item
         android:id="@+id/toolbar_info"
         android:actionLayout="@layout/bulletion_notification"
-        android:icon="@drawable/ic_message"
+        android:icon="@drawable/ic_bulletin"
         app:actionLayout="@layout/bulletion_notification"
         android:title="消息"
         app:showAsAction="always" />

@@ -22,22 +22,32 @@ public class Comment implements Parcelable {
     String body;
     String author;
     String time;
-    boolean authorTeacher =false;
+    int authorType;
+    boolean isAuthorTeacher=false;
 
     public boolean isAuthorTeacher() {
-        return authorTeacher;
+        return isAuthorTeacher;
     }
 
     public void setAuthorTeacher(boolean authorTeacher) {
-        this.authorTeacher = authorTeacher;
+        isAuthorTeacher = authorTeacher;
     }
 
-    public Comment(String id, String body, String author, String time, boolean authorIsTeacher) {
+    public int getAuthorType() {
+        return authorType;
+    }
+
+    public void setAuthorType(int authorType) {
+        this.authorType = authorType;
+    }
+
+    public Comment(String id, String body, String author, String time, int authorIsTeacher) {
         this.id = id;
         this.body = body;
         this.author = author;
         this.time = time;
-        this.authorTeacher = authorIsTeacher;
+        this.authorType = authorIsTeacher;
+        this.isAuthorTeacher=(authorType==Constants.ACC_T_Tea);
     }
 
     public String getTime() {
@@ -61,7 +71,8 @@ public class Comment implements Parcelable {
         body = in.readString();
         author = in.readString();
         time = in.readString();
-        authorTeacher=in.readByte()==1;
+        authorType=in.readInt();
+
     }
 
     public Comment(String id, String body, String author, String time) {
@@ -110,18 +121,31 @@ public class Comment implements Parcelable {
         parcel.writeString(body);
         parcel.writeString(author);
         parcel.writeString(time);
-        parcel.writeByte((byte)(authorTeacher?1:0));
+        parcel.writeInt(authorType);
+    }
+
+    @Override
+    public String toString() {
+        return "Comment{" +
+                "id='" + id + '\'' +
+                ", body='" + body + '\'' +
+                ", author='" + author + '\'' +
+                ", time='" + time + '\'' +
+                ", authorType=" + authorType +
+                ", isAuthorTeacher=" + isAuthorTeacher +
+                '}';
     }
 
     @Nullable
     public static Comment toComment(JSONObject object){
         try {
-            String id =object.getString("id");
+            String id =object.getString("_id");
             String body=object.getString("body");
-            String author=object.getString("aName");
+            String author=object.getString("author");
             String time=object.getString("time");
-            boolean isAuthorTeacher=object.getInt("aT")==Constants.ACC_T_Tea;
-            Comment comment=new Comment(id,body,author,time,isAuthorTeacher);
+            int authorType=object.getInt("aT");
+//            int isAuthorTeacher=object.getInt("aT")==Constants.ACC_T_Tea;
+            Comment comment=new Comment(id,body,author,time,authorType);
             return comment;
 
         } catch (JSONException e) {
@@ -135,13 +159,11 @@ public class Comment implements Parcelable {
         for(int i=0;i<commentsArray.length();i++){
             try {
                 comments.add(toComment(commentsArray.getJSONObject(i)));
-                return comments;
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
        return comments;
     }
-
 
 }
