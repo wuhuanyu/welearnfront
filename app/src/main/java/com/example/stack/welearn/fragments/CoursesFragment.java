@@ -4,39 +4,28 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.widget.LinearLayout;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.chad.library.adapter.base.BaseQuickAdapter;
-import com.chad.library.adapter.base.listener.OnItemClickListener;
 import com.example.stack.welearn.R;
-import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.activities.CourseDetailActivity;
 import com.example.stack.welearn.adapters.CourseAdapter;
 import com.example.stack.welearn.adapters.GlideImageLoader;
 import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.events.Event;
+import com.example.stack.welearn.tasks.MyCoursesTask;
+import com.example.stack.welearn.tasks.PremierCoursesTask;
 import com.example.stack.welearn.test.DefaultUser;
-import com.example.stack.welearn.utils.ACache;
-import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.ThreadPoolManager;
-import com.example.stack.welearn.utils.ToastUtils;
-import com.squareup.haha.perflib.Main;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -54,7 +43,6 @@ public class CoursesFragment extends BaseFragment {
     private LinearLayoutManager  mLayoutManager;
     private Handler mHandler=new Handler(Looper.getMainLooper());
     CourseAdapter myCourseAdapter;
-
     CourseAdapter premierCourseAdapter;
     List<Course> myCourseData=new ArrayList<>();
     List<Course> mPremierCourseData=new ArrayList<>();
@@ -65,92 +53,12 @@ public class CoursesFragment extends BaseFragment {
     @BindView(R.id.banner)
     Banner mBanner;
 
-    ACache mCache=WeLearnApp.cache();
+    MyCoursesTask mCourseTask=MyCoursesTask.instance(DefaultUser.authorization,DefaultUser.id);
+    PremierCoursesTask mPremierCourseTask=PremierCoursesTask.instance();
     Integer[] mBannerImages={
             R.drawable.math1,R.drawable.history1,R.drawable.history2,R.drawable.art2
     };
 
-    private Runnable getMyCourseTask=()->{
-        /**
-         * 尝试从缓存中获取
-         */
-        JSONArray myCourseDataJSONS=mCache.getAsJSONArray("mycourse");
-        /**
-         * 需要刷新 或者没有缓存
-         */
-        if(toRefresh||myCourseDataJSONS==null) {
-            AndroidNetworking.get(Constants.Net.API_URL + "/acc/stu/" + DefaultUser.id + "/course")
-                    .addHeaders("authorization", DefaultUser.authorization)
-                    .addHeaders("content-type", "application/json")
-                    .build().getAsJSONObject(new JSONObjectRequestListener() {
-                JSONArray data;
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        data = response.getJSONArray("data");
-                    } catch (Exception e) {
-                        e.printStackTrace();
-                        EventBus.getDefault().post(new Event<List<Course>>(Event.MY_COURSE_FETCH_FAIL, ""));
-                    }
-                    mCache.put("mycourse", data);
-                    List<Course> courses = Course.toCourses(data);
-                    EventBus.getDefault().post(new Event<>(Event.MY_COURSE_FETCH_OK, Course.toCourses(data)));
-                }
-                @Override
-                public void onError(ANError anError) {
-                    Log.e(TAG, anError.getErrorBody());
-                    EventBus.getDefault().post(new Event<List<Course>>(Event.MY_COURSE_FETCH_FAIL, ""));
-                }
-            });
-        }
-        else {
-            Log.i(TAG,"缓存中有我的课程");
-            Log.i(TAG,myCourseDataJSONS.toString());
-            EventBus.getDefault().post(new Event<List<Course>>(Event.MY_COURSE_FETCH_OK,Course.toCourses(myCourseDataJSONS)));
-        }
-
-    };
-
-    private Runnable getPremierCourseTask=()->{
-        JSONArray mPremierCourseJSONS=mCache.getAsJSONArray("premiercourse");
-        /*
-        需要刷新或者没有缓存
-         */
-        if(toRefresh||mPremierCourseJSONS==null){
-            AndroidNetworking.get(Constants.Net.API_URL+"/course/all")
-                    .addQueryParameter("start","0")
-                    .addQueryParameter("count","3")
-                    .build().getAsJSONObject(new JSONObjectRequestListener() {
-                List<Course> data;
-                @Override
-                public void onResponse(JSONObject response) {
-                    Log.i(TAG,response.toString());
-                    try {
-                        data=Course.toCourses(response.getJSONArray("data"));
-                        mCache.put("premiercourse",response.getJSONArray("data"));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                    EventBus.getDefault().post(new Event<List<Course>>(Event.PREMIER_COURSE_FETCH_OK,data));
-                }
-
-                @Override
-                public void onError(ANError anError) {
-                    Log.e(TAG,anError.getErrorBody());
-                    EventBus.getDefault().post(new Event(Event.PREMIER_COURSE_FETCH_FAIL,anError.getErrorBody()));
-                }
-            });
-
-        }
-        /**
-         * 有缓存且不需要刷新
-         */
-        else{
-            Log.i(TAG,"缓存中有精选课程");
-            EventBus.getDefault().post(new Event<List<Course>>(Event.PREMIER_COURSE_FETCH_OK,Course.toCourses(mPremierCourseJSONS)));
-        }
-
-    };
     BaseQuickAdapter.OnItemClickListener listener=(adapter,view,i)->{
         Course course= (Course) adapter.getData().get(i);
         Bundle bundle =new Bundle();
@@ -175,8 +83,8 @@ public class CoursesFragment extends BaseFragment {
     }
     @Override
     public void initView() {
-        ThreadPoolManager.getInstance().getService().submit(getMyCourseTask);
-        ThreadPoolManager.getInstance().getService().submit(getPremierCourseTask);
+        ThreadPoolManager.getInstance().getService().submit(mCourseTask.getMyCourses());
+        ThreadPoolManager.getInstance().getService().submit(mPremierCourseTask.getPremierCourses());
 
         myCourseAdapter =new CourseAdapter(R.layout.item_course_card, myCourseData);
         myCourseAdapter.setOnItemClickListener(listener);
@@ -197,7 +105,6 @@ public class CoursesFragment extends BaseFragment {
             @Override
             public void OnBannerClick(int position) {
                 Intent intent=new Intent(getContext(),CourseDetailActivity.class);
-
                 Bundle bundle =new Bundle();
                 bundle.putInt("course_id",1);
                 intent.putExtras(bundle);
