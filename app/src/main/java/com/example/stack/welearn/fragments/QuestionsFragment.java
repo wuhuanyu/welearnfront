@@ -48,7 +48,7 @@ public class QuestionsFragment extends BaseFragment {
             R.drawable.math1,R.drawable.history1,R.drawable.history2,R.drawable.art2
     };
     @BindView(R.id.banner_categorized_question)
-            Banner mBanner;
+    Banner mBanner;
     CategorizedQuestionAdapter mAdapter;
     TestPaperAdapter mTestpaperAdapter;
 
@@ -92,11 +92,7 @@ public class QuestionsFragment extends BaseFragment {
             intent.putExtra("course_id",courseId);
             startActivity(intent);
         });
-//        mAdapter.setOnItemClickListener((baseQuickAdapter,view,postiion)->{
-////            Intent intent=new Intent(this, QuestionDetailContainerAct.class);
-//            Intent intent=new Intent(getActivity(), QuestionDetailContainerAct.class);
-//            startActivity(intent);
-//        });
+
         mQuestions.setLayoutManager(mManager);
         mQuestions.setAdapter(mAdapter);
 
@@ -107,8 +103,8 @@ public class QuestionsFragment extends BaseFragment {
         mTestPapers.setAdapter(mTestpaperAdapter);
     }
     public void onStop(){
-       super.onStop();
         EventBus.getDefault().unregister(this);
+        super.onStop();
     }
 
     private void setUpCategorizedQuestion(List<CategorizedQuestionCourse> categorizedQuestions){

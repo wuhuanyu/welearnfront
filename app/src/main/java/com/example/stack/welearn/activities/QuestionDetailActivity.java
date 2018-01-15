@@ -76,10 +76,12 @@ public class QuestionDetailActivity extends BaseActivity {
 
     @Override
     public void initView() {
+        Log.i(TAG,"---------init view----------");
         courseId=getIntent().getIntExtra("course_id",-1);
 //        Log.i(TAG,"-------initview---------")
         mQuestionTask= QuestionTask.instance(courseId);
         ThreadPoolManager.getInstance().getService().execute(mQuestionTask.getQuestions());
+
         Sensey.getInstance().startTouchTypeDetection(this,touchTypListener);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -92,7 +94,6 @@ public class QuestionDetailActivity extends BaseActivity {
         }
         else {
             setUpQuestion(questions.get(0));
-
         }
     }
 
@@ -109,35 +110,43 @@ public class QuestionDetailActivity extends BaseActivity {
         ThreadPoolManager.getInstance().getService().execute(mCommentsTask.getComments());
     }
     private void setUpComments(List<Comment> comments){
-        mHandler.post(()->{
             mAdapter.setNewData(comments);
-        });
     }
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(Event<?> event){
+        Log.i(TAG,"-----------on event---------");
+        Log.i(TAG,event.code()+"");
         switch (event.code()){
             case Event.QUESITON_FETCH_OK:
                 Log.i(TAG,"---------start processing question---------");
                 this.questions=(List<Question>)event.t();
-                setUpQuestion(this.questions.get(0));
 
+                mHandler.post(()->{
+                    setUpQuestion(this.questions.get(0));
+                });
                 break;
             case Event.QUESTION_COMMENT_FETCH_OK:
-                Log.i(TAG,"----------start question comments-------");
-                setUpComments((List<Comment>)event.t());
+                Log.i(TAG,"----------start processing question comments-------");
+                mHandler.post(()->{
+                    setUpComments((List<Comment>)event.t());
+                });
                 break;
             default:break;
         }
-//        this.questions=event.t();
     }
 
     public void onStop(){
-        super.onStop();
         EventBus.getDefault().unregister(this);
+        super.onStop();
         Sensey.getInstance().stopTouchTypeDetection();
         Sensey.getInstance().stop();
+    }
+
+    public void onBackPressed(){
+        super.onBackPressed();
+        this.finish();
     }
 
 
@@ -191,6 +200,7 @@ public class QuestionDetailActivity extends BaseActivity {
         public void onTwoFingerSingleTap() {
 
         }
+
 
     };
 }
