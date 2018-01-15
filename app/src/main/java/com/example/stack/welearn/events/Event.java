@@ -23,12 +23,20 @@ public class Event<T>{
     public static final int COURSE_COMMENT_FETCH_OK=17;
     public static final int COURSE_COMMENT_FETCH_FAIL=18;
 
+    public static final int CATEGORIZED_QUESTION_FETCH_OK=19;
+    public static final int CATEGORIZED_QUESTION_FETCH_FAIL=20;
+
+    public static final int QUESITON_FETCH_OK=21;
+    public static final int QUESTION_FETCH_FAIL=22;
+
+    public static final int QUESTION_COMMENT_FETCH_OK=23;
+    public static final int QUESTION_COMMENT_FETCH_FAIL=24;
     /**
      * 通知事件
      */
-    public static final int NEW_BULLETIIN=19;
-    public static final int NEW_COMMENT=20;
-    public static final int NEW_QUESTION=21;
+    public static final int NEW_BULLETIIN=99;
+    public static final int NEW_COMMENT=98;
+    public static final int NEW_QUESTION=97;
 
 
     private int code;

@@ -1,12 +1,15 @@
 package com.example.stack.welearn.fragments;
 
 import android.content.Intent;
+import android.os.Bundle;
 import android.service.autofill.Dataset;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.WeLearnApp;
+import com.example.stack.welearn.activities.QuestionDetailActivity;
 import com.example.stack.welearn.activities.QuestionDetailContainerAct;
 import com.example.stack.welearn.adapters.CategorizedQuestionAdapter;
 import com.example.stack.welearn.adapters.GlideImageLoader;
@@ -14,10 +17,18 @@ import com.example.stack.welearn.adapters.TestPaperAdapter;
 import com.example.stack.welearn.entities.CategorizedQuestionCourse;
 import com.example.stack.welearn.entities.Question;
 import com.example.stack.welearn.entities.TestPaper;
+import com.example.stack.welearn.events.Event;
+import com.example.stack.welearn.tasks.CategorizedQuestionsTask;
 import com.example.stack.welearn.test.DataServer;
+import com.example.stack.welearn.test.DefaultUser;
+import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.utils.ToastUtils;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
+
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.Arrays;
 import java.util.List;
@@ -29,8 +40,10 @@ import butterknife.BindView;
  */
 
 public class QuestionsFragment extends BaseFragment {
+    private static final String TAG=QuestionsFragment.class.getSimpleName();
     @BindView(R.id.rv_questions)
     RecyclerView mQuestions;
+
     Integer[] mBannerImages={
             R.drawable.math1,R.drawable.history1,R.drawable.history2,R.drawable.art2
     };
@@ -39,8 +52,8 @@ public class QuestionsFragment extends BaseFragment {
     CategorizedQuestionAdapter mAdapter;
     TestPaperAdapter mTestpaperAdapter;
 
-    List<CategorizedQuestionCourse> courses= DataServer.getCategorizedQuestions(3);
 
+    CategorizedQuestionsTask mCategorizedQuestionsTask=CategorizedQuestionsTask.instance(DefaultUser.authorization,DefaultUser.id);
     @BindView(R.id.rv_testpaper)
     RecyclerView mTestPapers;
     @Override
@@ -52,10 +65,15 @@ public class QuestionsFragment extends BaseFragment {
     public void doRegister() {
 
     }
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
 
     @Override
     public void initView() {
 
+        ThreadPoolManager.getInstance().getService().execute(mCategorizedQuestionsTask.getCategorizedQuestion());
         LinearLayoutManager mManager=new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         mBanner.setImageLoader(new GlideImageLoader());
         mBanner.setImages(Arrays.asList(mBannerImages));
@@ -67,16 +85,20 @@ public class QuestionsFragment extends BaseFragment {
         });
 
         mBanner.start();
-        mAdapter=new CategorizedQuestionAdapter(R.layout.item_categorized_question,courses);
-        mAdapter.setOnItemClickListener((baseQuickAdapter,view,postiion)->{
-//            Intent intent=new Intent(this, QuestionDetailContainerAct.class);
-            Intent intent=new Intent(getActivity(), QuestionDetailContainerAct.class);
+        mAdapter=new CategorizedQuestionAdapter(R.layout.item_categorized_question);
+        mAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
+            Intent intent=new Intent(getActivity(), QuestionDetailActivity.class);
+            int courseId=((List<CategorizedQuestionCourse>)baseQuickAdapter.getData()).get(i).getCourseId();
+            intent.putExtra("course_id",courseId);
             startActivity(intent);
         });
+//        mAdapter.setOnItemClickListener((baseQuickAdapter,view,postiion)->{
+////            Intent intent=new Intent(this, QuestionDetailContainerAct.class);
+//            Intent intent=new Intent(getActivity(), QuestionDetailContainerAct.class);
+//            startActivity(intent);
+//        });
         mQuestions.setLayoutManager(mManager);
         mQuestions.setAdapter(mAdapter);
-
-
 
 
         LinearLayoutManager manager=new LinearLayoutManager(getContext(),LinearLayoutManager.HORIZONTAL,false);
@@ -84,4 +106,28 @@ public class QuestionsFragment extends BaseFragment {
         mTestPapers.setLayoutManager(manager);
         mTestPapers.setAdapter(mTestpaperAdapter);
     }
+    public void onStop(){
+       super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    private void setUpCategorizedQuestion(List<CategorizedQuestionCourse> categorizedQuestions){
+        Log.i(TAG,"----------setup categorized question--------");
+        Log.i(TAG,""+categorizedQuestions.size());
+        Log.i(TAG,categorizedQuestions.get(0).toString());
+        mHandler.post(()->{
+            mAdapter.setNewData(categorizedQuestions);
+        });
+
+    }
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(Event<List<CategorizedQuestionCourse>> event){
+        switch (event.code()){
+            case Event.CATEGORIZED_QUESTION_FETCH_OK:
+                setUpCategorizedQuestion(event.t());
+                break;
+            default:break;
+        }
+    }
+
 }

@@ -1,6 +1,8 @@
 package com.example.stack.welearn.activities;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 
 
@@ -13,6 +15,7 @@ import butterknife.ButterKnife;
  */
 
 public abstract class BaseActivity extends AppCompatActivity {
+    protected Handler mHandler=new Handler(Looper.getMainLooper());
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(getLayout());

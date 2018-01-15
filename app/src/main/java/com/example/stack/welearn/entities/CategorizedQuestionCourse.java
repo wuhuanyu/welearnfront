@@ -6,7 +6,7 @@ package com.example.stack.welearn.entities;
 
 public class CategorizedQuestionCourse {
     String courseImage;
-    String updateTime;
+    long updateTime;
     int count;
     int courseId;
     String courseName;
@@ -19,7 +19,7 @@ public class CategorizedQuestionCourse {
         this.courseName = courseName;
     }
 
-    public CategorizedQuestionCourse(String courseImage, String updateTime, int count, int courseId, String courseName) {
+    public CategorizedQuestionCourse(String courseImage, long updateTime, int count, int courseId, String courseName) {
 
         this.courseImage = courseImage;
         this.updateTime = updateTime;
@@ -28,11 +28,11 @@ public class CategorizedQuestionCourse {
         this.courseName = courseName;
     }
 
-    public String getUpdateTime() {
+    public long getUpdateTime() {
         return updateTime;
     }
 
-    public void setUpdateTime(String updateTime) {
+    public void setUpdateTime(long updateTime) {
         this.updateTime = updateTime;
     }
 
@@ -60,4 +60,14 @@ public class CategorizedQuestionCourse {
         this.courseId = courseId;
     }
 
+    @Override
+    public String toString() {
+        return "CategorizedQuestionCourse{" +
+                "courseImage='" + courseImage + '\'' +
+                ", updateTime=" + updateTime +
+                ", count=" + count +
+                ", courseId=" + courseId +
+                ", courseName='" + courseName + '\'' +
+                '}';
+    }
 }

@@ -4,7 +4,7 @@ android {
     compileSdkVersion 26
     defaultConfig {
         applicationId "com.example.stack.welearn"
-        minSdkVersion 23
+        minSdkVersion 24
         targetSdkVersion 26
         versionCode 1
         versionName "1.0"
@@ -48,6 +48,7 @@ dependencies {
     annotationProcessor 'com.github.bumptech.glide:compiler:4.5.0'
     implementation 'com.mikepenz:actionitembadge:3.3.2@aar'
     compile 'com.cleveroad:slidingtutorial:1.0.8'
+    implementation 'com.github.nisrulz:sensey:1.8.0'
 
     //SUB-DEPENDENCIES
     //Android-Iconics - used to provide an easy API for icons

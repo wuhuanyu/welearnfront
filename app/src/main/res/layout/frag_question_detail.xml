@@ -94,15 +94,15 @@
             app:layout_constraintStart_toStartOf="@+id/cardView"
             app:layout_constraintTop_toBottomOf="@+id/cardView">
             <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_images"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"/>
+                android:id="@+id/rv_images"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
 
             <TextView
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:text="this is for image"
-            />
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:text="this is for image"
+                />
         </LinearLayout>
 
     </android.support.constraint.ConstraintLayout>

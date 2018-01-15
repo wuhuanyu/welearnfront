@@ -39,7 +39,7 @@
         app:layout_constraintStart_toStartOf="@+id/text_categoried_course_name" />
 
     <TextView
-        android:id="@+id/text_categorized_last_update_time"
+        android:id="@+id/text_categorized_update"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

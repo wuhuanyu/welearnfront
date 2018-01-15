@@ -1,9 +1,7 @@
 package com.example.stack.welearn.activities;
 
 
-import android.app.ActivityManager;
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -11,14 +9,9 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.ViewDebug;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.ThemedSpinnerAdapter;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.stack.welearn.R;
@@ -27,9 +20,8 @@ import com.example.stack.welearn.adapters.CommentQuickAdapter;
 import com.example.stack.welearn.entities.Comment;
 import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.events.Event;
-import com.example.stack.welearn.tasks.CourseCommentsTask;
+import com.example.stack.welearn.tasks.CommentsTask;
 import com.example.stack.welearn.tasks.CourseDetailTask;
-import com.example.stack.welearn.test.DataServer;
 import com.example.stack.welearn.utils.ACache;
 import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.ThreadPoolManager;
@@ -38,15 +30,9 @@ import com.example.stack.welearn.utils.ToastUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-import org.w3c.dom.Text;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindBitmap;
 import butterknife.BindView;
 
 import static com.example.stack.welearn.WeLearnApp.getContext;
@@ -69,7 +55,7 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     RecyclerView rvComments;
     CommentQuickAdapter mCommentAdapter;
     CourseDetailTask mCourseDetailTask;
-    CourseCommentsTask mCourseCommentsTask;
+    CommentsTask mCourseCommentsTask;
 
     @BindView(R.id.iv_course_detail_main)
     ImageView courseImage;
@@ -92,13 +78,12 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     public void initView() {
 
         Bundle bundle=getIntent().getExtras();
-//        Log.i(TAG,""+bundle.getInt("course_id"));
         courseId=bundle.getInt("course_id");
         //单例获取
         mCourseDetailTask=CourseDetailTask.instance(courseId);
-        mCourseCommentsTask=CourseCommentsTask.instance(courseId);
+        mCourseCommentsTask= CommentsTask.instance(courseId,CommentsTask.FOR_COURSE);
         ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail());
-        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments());
+        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getComments());
         setSupportActionBar(mToolbar);
 
         LinearLayoutManager manager=new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
@@ -119,7 +104,7 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         mCommentRefresh.setOnClickListener((v)->{
             mCourseCommentsTask.setToRefresh(true);
             ThreadPoolManager.getInstance().getService().execute(
-                    mCourseCommentsTask.getCourseComments()
+                    mCourseCommentsTask.getComments()
             );
         });
 
@@ -218,7 +203,7 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         mCourseCommentsTask.setToRefresh(true);
         mCourseDetailTask.setToRefresh(true);
         ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail());
-        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments());
+        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getComments());
     }
 
 }

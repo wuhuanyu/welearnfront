@@ -29,8 +29,8 @@
         </activity>
         <activity android:name=".activities.CourseDetailActivity"/>
         <activity android:name=".activities.BulletinActivity"/>
-        <activity android:name=".activities.QuestionDetailContainerAct"/>
         <service android:name="org.eclipse.paho.android.service.MqttService" />
+        <activity android:name=".activities.QuestionDetailActivity"/>
     </application>
 
 </manifest>

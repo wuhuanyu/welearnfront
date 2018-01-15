@@ -1,6 +1,8 @@
 package com.example.stack.welearn.fragments;
 
 import android.os.Bundle;
+import android.os.Handler;
+import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -18,7 +20,7 @@ public abstract class BaseFragment extends Fragment {
     public abstract int getLayout();
     public abstract void doRegister();
     public abstract void initView();
-
+    public Handler mHandler=new Handler(Looper.getMainLooper());
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
@@ -33,4 +35,6 @@ public abstract class BaseFragment extends Fragment {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
     }
+
+
 }

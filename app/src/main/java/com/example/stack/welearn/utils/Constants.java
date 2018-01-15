@@ -20,7 +20,7 @@ public final class Constants {
     public static final int QA=32;
 
     public static final class Net{
-        public static final String HOST="192.168.1.103";
+        public static final String HOST="192.168.1.100";
         public static final String PORT="3000";
         public static final String API_URL="http://"+HOST+":"+PORT+"/api/v1";
         public static final String IMAGE_URL="http://"+HOST+":"+PORT+"/images/";
