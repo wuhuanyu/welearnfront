@@ -2,6 +2,9 @@ package com.example.stack.welearn.activities;
 
 import com.example.stack.welearn.R;
 
+import butterknife.BindBitmap;
+import butterknife.BindView;
+import cn.jiguang.imui.messages.MessageList;
 import cn.jiguang.imui.messages.MsgListAdapter;
 
 /**
@@ -9,7 +12,7 @@ import cn.jiguang.imui.messages.MsgListAdapter;
  */
 
 public class ChatActivity extends BaseActivity {
-//    MsgListAdapter mAdapter=new MsgListAdapter("0",/)
+    MessageList mMessagesList;
 
     @Override
     public void doRegister() {

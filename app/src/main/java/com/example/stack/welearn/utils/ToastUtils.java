@@ -3,6 +3,8 @@ package com.example.stack.welearn.utils;
 import android.content.Context;
 import android.widget.Toast;
 
+import com.example.stack.welearn.WeLearnApp;
+
 /**
  * Created by stack on 2018/1/2.
  */
@@ -18,6 +20,9 @@ public class ToastUtils {
         return INSTANCE;
     }
 
+    public static ToastUtils getInstance(){
+        return getInstance(WeLearnApp.getContext());
+    }
     private ToastUtils(Context context) {
         this.toast=Toast.makeText(context,"",Toast.LENGTH_SHORT);
     }

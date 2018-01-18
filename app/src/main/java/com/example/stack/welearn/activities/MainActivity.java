@@ -2,14 +2,12 @@ package com.example.stack.welearn.activities;
 
 import android.content.Context;
 import android.content.Intent;
-import android.graphics.LinearGradient;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
+import android.os.Bundle;
 import android.support.constraint.ConstraintLayout;
-import android.support.constraint.solver.widgets.ConstraintAnchor;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v7.widget.ActionMenuView;
 import android.util.Log;
 import android.view.Menu;
 import android.view.View;
@@ -17,16 +15,26 @@ import android.widget.FrameLayout;
 import android.widget.TextView;
 
 import com.example.stack.welearn.R;
+import com.example.stack.welearn.WeLearnApp;
+import com.example.stack.welearn.config.MQTTClient;
+import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.fragments.ChatFragment;
 import com.example.stack.welearn.fragments.QuestionsFragment;
 import com.example.stack.welearn.fragments.CoursesFragment;
 import com.example.stack.welearn.fragments.MeFragment;
+import com.example.stack.welearn.utils.ToastUtils;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-import com.squareup.haha.perflib.Main;
+
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.greenrobot.eventbus.EventBus;
+import org.greenrobot.eventbus.Subscribe;
+import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.HashMap;
 
-import butterknife.BindInt;
 import butterknife.BindView;
 import q.rorbin.badgeview.Badge;
 import q.rorbin.badgeview.QBadgeView;
@@ -38,24 +46,24 @@ import q.rorbin.badgeview.QBadgeView;
 public class MainActivity extends BaseActivity {
     public static final String TAG= MainActivity.class.getSimpleName();
     private HashMap<String,Fragment> fragmentHashMap=new HashMap<>();
-
     @BindView(R.id.bottom)BottomNavigationViewEx bottomNav;
-
-    @BindView(R.id.main_toolbar)
-    android.support.v7.widget.Toolbar mToolbar;
-    @BindView(R.id.empty_view)
-    ConstraintLayout mEmptyView;
-
+    @BindView(R.id.main_toolbar) android.support.v7.widget.Toolbar mToolbar;
+    @BindView(R.id.empty_view) ConstraintLayout mEmptyView;
     TextView tvBulletinCount;
-
-    @BindView(R.id.fragment_container)
-    FrameLayout mFragmentContainer;
-
-
+    @BindView(R.id.fragment_container) FrameLayout mFragmentContainer;
     private boolean isWifiConnected;
     private boolean isCelluarConnected;
+    private boolean haveSetUpMqtt =false;
+
+
+    public void onCreate(Bundle savedInstanceState){
+        super.onCreate(savedInstanceState);
+        EventBus.getDefault().register(this);
+    }
     @Override
     public void doRegister() {
+
+
     }
 
     @Override
@@ -152,5 +160,41 @@ public class MainActivity extends BaseActivity {
 
                     }
                 });
+    }
+    public void onStop(){
+        super.onStop();
+        EventBus.getDefault().unregister(this);
+    }
+
+    @Subscribe(threadMode = ThreadMode.MAIN)
+    public void onEvent(Event<String> event){
+        Log.i(TAG,"processing subscribe event");
+        switch (event.code()){
+            case Event.SUBSCRIBE_OK:
+                if(!haveSetUpMqtt) setUpMqttClient();
+                ToastUtils.getInstance().showMsgLong("话题订阅成功");
+                break;
+            default:break;
+        }
+    }
+    private void setUpMqttClient(){
+        MqttAndroidClient client=MQTTClient.instance().getClient();
+        client.setCallback(new MqttCallback() {
+            @Override
+            public void connectionLost(Throwable cause) {
+
+            }
+
+            @Override
+            public void messageArrived(String topic, MqttMessage message) throws Exception {
+                Log.i(TAG,new String(message.getPayload()));
+            }
+
+            @Override
+            public void deliveryComplete(IMqttDeliveryToken token) {
+
+            }
+        });
+        this.haveSetUpMqtt=true;
     }
 }

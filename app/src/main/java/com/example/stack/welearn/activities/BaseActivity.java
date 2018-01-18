@@ -29,11 +29,9 @@ public abstract class BaseActivity extends AppCompatActivity {
     public abstract int getLayout();
     public void onStart(){
         super.onStart();
-//        EventBus.getDefault().register(this);
     }
 
     public void onStop(){
         super.onStop();
-//        EventBus.getDefault().unregister(this);
     }
 }

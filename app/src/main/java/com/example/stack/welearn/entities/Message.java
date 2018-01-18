@@ -91,7 +91,7 @@ import cn.jiguang.imui.commons.models.IUser;
 
 
 
-public class Message {
+public class Message  {
     int id;
     int courseId;
     Date sendTime;

@@ -8,6 +8,9 @@ import android.support.annotation.Nullable;
  */
 
 public class Event<T>{
+    public static final int SUBSCRIBE_OK=10;
+    public static final int SUBSCRIBE_FAIL=101;
+
     /**
      * 网络事件
      */
@@ -31,12 +34,22 @@ public class Event<T>{
 
     public static final int QUESTION_COMMENT_FETCH_OK=23;
     public static final int QUESTION_COMMENT_FETCH_FAIL=24;
+
     /**
      * 通知事件
      */
+
     public static final int NEW_BULLETIIN=99;
-    public static final int NEW_COMMENT=98;
-    public static final int NEW_QUESTION=97;
+
+    public static final int NEW_COMMENT_COURSE=98;
+    public static final int NEW_COMMENT_COURSE_TEACHER=97;
+
+    public static final int NEW_QUESTION=96;
+
+    public static final int NEW_COMMENT_QUESTION=95;
+    public static final int NEW_COMMENT_QUESTION_TEACHER=94;
+
+    public static final int NEW_MESSAGE=50;
 
 
     private int code;
@@ -52,6 +65,12 @@ public class Event<T>{
     public Event(int code,String msg){
         this.code=code;
         this.msg=msg;
+        this.data=null;
+    }
+
+    public Event(int code){
+        this.code=code;
+        this.msg=null;
         this.data=null;
     }
     @Nullable

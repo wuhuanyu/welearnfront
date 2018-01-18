@@ -1,19 +1,33 @@
 package com.example.stack.welearn.tasks;
 
+import android.nfc.Tag;
 import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.example.stack.welearn.WeLearnApp;
+import com.example.stack.welearn.config.MQTTClient;
 import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.utils.Constants;
+import com.example.stack.welearn.utils.ToastUtils;
 
+import org.eclipse.paho.android.service.MqttAndroidClient;
+import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttException;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.concurrent.CountDownLatch;
+import java.util.stream.Collectors;
+
+import static com.example.stack.welearn.WeLearnApp.info;
 
 /**
  * Created by stack on 2018/1/14.
@@ -24,6 +38,7 @@ public class MyCoursesTask extends BaseTask{
     private static MyCoursesTask instance;
     private String autorizaiton;
     private int useId;
+    private CountDownLatch mCountDownLatch;
     private MyCoursesTask(String auth,int userId){
         this.autorizaiton=auth;
         this.useId=userId;
@@ -64,8 +79,21 @@ public class MyCoursesTask extends BaseTask{
                                 EventBus.getDefault().post(new Event<List<Course>>(Event.MY_COURSE_FETCH_FAIL, ""));
                             }
                             mCache.put(getCacheName(), data);
-                            List<Course> courses = Course.toCourses(data);
+                            List<Course> myCourses = Course.toCourses(data);
+                            for(Course c:myCourses){
+                              Map<Integer,String> mycourse= WeLearnApp.info().getMyCourses();
+                               mycourse.put(c.getId(),c.getName());
+                            }
+//                           myCourses=myCourses.stream().filter(course -> course!=.collect(Collectors.toList());
+                           mCountDownLatch=new CountDownLatch(myCourses.size());
                             EventBus.getDefault().post(new Event<>(Event.MY_COURSE_FETCH_OK, Course.toCourses(data)));
+                            subscribe(myCourses);
+                            try {
+                                mCountDownLatch.await();
+
+                            } catch (InterruptedException e) {
+                                e.printStackTrace();
+                            }
                         }
                         @Override
                         public void onError(ANError anError) {
@@ -75,11 +103,69 @@ public class MyCoursesTask extends BaseTask{
                     });
         }
         else{
+            List<Course>courses=Course.toCourses(myCourseArray);
             EventBus.getDefault().post(new Event<List<Course>>(Event.MY_COURSE_FETCH_OK,Course.toCourses(myCourseArray)));
+            mCountDownLatch=new CountDownLatch(courses.size());
+            subscribe(courses);
+            try {
+                mCountDownLatch.await();
+                EventBus.getDefault().post(new Event<String>(Event.SUBSCRIBE_OK));
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+                EventBus.getDefault().post(new Event<String>(Event.SUBSCRIBE_FAIL));
+            }
         }
     };
 
     public Runnable getMyCourses(){
         return getMyCourses;
+    }
+
+    private void doSubscribe(List<Course> myCourses){
+        for(int i=0;i<myCourses.size();i++){
+//            Log.i(TAG,"begin subscribe");
+            if(myCourses.get(i)!=null){
+                int j=i;
+                Course c=myCourses.get(i);
+                MqttAndroidClient deferedClient=MQTTClient.instance().getClient();
+                try {
+                    deferedClient.unsubscribe(String.valueOf(c.getId()));
+                    IMqttToken token= deferedClient.subscribe(String.valueOf(c.getId()),0);
+                    token.setActionCallback(new IMqttActionListener() {
+                        @Override
+                        public void onSuccess(IMqttToken asyncActionToken) {
+                            mCountDownLatch.countDown();
+                        }
+                        @Override
+                        public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+
+                        }
+                    });
+                } catch (MqttException e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+    }
+    private void subscribe(List<Course> myCourses){
+        MQTTClient mqttClient=MQTTClient.instance();
+        if(!mqttClient.getClient().isConnected()){
+            try {
+                mqttClient.connect(new MQTTClient.ConnectCallback() {
+                    @Override
+                    public void onConnectionFail(Throwable e) {
+
+                    }
+
+                    @Override
+                    public void onConnectionOK() {
+                        doSubscribe(myCourses);
+                    }
+                });
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+        }
+        doSubscribe(myCourses);
     }
 }

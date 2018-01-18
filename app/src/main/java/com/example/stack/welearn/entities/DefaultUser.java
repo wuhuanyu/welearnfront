@@ -3,13 +3,18 @@ package com.example.stack.welearn.entities;
 import cn.jiguang.imui.commons.models.IUser;
 
 /**
- * Created by stack on 2018/1/9.
+ * Created by stack on 2018/1/17.
  */
 
-public class User implements IUser {
-    public String id;
-    public String displayName;
-   public String avatar;
+public class DefaultUser implements IUser {
+    private String id;
+    private String displayName;
+    private String avatar;
+    public DefaultUser(String id,String displayName,String avatar){
+        this.id=id;
+        this.displayName=displayName;
+        this.avatar=avatar;
+    }
     @Override
     public String getId() {
         return id;
@@ -24,7 +29,4 @@ public class User implements IUser {
     public String getAvatarFilePath() {
         return avatar;
     }
-
-
 }
-

@@ -31,6 +31,7 @@
         <activity android:name=".activities.BulletinActivity"/>
         <service android:name="org.eclipse.paho.android.service.MqttService" />
         <activity android:name=".activities.QuestionDetailActivity"/>
+
     </application>
 
 </manifest>

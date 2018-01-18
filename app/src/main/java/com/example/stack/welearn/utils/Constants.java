@@ -19,14 +19,15 @@ public final class Constants {
     public static final int SELECT=31;
     public static final int QA=32;
 
+
+
     public static final class Net{
-        public static final String HOST="192.168.1.100";
+        public static final String HOST="192.168.1.103";
         public static final String PORT="3000";
         public static final String API_URL="http://"+HOST+":"+PORT+"/api/v1";
         public static final String IMAGE_URL="http://"+HOST+":"+PORT+"/images/";
+        public static final int BROKER_PORT=1883;
+        public static final String BROKER_URL="tcp://"+HOST+":"+BROKER_PORT;
     }
-
-
-
 
 }
