@@ -13,18 +13,17 @@ import java.util.Date;
  */
 public final class MessagesFixtures extends FixturesData {
     private MessagesFixtures() {
-                throw new AssertionError();
-            }
+        throw new AssertionError();
+    }
 
-        public static ChatMessage getImageMessage() {
-            return new ChatMessage()
-                    .setUser(getUser())
-                    .setImage(new ChatMessage.Image(getRandomImage()))
-                    .setId(getRandomId());
+    public static ChatMessage getImageMessage() {
+        return new ChatMessage()
+                .setUser(getUser())
+                .setImage(new ChatMessage.Image(getRandomImage()))
+                .setId(getRandomId());
     }
 
     public static ChatMessage getVoiceMessage() {
-//        Message message = new ChatMessage(getRandomId(), getUser(), null);
         ChatMessage message=new ChatMessage()
                 .setId(getRandomId())
                 .setUser(getUser());
@@ -37,10 +36,10 @@ public final class MessagesFixtures extends FixturesData {
     }
 
     public static ChatMessage getTextMessage(String text) {
-        return new ChatMessage()
-                .setId(getRandomId())
-                .setUser(getUser())
-                .setText(text);
+            return new ChatMessage()
+                    .setId(getRandomId())
+                    .setUser(getUser())
+                .setText(text).setCreatedAt(new Date());
     }
 
     public static ArrayList<ChatMessage> getMessages(Date startDate) {
@@ -59,7 +58,6 @@ public final class MessagesFixtures extends FixturesData {
                 Calendar calendar = Calendar.getInstance();
                 if (startDate != null) calendar.setTime(startDate);
                 calendar.add(Calendar.DAY_OF_MONTH, -(i * i + 1));
-
                 message.setCreatedAt(calendar.getTime());
                 messages.add(message);
             }

@@ -1,21 +1,67 @@
 package com.example.stack.welearn.config;
 
+import android.util.Log;
+
 import com.example.stack.welearn.WeLearnApp;
+import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.utils.Constants;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
+import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
+import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
+import org.eclipse.paho.client.mqttv3.MqttMessage;
+import org.greenrobot.eventbus.EventBus;
+import org.json.JSONObject;
 
 /**
  * Created by stack on 2018/1/18.
  */
 
 public class MQTTClient {
-    private MqttAndroidClient client;
+    private  MqttAndroidClient client;
+    private   boolean haveSetUpMqtt=false;
+    public static final String TAG=MQTTClient.class.getSimpleName();
+    private MqttCallback mqttCallback=new MqttCallback() {
+        @Override
+        public void connectionLost(Throwable cause) {
+
+        }
+        @Override
+        public void messageArrived(String topic, MqttMessage message) throws Exception {
+            client.setCallback(new MqttCallback() {
+                @Override
+                public void connectionLost(Throwable cause) {
+                }
+                @Override
+                public void messageArrived(String topic, MqttMessage message) throws Exception {
+                    Log.i(TAG, new String(message.getPayload()));
+                    JSONObject jsonObject=new JSONObject(new String(message.getPayload()));
+                    if(jsonObject.has("type")){
+                        int type=jsonObject.getInt("type");
+                        switch (type){
+                            case Event.NEW_MESSAGE:
+                                EventBus.getDefault().post(new Event<JSONObject>(Event.NEW_MESSAGE,jsonObject.getJSONObject("payload")));
+                                break;
+                            default:break;
+                        }
+                    }
+                }
+                @Override
+                public void deliveryComplete(IMqttDeliveryToken token) {
+                }
+            });
+        }
+
+        @Override
+        public void deliveryComplete(IMqttDeliveryToken token) {
+
+        }
+    };
 
     /**
      * 内部静态类实现单例
@@ -33,7 +79,7 @@ public class MQTTClient {
     }
 
 
-    public MqttAndroidClient getClient(){
+    public  MqttAndroidClient getClient(){
         if(this.client==null){
             this.client=new MqttAndroidClient(WeLearnApp.getContext(), Constants.Net.BROKER_URL, com.example.stack.welearn.test.DefaultUser.authorization);
         }
@@ -82,6 +128,15 @@ public class MQTTClient {
             }
         });
 
+    }
+
+    public void setUpCallback(){
+        if(client.isConnected()){
+            if(!haveSetUpMqtt) {
+                client.setCallback(mqttCallback);
+                haveSetUpMqtt=true;
+            }
+        }
     }
 
 

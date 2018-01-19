@@ -46,17 +46,17 @@ public class ChatUser implements IUser {
     }
     @Override
     public String getId() {
-        return null;
+        return id;
     }
 
     @Override
     public String getName() {
-        return null;
+        return name;
     }
 
     @Override
     public String getAvatar() {
-        return null;
+        return avatar;
     }
     public static class DefaultUser implements IUser{
 

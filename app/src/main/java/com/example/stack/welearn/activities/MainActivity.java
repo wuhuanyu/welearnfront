@@ -32,6 +32,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -53,12 +54,17 @@ public class MainActivity extends BaseActivity {
     @BindView(R.id.fragment_container) FrameLayout mFragmentContainer;
     private boolean isWifiConnected;
     private boolean isCelluarConnected;
-    private boolean haveSetUpMqtt =false;
 
+    private Fragment currentFragment;
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
+        if(savedInstanceState==null){
+            fragmentHashMap.put("course",new CoursesFragment());
+            currentFragment=fragmentHashMap.get("course");
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.fragment_container,currentFragment).commit();
+        }
     }
     @Override
     public void doRegister() {
@@ -81,21 +87,15 @@ public class MainActivity extends BaseActivity {
             mFragmentContainer.setVisibility(View.VISIBLE);
             mEmptyView.setVisibility(View.GONE);
 
-            Fragment courseFragment=new CoursesFragment();
-            fragmentHashMap.put("course",courseFragment);
-            getSupportFragmentManager().beginTransaction().add(R.id.fragment_container,fragmentHashMap.get("course")).commit();
-
             bottomNav.enableItemShiftingMode(false);
             bottomNav.enableShiftingMode(false);
             bottomNav.setOnNavigationItemSelectedListener((item -> {
-                FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
                 Fragment selectedFrag=null;
                 switch (item.getItemId()){
                     case R.id.bottom_course:
                         selectedFrag=fragmentHashMap.get("course");
                         item.setChecked(true);
                         break;
-
                     case R.id.bottom_question:
                         if(!fragmentHashMap.containsKey("question"))
                             fragmentHashMap.put("question",new QuestionsFragment());
@@ -115,8 +115,7 @@ public class MainActivity extends BaseActivity {
                         item.setChecked(true);
                         break;
                 }
-                transaction.replace(R.id.fragment_container,selectedFrag);
-                transaction.commit();
+                switchFragment(currentFragment,selectedFrag);
                 return false;
             }));
             addBadgeAt(2,4);
@@ -166,35 +165,16 @@ public class MainActivity extends BaseActivity {
         EventBus.getDefault().unregister(this);
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(Event<String> event){
-        Log.i(TAG,"processing subscribe event");
-        switch (event.code()){
-            case Event.SUBSCRIBE_OK:
-                if(!haveSetUpMqtt) setUpMqttClient();
-                ToastUtils.getInstance().showMsgLong("话题订阅成功");
-                break;
-            default:break;
+    private void switchFragment(Fragment from,Fragment to){
+        if(from!=to){
+            currentFragment=to;
+            FragmentTransaction transaction=getSupportFragmentManager().beginTransaction();
+            if(!to.isAdded()){
+                transaction.hide(from).add(R.id.fragment_container,to).commit();
+            }
+            else{
+                transaction.hide(from).show(to).commit();
+            }
         }
-    }
-    private void setUpMqttClient(){
-        MqttAndroidClient client=MQTTClient.instance().getClient();
-        client.setCallback(new MqttCallback() {
-            @Override
-            public void connectionLost(Throwable cause) {
-
-            }
-
-            @Override
-            public void messageArrived(String topic, MqttMessage message) throws Exception {
-                Log.i(TAG,new String(message.getPayload()));
-            }
-
-            @Override
-            public void deliveryComplete(IMqttDeliveryToken token) {
-
-            }
-        });
-        this.haveSetUpMqtt=true;
     }
 }

@@ -18,8 +18,10 @@ public class ChatMessage implements IMessage,MessageContentType.Image,MessageCon
     private IUser user;
     private Date createdAt;
     private Image image;
-
     private Voice voice;
+
+    private boolean isTeacher;
+
 
     public Voice getVoice() {
         return voice;
@@ -61,12 +63,12 @@ public class ChatMessage implements IMessage,MessageContentType.Image,MessageCon
 
     @Override
     public String getId() {
-        return null;
+        return id;
     }
 
     @Override
     public String getText() {
-        return null;
+        return text;
     }
 
     @Override
@@ -81,7 +83,8 @@ public class ChatMessage implements IMessage,MessageContentType.Image,MessageCon
 
     @Override
     public String getImageUrl() {
-        return null;
+//        return image.url;
+        return image==null?null:image.url;
     }
 
     public static class Image{

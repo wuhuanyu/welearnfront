@@ -22,6 +22,7 @@ public class CourseUsersTask extends BaseTask{
     public static CourseUsersTask instance;
     private CourseUsersTask(){}
     private List<Runnable> tasks;
+
     public static CourseUsersTask instance(){
         if(instance==null){
             instance=new CourseUsersTask();
@@ -38,25 +39,26 @@ public class CourseUsersTask extends BaseTask{
         public void run() {
             List<Course> myCourses=Course.toCourses(mCache.getAsJSONArray("my_course"));
             if(myCourses!=null){
-               tasks= myCourses.stream()
-                       .map(course -> new Runnable() {
-                           @Override
-                           public void run() {
-                               AndroidNetworking.get(Constants.Net.API_URL+"/course/"+course.getId()+"/users")
-                                       .build()
-                                       .getAsJSONObject(new JSONObjectRequestListener() {
-                                           @Override
-                                           public void onResponse(JSONObject response) {
+                tasks= myCourses.stream()
+                        .map(course -> new Runnable() {
+                            @Override
+                            public void run() {
+                                if (isToRefresh()) {
+                                    AndroidNetworking.get(Constants.Net.API_URL + "/course/" + course.getId() + "/users")
+                                            .build()
+                                            .getAsJSONObject(new JSONObjectRequestListener() {
+                                                @Override
+                                                public void onResponse(JSONObject response) {
+                                                }
 
-                                           }
+                                                @Override
+                                                public void onError(ANError anError) {
 
-                                           @Override
-                                           public void onError(ANError anError) {
-
-                                           }
-                                       });
-                           }
-                       }).collect(Collectors.toList());
+                                                }
+                                            });
+                                }
+                            }
+                        }).collect(Collectors.toList());
             }
         }
     };

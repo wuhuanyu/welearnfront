@@ -1,16 +1,29 @@
 package com.example.stack.welearn.fragments;
 
+import android.content.Intent;
+import android.os.Bundle;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.WeLearnApp;
+import com.example.stack.welearn.activities.ChatActivity;
+import com.example.stack.welearn.entities.ChatMessage;
+import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.entities.Dialog;
 import com.example.stack.welearn.fixtures.DialogsFixtures;
+import com.example.stack.welearn.fixtures.MessagesFixtures;
+import com.example.stack.welearn.utils.Constants;
+import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.utils.ToastUtils;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
+
+import java.text.MessageFormat;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.stream.Collectors;
 
 import butterknife.BindView;
 
@@ -25,6 +38,22 @@ public class ChatFragment extends BaseFragment implements DialogsListAdapter.OnD
      DialogsList mDialogs;
 
     private DialogsListAdapter<Dialog> mDialogsAdapter;
+    private Runnable getCoursesDialog=()->{
+        List<Course> myCourses=Course.toCourses(mCache.getAsJSONArray("my_course"));
+        if(myCourses!=null){
+            List<Dialog> dialogs=myCourses.stream().map(course -> {
+                Dialog dialog= new Dialog()
+                        .setDialogName(course.getName())
+                        .setDialogPhoto(Constants.Net.IMAGE_URL+course.getImages().get(0))
+                        .setId(String.valueOf(course.getId()))
+                        .setUnreadCount(2)
+                        .setUsers(DialogsFixtures.getUsers());
+                dialog.setLastMessage(MessagesFixtures.getTextMessage());
+                return dialog;
+            }).collect(Collectors.toList());
+            mHandler.post(()->{setUpDialogs(dialogs);});
+        }
+    };
     @Override
     public int getLayout() {
         return R.layout.frag_chat;
@@ -39,23 +68,31 @@ public class ChatFragment extends BaseFragment implements DialogsListAdapter.OnD
         this.mImageLoader=new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url) {
-                Glide.with(getContext()).load(R.drawable.avatar2).into(imageView);
+                Glide.with(getContext()).load(url).into(imageView);
             }
         };
         mDialogsAdapter =new DialogsListAdapter<Dialog>(this.mImageLoader);
-        mDialogsAdapter.setItems(DialogsFixtures.getDialogs());
+//        mDialogsAdapter.setItems(DialogsFixtures.getDialogs());
         mDialogsAdapter.setOnDialogClickListener(this);
         mDialogs.setAdapter(mDialogsAdapter);
     }
 
-    @Override
-    public void onDialogClick(Dialog dialog) {
-        ToastUtils.getInstance(WeLearnApp.getContext()).showMsgShort("you clicked dialog");
+    public void onActivityCreated(Bundle savedInstanceState){
+        super.onActivityCreated(savedInstanceState);
+        ThreadPoolManager.getInstance().getService().execute(getCoursesDialog);
     }
 
+    @Override
+    public void onDialogClick(Dialog dialog) {
+        Intent intent=new Intent(getActivity(), ChatActivity.class);
+        startActivity(intent);
+    }
 
-
+    private void setUpDialogs(List<Dialog> dialogs){
+        mDialogsAdapter.setItems(dialogs);
+    }
 }
+
 
 
 

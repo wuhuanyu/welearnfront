@@ -42,7 +42,7 @@ public final class DialogsFixtures extends FixturesData {
                 i < 3 ? 3 - i : 0);
     }
 
-    private static ArrayList<ChatUser> getUsers() {
+    public static ArrayList<ChatUser> getUsers() {
         ArrayList<ChatUser> users = new ArrayList<>();
         int usersCount = 1 + rnd.nextInt(4);
 

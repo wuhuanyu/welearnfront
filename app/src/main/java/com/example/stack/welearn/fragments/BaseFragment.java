@@ -10,6 +10,9 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.example.stack.welearn.WeLearnApp;
+import com.example.stack.welearn.utils.ACache;
+
 import butterknife.ButterKnife;
 
 /**
@@ -17,6 +20,7 @@ import butterknife.ButterKnife;
  */
 
 public abstract class BaseFragment extends Fragment {
+    protected ACache mCache= WeLearnApp.cache();
     public abstract int getLayout();
     public abstract void doRegister();
     public abstract void initView();

@@ -30,7 +30,7 @@ public class Dialog implements IDialog<ChatMessage> {
         this.unreadCount = unreadCount;
     }
 
-
+    public Dialog(){}
 
     public Dialog setId(String id) {
         this.id = id;
