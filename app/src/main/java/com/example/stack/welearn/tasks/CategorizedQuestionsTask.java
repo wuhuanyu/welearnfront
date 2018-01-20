@@ -77,7 +77,7 @@ public class CategorizedQuestionsTask extends BaseTask {
                             JSONArray cachedQuestions=mCache.getAsJSONArray("course-"+courseId+"-questions");
                             //没有缓存，而且请求刷新
                             if(cachedQuestions==null||isToRefresh()) {
-                                AndroidNetworking.get(Constants.Net.API_URL + "/course/" + courseId + "/questions")
+                                AndroidNetworking.get(Constants.Net.API_URL + "/course/" + courseId + "/question")
                                         .build().getAsJSONObject(new JSONObjectRequestListener() {
                                     @Override
                                     public void onResponse(JSONObject response) {

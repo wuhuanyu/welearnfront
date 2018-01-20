@@ -55,24 +55,41 @@ public class Event<T>{
     private int code;
     private T data;
     private String msg;
+    private int next;
 
     public Event(int code,T data){
         this.code=code;
         this.data=data;
         this.msg=null;
+        this.next=0;
     }
+
 
     public Event(int code,String msg){
         this.code=code;
         this.msg=msg;
         this.data=null;
+        this.next=0;
     }
 
     public Event(int code){
         this.code=code;
         this.msg=null;
         this.data=null;
+        this.next=0;
     }
+
+    public int next(){
+        return this.next;
+    }
+
+    public Event(int code, T data, int next) {
+        this.code = code;
+        this.data = data;
+        this.next = next;
+        this.msg=null;
+    }
+
     @Nullable
     public T t(){
         return this.data;

@@ -76,11 +76,10 @@ public class QuestionDetailActivity extends BaseActivity {
 
     @Override
     public void initView() {
-        Log.i(TAG,"---------init view----------");
         courseId=getIntent().getIntExtra("course_id",-1);
 //        Log.i(TAG,"-------initview---------")
-        mQuestionTask= QuestionTask.instance(courseId);
-        ThreadPoolManager.getInstance().getService().execute(mQuestionTask.getQuestions());
+        mQuestionTask= QuestionTask.instance();
+        ThreadPoolManager.getInstance().getService().execute(mQuestionTask.getQuestions(courseId,false));
 
         Sensey.getInstance().startTouchTypeDetection(this,touchTypListener);
         setSupportActionBar(mToolbar);
@@ -90,7 +89,7 @@ public class QuestionDetailActivity extends BaseActivity {
         comments.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
         comments.setAdapter(mAdapter);
         if(this.questions==null){
-//            root.setVisibility(View.GONE);
+
         }
         else {
             setUpQuestion(questions.get(0));
@@ -107,7 +106,7 @@ public class QuestionDetailActivity extends BaseActivity {
         this.curQuestionId=q.getId();
         body.setText(q.getBody());
         mCommentsTask=CommentsTask.instance(courseId,CommentsTask.FOR_QUESTION,curQuestionId);
-        ThreadPoolManager.getInstance().getService().execute(mCommentsTask.getComments());
+        ThreadPoolManager.getInstance().getService().execute(mCommentsTask.getQuestionComments(courseId,Integer.parseInt(curQuestionId),true,0,5));
     }
     private void setUpComments(List<Comment> comments){
             mAdapter.setNewData(comments);
@@ -122,7 +121,6 @@ public class QuestionDetailActivity extends BaseActivity {
             case Event.QUESITON_FETCH_OK:
                 Log.i(TAG,"---------start processing question---------");
                 this.questions=(List<Question>)event.t();
-
                 mHandler.post(()->{
                     setUpQuestion(this.questions.get(0));
                 });

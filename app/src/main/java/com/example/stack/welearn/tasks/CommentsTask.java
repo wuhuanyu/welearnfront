@@ -58,8 +58,7 @@ public class CommentsTask extends BaseTask {
 
             }
             else{
-                url=Constants.Net.API_URL+"/course/"+getCourseId()+"/"+getQuestionId()+"/comments";
-
+                url=Constants.Net.API_URL+"/course/"+getCourseId()+"/question/"+getQuestionId()+"/comment";
             }
             AndroidNetworking.get(url)
                     .build()
@@ -146,5 +145,36 @@ public class CommentsTask extends BaseTask {
         return null;
     }
 
+    public Runnable getQuestionComments(int courseId,int questionId,boolean toRefresh,int start,int limit){
+        return ()->{
+//            JSONArray commentsJSON=mCache.getAsJSONArray("course-"+courseId+"-question-"+questionId+"-comments");
+            //TODO: 接入缓存
+            JSONArray commentsJSON=null;
+            if(commentsJSON==null||toRefresh){
+                AndroidNetworking.get(Constants.Net.API_URL+"/course/"+courseId+"/question/"+questionId+"/comment")
+                        .addQueryParameter("start",String.valueOf(start))
+                        .addQueryParameter("limit",String.valueOf(limit))
+                        .build()
+                        .getAsJSONObject(new JSONObjectRequestListener() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    int next=response.getInt("next");
+                                    //写入缓存
+                                    //发送事件
+                                    List<Comment> comments=Comment.toComments(response.getJSONArray("data"));
+                                    EventBus.getDefault().post(new Event<List<Comment>>(Event.QUESTION_COMMENT_FETCH_OK,comments,next));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            @Override
+                            public void onError(ANError anError) {
+
+                            }
+                        });
+            }
+        };
+    }
 
 }

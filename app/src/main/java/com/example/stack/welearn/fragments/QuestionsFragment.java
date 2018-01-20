@@ -108,9 +108,6 @@ public class QuestionsFragment extends BaseFragment {
     }
 
     private void setUpCategorizedQuestion(List<CategorizedQuestionCourse> categorizedQuestions){
-        Log.i(TAG,"----------setup categorized question--------");
-        Log.i(TAG,""+categorizedQuestions.size());
-        Log.i(TAG,categorizedQuestions.get(0).toString());
         mHandler.post(()->{
             mAdapter.setNewData(categorizedQuestions);
         });
