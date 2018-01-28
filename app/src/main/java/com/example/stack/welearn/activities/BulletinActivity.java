@@ -34,6 +34,7 @@ public class BulletinActivity extends BaseActivity {
     LinearLayoutManager mLayoutManager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
 
     ItemTouchHelper mBulletinTouchHelper;
+
     OnItemSwipeListener mOnBulletinSwipeListener=new OnItemSwipeListener() {
         @Override
         public void onItemSwipeStart(RecyclerView.ViewHolder viewHolder, int i) {
@@ -77,6 +78,7 @@ public class BulletinActivity extends BaseActivity {
 
         rvBulletins.setLayoutManager(mLayoutManager);
         rvBulletins.setAdapter(mDragableAdapter);
+
     }
 
     @Override

@@ -35,6 +35,9 @@ public class Event<T>{
     public static final int QUESTION_COMMENT_FETCH_OK=23;
     public static final int QUESTION_COMMENT_FETCH_FAIL=24;
 
+    public static final int BULLETIN_FETCH_OK=25;
+    public static final int BULLETIN_FETCH_FAIL=26;
+
     /**
      * 通知事件
      */
