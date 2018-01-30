@@ -17,6 +17,24 @@ public class Bulletin {
     private String course;
     private String body;
     private long time;
+    private String image;
+
+    public String getImage() {
+        return image;
+    }
+
+    public Bulletin setImage(String image) {
+        this.image = image;
+        return this;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public long getTime() {
+        return time;
+    }
 
     public Bulletin(int id, String course, String body, long time) {
         this.id = id;
@@ -78,7 +96,7 @@ public class Bulletin {
     }
 
 
-    public static Bulletin toBulletin(String course,JSONObject bulletinObject){
+    public static Bulletin toBulletin(String course,String image,JSONObject bulletinObject){
         Bulletin bulletin=null;
         try {
             int id = bulletinObject.getInt("id");
@@ -87,6 +105,7 @@ public class Bulletin {
             bulletin= new Bulletin()
                     .setBody(body)
                     .setId(id)
+                    .setImage(image)
                     .setCourse(course)
                     .setTime(time);
         }catch (JSONException e){
@@ -94,11 +113,11 @@ public class Bulletin {
         }
         return bulletin;
     }
-    public static List<Bulletin> toBulletins(String course, JSONArray bulletinJsons){
+    public static List<Bulletin> toBulletins(String course,String image,JSONArray bulletinJsons){
         List<Bulletin> bulletins=new ArrayList<>();
         for(int i=0;i<bulletinJsons.length();i++){
             try {
-                bulletins.add(toBulletin(course,bulletinJsons.getJSONObject(i)));
+                bulletins.add(toBulletin(course,image,bulletinJsons.getJSONObject(i)));
             } catch (JSONException e) {
                 e.printStackTrace();
                 bulletins.add(null);

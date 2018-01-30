@@ -8,13 +8,12 @@
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circleImageView3"
+        android:id="@+id/cim_bulletin_image"
         android:layout_width="45dp"
         android:layout_height="45dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:src="@drawable/avatar2"
         app:civ_border_color="@android:color/darker_gray"
         app:civ_border_width="1dp"
         app:layout_constraintBottom_toBottomOf="parent"
@@ -26,7 +25,6 @@
         android:layout_width="wrap_content"
         android:layout_height="0dp"
         android:layout_marginTop="2dp"
-        android:text="明天三点开会"
         android:textSize="15sp"
         app:layout_constraintStart_toStartOf="@+id/text_bulletin_sender"
         app:layout_constraintTop_toBottomOf="@+id/text_bulletin_sender" />
@@ -36,17 +34,15 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
-        android:text="袁寿其"
         android:textSize="18sp"
-        app:layout_constraintStart_toEndOf="@+id/circleImageView3"
-        app:layout_constraintTop_toTopOf="@+id/circleImageView3" />
+        app:layout_constraintStart_toEndOf="@+id/cim_bulletin_image"
+        app:layout_constraintTop_toTopOf="@+id/cim_bulletin_image" />
 
     <TextView
         android:id="@+id/text_bulletin_time"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="24dp"
-        android:text="上午9:45"
         app:layout_constraintBaseline_toBaselineOf="@+id/text_bulletin_sender"
         app:layout_constraintEnd_toEndOf="parent" />
 

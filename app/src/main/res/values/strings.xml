@@ -15,4 +15,6 @@
     <array name="pager_indicator_color">
         <item>#000</item>
     </array>
+    <string name="comment_ok">评论成功</string>
+    <string name="unauthorized">请登录后操作</string>
 </resources>

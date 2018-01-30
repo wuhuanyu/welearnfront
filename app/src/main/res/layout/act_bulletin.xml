@@ -10,29 +10,33 @@
     <include layout="@layout/action_bar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
-    <android.support.constraint.ConstraintLayout
+    <SearchView
+        android:id="@+id/searchView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:queryHint="搜索"
+        />
+    <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
-
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/fb_bulletin_refresh"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="60dp"
+            android:layout_marginEnd="30dp"
+            app:rippleColor="@color/colorPrimary"
+            app:backgroundTint="@android:color/white"
+            app:elevation="1dp"
+            android:src="@drawable/ic_refresh"
+            android:layout_gravity="bottom|end"
+            />
         <android.support.v7.widget.RecyclerView
             android:id="@+id/rv_bulletins"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/searchView" />
+            android:layout_width="match_parent"
+            android:layout_height="match_parent" />
+    </FrameLayout>
 
-        <SearchView
-            android:id="@+id/searchView"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            android:queryHint="搜索"
-            app:layout_constraintTop_toTopOf="parent" />
-    </android.support.constraint.ConstraintLayout>
 </LinearLayout>
 
 

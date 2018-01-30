@@ -97,9 +97,7 @@ public class CommentsTask extends BaseTask {
         }
     };
 
-    public Runnable getComments(){
-        return getComments;
-    }
+
     private Runnable postCourseComments=()->{
 
     };
@@ -145,6 +143,35 @@ public class CommentsTask extends BaseTask {
         return null;
     }
 
+    public Runnable getCourseComments(int courseId,boolean toRefresh,int start,int limit){
+        return ()->{
+            JSONArray commentsJsons=null;
+            if(commentsJsons==null||toRefresh){
+                 AndroidNetworking.get(Constants.Net.API_URL+"/course/"+courseId+"/comment")
+                        .addQueryParameter("start",String.valueOf(start))
+                        .addQueryParameter("limit",String.valueOf(limit))
+                        .build()
+                        .getAsJSONObject(new JSONObjectRequestListener() {
+                            @Override
+                            public void onResponse(JSONObject response) {
+                                try {
+                                    int next=response.getInt("next");
+                                    //写入缓存
+                                    //发送事件
+                                    List<Comment> comments=Comment.toComments(response.getJSONArray("data"));
+                                    EventBus.getDefault().post(new Event<List<Comment>>(Event.COURSE_COMMENT_FETCH_OK,comments,next));
+                                } catch (JSONException e) {
+                                    e.printStackTrace();
+                                }
+                            }
+                            @Override
+                            public void onError(ANError anError) {
+
+                            }
+                        });
+            }
+        };
+    }
     public Runnable getQuestionComments(int courseId,int questionId,boolean toRefresh,int start,int limit){
         return ()->{
 //            JSONArray commentsJSON=mCache.getAsJSONArray("course-"+courseId+"-question-"+questionId+"-comments");

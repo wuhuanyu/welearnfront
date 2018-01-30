@@ -83,14 +83,18 @@ public class QuestionDetailContainerAct extends BaseActivity implements CommentD
         return R.layout.act_questions;
     }
 
+
+
+
+
     @Override
-    public void onDialogPositiveClick(DialogFragment dialog) {
+    public void onPositiveClick(String input, CommentDialog dialog) {
 
     }
 
     @Override
-    public void onDialogNegetiveClick(DialogFragment dialog) {
-        dialog.dismiss();
+    public void onNegativeClick(CommentDialog dialog) {
+
     }
 }
 class QuestionPagerAdapter extends FragmentStatePagerAdapter{

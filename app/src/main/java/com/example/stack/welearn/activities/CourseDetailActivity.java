@@ -1,7 +1,10 @@
 package com.example.stack.welearn.activities;
 
 
+import android.nfc.Tag;
 import android.os.Bundle;
+import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +15,9 @@ import android.view.MenuItem;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.androidnetworking.AndroidNetworking;
+import com.androidnetworking.error.ANError;
+import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.stack.welearn.R;
@@ -19,7 +25,9 @@ import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.adapters.CommentQuickAdapter;
 import com.example.stack.welearn.entities.Comment;
 import com.example.stack.welearn.entities.Course;
+import com.example.stack.welearn.entities.DefaultUser;
 import com.example.stack.welearn.events.Event;
+import com.example.stack.welearn.fragments.CommentDialog;
 import com.example.stack.welearn.tasks.CommentsTask;
 import com.example.stack.welearn.tasks.CourseDetailTask;
 import com.example.stack.welearn.utils.ACache;
@@ -30,9 +38,12 @@ import com.example.stack.welearn.utils.ToastUtils;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.List;
 
+import butterknife.BindBitmap;
 import butterknife.BindView;
 
 import static com.example.stack.welearn.WeLearnApp.getContext;
@@ -41,10 +52,11 @@ import static com.example.stack.welearn.WeLearnApp.getContext;
  * Created by stack on 2018/1/5.
  */
 
-public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener  {
+public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,CommentDialog.CommentDialogListener {
 
     public static final String TAG= CourseDetailActivity.class.getSimpleName();
     private int courseId;
+    private boolean noMoreComment=false;
     private boolean isChecked=false;
     private boolean toRefresh=false;
     private boolean toRefreshComments=false;
@@ -56,7 +68,6 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     CommentQuickAdapter mCommentAdapter;
     CourseDetailTask mCourseDetailTask;
     CommentsTask mCourseCommentsTask;
-
     @BindView(R.id.iv_course_detail_main)
     ImageView courseImage;
     @BindView(R.id.text_course_detail_desc)
@@ -69,6 +80,12 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
 
     @BindView(R.id.text_course_detail_refresh)
     TextView mCommentRefresh;
+
+    @BindView(R.id.fb_write_course_comment)
+    FloatingActionButton fbWriteComment;
+
+    private int nextComment=0;
+    private boolean isRefresh=false;
     @Override
     public void doRegister() {
         EventBus.getDefault().register(this);
@@ -82,8 +99,7 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         //单例获取
         mCourseDetailTask=CourseDetailTask.instance(courseId);
         mCourseCommentsTask= CommentsTask.instance(courseId,CommentsTask.FOR_COURSE);
-        ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail());
-        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getComments());
+
         setSupportActionBar(mToolbar);
 
         LinearLayoutManager manager=new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
@@ -103,11 +119,18 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         mSwipeRefresh.setOnRefreshListener(this);
         mCommentRefresh.setOnClickListener((v)->{
             mCourseCommentsTask.setToRefresh(true);
+            isRefresh=true;
             ThreadPoolManager.getInstance().getService().execute(
-                    mCourseCommentsTask.getComments()
+                    mCourseCommentsTask.getCourseComments(courseId,true,0,4)
             );
         });
-
+        fbWriteComment.setOnClickListener(v->{
+            CommentDialog commentDialog=new CommentDialog();
+            commentDialog.show(getSupportFragmentManager(),"comment_dialog");
+        });
+        isRefresh=true;
+        ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail());
+        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,toRefresh,0,4));
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -156,8 +179,15 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     }
 
     private void setUpCourseComments(List<Comment> courseComments){
-        Log.i(TAG,"-------set up course comments-------");
-        mCommentAdapter.setNewData(courseComments);
+        if(isRefresh){
+            mCommentAdapter.setNewData(courseComments);
+            isRefresh=false;
+        }
+        else {
+            mCommentAdapter.addData(courseComments);
+            mCommentAdapter.loadMoreComplete();
+        }
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -169,10 +199,9 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
                 setUpCourseDetail((Course)event.t());
                 break;
             case Event.COURSE_DETAIL_FETCH_FAIL:
-//                if(mSwipeRefresh.isRefreshing())
-//                    mSwipeRefresh.setRefreshing(false);
                 break;
             case  Event.COURSE_COMMENT_FETCH_OK:
+                this.nextComment=event.next();
                 setUpCourseComments((List<Comment>)event.t());
                 if(mSwipeRefresh.isRefreshing())
                     mSwipeRefresh.setRefreshing(false);
@@ -187,15 +216,7 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     }
 
     private void loadMore(){
-//        List<Comment> comments=new ArrayList<>();
-//        for(int i=0;i<3;i++){
-//            comments.add(new Comment(""+i,"This is item_comment"+i,"Author"+i,"上午九点"));
-//        }
-//
-//        new Handler(getMainLooper()).postDelayed(()->{
-//            mCommentAdapter.addData(comments);
-//            mCommentAdapter.loadMoreComplete();
-//        },1000);
+        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,toRefresh,nextComment,4));
     }
 
     @Override
@@ -203,9 +224,55 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         mCourseCommentsTask.setToRefresh(true);
         mCourseDetailTask.setToRefresh(true);
         ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail());
-        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getComments());
+        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,true,0,4));
     }
 
+
+    private void submitComment(String input){
+        Runnable submitTask=()->{
+            JSONObject submitContent=new JSONObject();
+            try {
+                submitContent.put("body",input);
+            } catch (JSONException e) {
+                e.printStackTrace();
+                return;
+            }
+            AndroidNetworking.post(Constants.Net.API_URL+"/course/"+courseId+"/comment")
+                    .addHeaders("authorization", com.example.stack.welearn.test.DefaultUser.authorization)
+                    .addHeaders("content-type","application/json")
+                    .addJSONObjectBody(submitContent)
+                    .build()
+                    .getAsJSONObject(new JSONObjectRequestListener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,true,0,8));
+                            runOnUiThread(()->{
+                                ToastUtils.getInstance().showMsgShort(getString(R.string.comment_ok));
+                            });
+                        }
+
+                        @Override
+                        public void onError(ANError anError) {
+                            if(anError.getErrorCode()==403){
+                                Log.i(TAG,"Un authorized operation");
+                                ToastUtils.getInstance().showMsgShort(getString(R.string.unauthorized));
+                            }
+                        }
+                    });
+        };
+        ThreadPoolManager.getInstance().getService().execute(submitTask);
+    }
+
+    @Override
+    public void onPositiveClick(String input, CommentDialog dialog) {
+        dialog.dismiss();
+        submitComment(input);
+    }
+
+    @Override
+    public void onNegativeClick(CommentDialog dialog) {
+        dialog.dismiss();
+    }
 }
 
 
