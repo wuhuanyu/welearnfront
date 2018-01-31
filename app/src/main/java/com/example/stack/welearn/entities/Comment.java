@@ -24,21 +24,71 @@ public class Comment implements Parcelable {
     String time;
     int authorType;
     boolean isAuthorTeacher=false;
+    String avatar;
 
-    public boolean isAuthorTeacher() {
-        return isAuthorTeacher;
+
+    public String getId() {
+        return id;
     }
 
-    public void setAuthorTeacher(boolean authorTeacher) {
-        isAuthorTeacher = authorTeacher;
+    public Comment setId(String id) {
+        this.id = id;
+        return this;
+    }
+
+    public String getBody() {
+        return body;
+    }
+
+    public Comment setBody(String body) {
+        this.body = body;
+        return this;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public Comment setAuthor(String author) {
+        this.author = author;
+        return this;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public Comment setTime(String time) {
+        this.time = time;
+        return this;
     }
 
     public int getAuthorType() {
         return authorType;
     }
 
-    public void setAuthorType(int authorType) {
+    public Comment setAuthorType(int authorType) {
         this.authorType = authorType;
+        this.isAuthorTeacher=(authorType==Constants.ACC_T_Tea);
+        return this;
+    }
+
+    public boolean isAuthorTeacher() {
+        return isAuthorTeacher;
+    }
+
+    public Comment setAuthorTeacher(boolean authorTeacher) {
+        isAuthorTeacher = authorTeacher;
+        return this;
+    }
+
+    public String getAvatar() {
+        return avatar;
+    }
+
+    public Comment setAvatar(String avatar) {
+        this.avatar = avatar;
+        return this;
     }
 
     public Comment(String id, String body, String author, String time, int authorIsTeacher) {
@@ -50,22 +100,7 @@ public class Comment implements Parcelable {
         this.isAuthorTeacher=(authorType==Constants.ACC_T_Tea);
     }
 
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
-    public String getId() {
-        return id;
-    }
-
-    public void setId(String id) {
-        this.id = id;
-    }
-
+    public Comment(){}
     public Comment(Parcel in) {
         id = in.readString();
         body = in.readString();
@@ -94,21 +129,7 @@ public class Comment implements Parcelable {
         }
     };
 
-    public String getBody() {
-        return body;
-    }
 
-    public void setBody(String body) {
-        this.body = body;
-    }
-
-    public String getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(String author) {
-        this.author = author;
-    }
 
     @Override
     public int describeContents() {
@@ -144,10 +165,14 @@ public class Comment implements Parcelable {
             String author=object.getString("author");
             String time=object.getString("time");
             int authorType=object.getInt("aT");
-//            int isAuthorTeacher=object.getInt("aT")==Constants.ACC_T_Tea;
-            Comment comment=new Comment(id,body,author,time,authorType);
-            return comment;
-
+//            String avatar=object.getString("avatar");
+            return new Comment()
+                    .setId(id)
+                    .setBody(body)
+                    .setAuthor(author)
+                    .setTime(time)
+                    .setAuthorType(authorType)
+                    .setAvatar((object.has("avatar")?object.getString("avatar"):"default_avatar.jpg"));
         } catch (JSONException e) {
             e.printStackTrace();
         }

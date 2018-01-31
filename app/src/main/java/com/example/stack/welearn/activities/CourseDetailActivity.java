@@ -23,9 +23,11 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.adapters.CommentQuickAdapter;
+import com.example.stack.welearn.adapters.VideoAdapter;
 import com.example.stack.welearn.entities.Comment;
 import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.entities.DefaultUser;
+import com.example.stack.welearn.entities.Video;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.fragments.CommentDialog;
 import com.example.stack.welearn.tasks.CommentsTask;
@@ -41,6 +43,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindBitmap;
@@ -83,6 +86,9 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
 
     @BindView(R.id.fb_write_course_comment)
     FloatingActionButton fbWriteComment;
+    @BindView(R.id.rv_video)
+    RecyclerView  rvVideos;
+    VideoAdapter mVideoAdapter;
 
     private int nextComment=0;
     private boolean isRefresh=false;
@@ -98,8 +104,7 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         courseId=bundle.getInt("course_id");
         //单例获取
         mCourseDetailTask=CourseDetailTask.instance(courseId);
-        mCourseCommentsTask= CommentsTask.instance(courseId,CommentsTask.FOR_COURSE);
-
+        mCourseCommentsTask=CommentsTask.instance();
         setSupportActionBar(mToolbar);
 
         LinearLayoutManager manager=new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
@@ -128,6 +133,16 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
             CommentDialog commentDialog=new CommentDialog();
             commentDialog.show(getSupportFragmentManager(),"comment_dialog");
         });
+        //set up video adapter
+        mVideoAdapter=new VideoAdapter(R.layout.item_video,generateVideo(10));
+        mVideoAdapter.setOnItemClickListener((b,v,i)->{
+//            ToastUtils.getInstance().showMsgShort("you clicked" +i);
+            Log.i(TAG,"you click "+i);
+        });
+
+        rvVideos.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        rvVideos.setAdapter(mVideoAdapter);
+
         isRefresh=true;
         ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail());
         ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,toRefresh,0,4));
@@ -172,7 +187,7 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     private void setUpCourseDetail(Course courseDetail){
         Log.i(TAG,courseDetail.toString());
         Glide.with(this)
-                .load(Constants.Net.IMAGE_URL+courseDetail.getImages().get(1))
+                .load(Constants.Net.IMAGE_URL+courseDetail.getImages().get(0))
                 .into(courseImage);
         courseDesc.setText(courseDetail.getDesc());
         teacher.setText(courseDetail.getTeacher());
@@ -223,10 +238,14 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     public void onRefresh() {
         mCourseCommentsTask.setToRefresh(true);
         mCourseDetailTask.setToRefresh(true);
+        this.isRefresh=true;
         ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail());
-        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,true,0,4));
     }
 
+    private void refreshComment(){
+        this.isRefresh=true;
+        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,true,0,4));
+    }
 
     private void submitComment(String input){
         Runnable submitTask=()->{
@@ -245,10 +264,11 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
                     .getAsJSONObject(new JSONObjectRequestListener() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,true,0,8));
                             runOnUiThread(()->{
                                 ToastUtils.getInstance().showMsgShort(getString(R.string.comment_ok));
                             });
+//                            ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,true,0,4));
+                            refreshComment();
                         }
 
                         @Override
@@ -272,6 +292,21 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     @Override
     public void onNegativeClick(CommentDialog dialog) {
         dialog.dismiss();
+    }
+
+    private List<Video> generateVideo(int len){
+        List<Video> videos=new ArrayList<>();
+        for(int i=0;i<len;i++){
+            videos.add(
+                    new Video().setAvatar("avatar1.jpg")
+                            .setCourseId(courseId)
+                            .setId(i)
+                            .setName("第"+i+"个视频")
+                            .setLink("http://www.baidu.com")
+                            .setSize(10000L)
+            );
+        }
+        return videos;
     }
 }
 

@@ -77,10 +77,8 @@ public class QuestionDetailActivity extends BaseActivity {
     @Override
     public void initView() {
         courseId=getIntent().getIntExtra("course_id",-1);
-//        Log.i(TAG,"-------initview---------")
         mQuestionTask= QuestionTask.instance();
-        ThreadPoolManager.getInstance().getService().execute(mQuestionTask.getQuestions(courseId,false));
-
+        mCommentsTask=CommentsTask.instance();
         Sensey.getInstance().startTouchTypeDetection(this,touchTypListener);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
@@ -94,6 +92,7 @@ public class QuestionDetailActivity extends BaseActivity {
         else {
             setUpQuestion(questions.get(0));
         }
+        ThreadPoolManager.getInstance().getService().execute(mQuestionTask.getQuestions(courseId,false));
     }
 
     @Override
@@ -105,7 +104,6 @@ public class QuestionDetailActivity extends BaseActivity {
         root.setVisibility(View.VISIBLE);
         this.curQuestionId=q.getId();
         body.setText(q.getBody());
-        mCommentsTask=CommentsTask.instance(courseId,CommentsTask.FOR_QUESTION,curQuestionId);
         ThreadPoolManager.getInstance().getService().execute(mCommentsTask.getQuestionComments(courseId,Integer.parseInt(curQuestionId),true,0,5));
     }
     private void setUpComments(List<Comment> comments){

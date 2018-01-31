@@ -12,5 +12,5 @@ public class DefaultUser {
     public static final int type= Constants.ACC_T_Stu;
     public static final int gender=Constants.MALE;
     public static final int id=1;
-    public static final String authorization="U3RhY2s6cGFzczoxMg==";
+    public static final String authorization="eW91bmd0b255OnBhc3M6MTI=";
 }

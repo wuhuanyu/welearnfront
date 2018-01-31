@@ -1,0 +1,190 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.v4.widget.SwipeRefreshLayout
+     xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/sw_course_detail"
+        >
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:orientation="vertical"
+                android:layout_height="match_parent">
+                <android.support.v7.widget.Toolbar
+                    android:id="@+id/tb_course_detail"
+                    android:layout_width="match_parent"
+                    android:layout_height="?attr/actionBarSize"
+                    android:background="?attr/colorPrimary"
+                    android:minHeight="?attr/actionBarSize"
+                    android:theme="?attr/actionBarTheme"
+                    />
+                <android.support.v4.widget.NestedScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+                    <android.support.constraint.ConstraintLayout
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content">
+                        <ImageView
+                            android:id="@+id/iv_course_detail_main"
+                            android:layout_width="0dp"
+                            android:layout_height="300dp"
+                            android:layout_marginEnd="8dp"
+                            android:layout_marginStart="8dp"
+                            android:layout_marginTop="8dp"
+                            android:scaleType="centerCrop"
+                            app:layout_constraintEnd_toEndOf="parent"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:srcCompat="@drawable/art2" />
+
+                        <TextView
+                            android:id="@+id/text_course_detail_desc"
+                            android:layout_width="0dp"
+                            android:layout_height="wrap_content"
+                            android:layout_marginTop="4dp"
+                            android:text="@string/demo_question_body"
+                            android:textSize="17sp"
+                            android:paddingStart="3dp"
+                            android:paddingEnd="3dp"
+                            app:layout_constraintEnd_toEndOf="@+id/iv_course_detail_main"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="@+id/iv_course_detail_main"
+                            app:layout_constraintTop_toBottomOf="@+id/textView22" />
+
+                        <TextView
+                            android:id="@+id/textView11"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
+                            android:text="老师"
+                            app:layout_constraintStart_toStartOf="@+id/text_course_detail_desc"
+                            app:layout_constraintTop_toBottomOf="@+id/iv_course_detail_main" />
+
+                        <TextView
+                            android:id="@+id/text_course_detail_teacher"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="zzw"
+                            app:layout_constraintBaseline_toBaselineOf="@+id/textView11"
+                            app:layout_constraintStart_toEndOf="@+id/textView11" />
+
+                        <android.support.v7.widget.RecyclerView
+                            android:id="@+id/rv_course_detail_comment"
+                            android:layout_width="0dp"
+                            android:layout_height="250dp"
+
+                            android:layout_marginTop="8dp"
+                            app:layout_constraintEnd_toEndOf="@+id/text_course_detail_desc"
+                            app:layout_constraintHorizontal_bias="0.0"
+                            app:layout_constraintStart_toStartOf="@+id/text_course_detail_desc"
+                            app:layout_constraintTop_toBottomOf="@+id/textView15" />
+
+                        <TextView
+                            android:id="@+id/textView4"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="100dp"
+                            android:text="开课日期"
+                            app:layout_constraintBaseline_toBaselineOf="@+id/text_course_detail_teacher"
+                            app:layout_constraintStart_toEndOf="@+id/text_course_detail_teacher" />
+
+                        <TextView
+                            android:id="@+id/textView5"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="下个星期一"
+                            app:layout_constraintBaseline_toBaselineOf="@+id/textView4"
+                            app:layout_constraintStart_toEndOf="@+id/textView4" />
+
+                        <TextView
+                            android:id="@+id/textView15"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="评论更精彩"
+                            app:layout_constraintStart_toStartOf="@+id/textView19"
+                            app:layout_constraintTop_toBottomOf="@+id/view5" />
+
+                        <View
+                            android:id="@+id/view5"
+                            android:layout_width="0dp"
+                            android:layout_height="@dimen/divider"
+                            android:background="@android:color/darker_gray"
+                            app:layout_constraintEnd_toEndOf="@+id/text_course_detail_desc"
+                            app:layout_constraintStart_toStartOf="@+id/text_course_detail_desc"
+                            app:layout_constraintTop_toBottomOf="@+id/textView19" />
+
+                        <TextView
+                            android:id="@+id/textView19"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
+                            android:text="阅读量"
+                            app:layout_constraintStart_toStartOf="@+id/text_course_detail_desc"
+                            app:layout_constraintTop_toBottomOf="@+id/text_course_detail_desc" />
+
+                        <TextView
+                            android:id="@+id/textView20"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:text="512"
+                            app:layout_constraintBaseline_toBaselineOf="@+id/textView19"
+                            app:layout_constraintStart_toEndOf="@+id/textView19" />
+
+                        <TextView
+                            android:id="@+id/textView22"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="12dp"
+                            android:layout_marginTop="8dp"
+                            android:text="课程介绍"
+                            app:layout_constraintStart_toStartOf="@+id/text_course_detail_desc"
+                            app:layout_constraintTop_toBottomOf="@+id/textView4" />
+
+                        <TextView
+                            android:id="@+id/text_course_detail_refresh"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginEnd="16dp"
+                            android:text="刷新"
+                            app:layout_constraintBaseline_toBaselineOf="@+id/textView15"
+                            app:layout_constraintEnd_toEndOf="@+id/text_course_detail_desc" />
+
+                        <TextView
+                            android:id="@+id/text_write_course_comment"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:text="写评论"
+                            app:layout_constraintBaseline_toBaselineOf="@id/textView15"
+                            app:layout_constraintEnd_toStartOf="@id/text_course_detail_refresh"
+                            android:layout_marginEnd="10dp"
+                            tools:layout_editor_absoluteX="224dp"
+                            tools:layout_editor_absoluteY="515dp" />
+
+
+                    </android.support.constraint.ConstraintLayout>
+                </android.support.v4.widget.NestedScrollView>
+            </LinearLayout>
+            <android.support.design.widget.FloatingActionButton
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:src="@drawable/ic_comment"
+                android:layout_gravity="bottom|end"
+                android:layout_marginEnd="@dimen/fab_margin"
+                android:layout_marginBottom="@dimen/fab_margin"
+                app:elevation="2dp"
+                app:rippleColor="@color/colorPrimary"
+                android:id="@+id/fb_write_course_comment"
+                app:backgroundTint="@android:color/white"
+                />
+        </FrameLayout>
+    </android.support.v4.widget.SwipeRefreshLayout>

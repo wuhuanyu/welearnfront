@@ -110,8 +110,18 @@ public class Answer {
         return result;
     }
 
+    @Override
+    public String toString() {
+        return "Answer{" +
+                "id='" + id + '\'' +
+                ", courseId='" + courseId + '\'' +
+                ", body='" + body + '\'' +
+                ", files=" + files +
+                ", images=" + images +
+                '}';
+    }
 
-    public static Answer toAnswer(String courseId,JSONObject jsonObject){
+    public static Answer toAnswer(String courseId, JSONObject jsonObject){
         List<String> files=null;
         List<String> images=null;
         Answer answer=null;

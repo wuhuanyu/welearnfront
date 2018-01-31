@@ -41,7 +41,7 @@ public class  CourseAdapter extends BaseQuickAdapter<Course,BaseViewHolder>{
         baseViewHolder.setText(R.id.course_name,course.getName());
 
         Glide.with(mContext)
-                .load(Constants.Net.IMAGE_URL+course.getImages().get(1))
+                .load(Constants.Net.IMAGE_URL+course.getImages().get(0))
                 .into((ImageView)baseViewHolder.getView(R.id.course_image));
 
     }

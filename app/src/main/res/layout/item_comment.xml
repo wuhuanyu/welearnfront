@@ -7,7 +7,7 @@
     android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:id="@+id/circleImageView2"
+        android:id="@+id/im_comment_avatar"
         app:civ_border_width="1dp"
         app:civ_border_color="@android:color/darker_gray"
         android:layout_width="50dp"
@@ -27,16 +27,18 @@
         android:layout_marginStart="8dp"
         android:layout_marginTop="2dp"
         android:text="环环"
-        app:layout_constraintStart_toEndOf="@+id/circleImageView2"
-        app:layout_constraintTop_toTopOf="@+id/circleImageView2" />
+        app:layout_constraintStart_toEndOf="@+id/im_comment_avatar"
+        app:layout_constraintTop_toTopOf="@+id/im_comment_avatar" />
 
     <TextView
         android:id="@+id/text_comment_body"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="16dp"
         android:layout_marginTop="8dp"
         android:text="很棒！过程能够更详细一点就更好了！"
         android:textAppearance="@style/TextAppearance.AppCompat.Button"
+        app:layout_constraintEnd_toStartOf="@+id/imageView3"
         app:layout_constraintStart_toStartOf="@+id/text_comment_author"
         app:layout_constraintTop_toBottomOf="@+id/text_comment_author" />
 

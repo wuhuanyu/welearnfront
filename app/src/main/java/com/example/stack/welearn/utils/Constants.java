@@ -28,6 +28,7 @@ public final class Constants {
         public static final String IMAGE_URL="http://"+HOST+":"+PORT+"/images/";
         public static final int BROKER_PORT=1883;
         public static final String BROKER_URL="tcp://"+HOST+":"+BROKER_PORT;
+        public static final String AVATAR_URL="http://"+HOST+":"+PORT+"/avatars/";
     }
 
 }

@@ -54,7 +54,7 @@ dependencies {
     //SUB-DEPENDENCIES
     //Android-Iconics - used to provide an easy API for icons
     implementation 'com.mikepenz:iconics-core:3.0.0@aar'
-
+    implementation 'com.github.chrisbanes:PhotoView:2.0.0'
     //appcompat
 //    compile 'com.github.nkzawa:socket.io-client:0.3.0'
     compile ('io.socket:socket.io-client:1.0.0') {
@@ -63,6 +63,9 @@ dependencies {
     }
     compile project(":library-debug")
 
+    implementation("com.mikepenz:materialdrawer:6.0.4@aar") {
+        transitive = true
+    }
     implementation 'com.android.support:support-v4:26.0.2'
     compile 'pl.droidsonroids.gif:android-gif-drawable:1.2.10'
     implementation 'com.android.support:design:26.0.2'
