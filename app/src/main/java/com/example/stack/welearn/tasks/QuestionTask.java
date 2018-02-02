@@ -2,6 +2,7 @@ package com.example.stack.welearn.tasks;
 
 import android.util.Log;
 
+import com.example.stack.welearn.Cachable;
 import com.example.stack.welearn.entities.Question;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.utils.ACache;
@@ -17,12 +18,9 @@ import java.util.stream.Collectors;
  * Created by stack on 2018/1/15.
  */
 
-public class QuestionTask extends BaseTask {
+public class QuestionTask extends BaseTask implements Cachable{
     private static final String TAG=QuestionTask.class.getSimpleName();
-    @Override
-    public String getCacheName() {
-        return null;
-    }
+
     private static QuestionTask instance;
     public static QuestionTask instance(){
         if(instance==null){
@@ -35,24 +33,22 @@ public class QuestionTask extends BaseTask {
 
 
 
-    private Runnable getQuestions=()->{
-        //假定已经缓存
-        JSONArray  questionJSONS=mCache.getAsJSONArray(getCacheName());
-        if(questionJSONS==null||toRefresh){
+    public Runnable getQuestions(boolean toRefresh){
+        return ()->{
+            //假定已经缓存
+            JSONArray  questionJSONS=mCache.getAsJSONArray(getCacheName());
+            if(questionJSONS==null||toRefresh){
 
-        }
-        else {
-            Log.i(TAG,"----------from cached question---------");
-            List<Question> questions=Question.toQuestions(questionJSONS);
-            questions=questions.stream()
-                    .filter(question -> question!=null)
-                    .collect(Collectors.toList());
-            EventBus.getDefault().post(new Event<List<Question>>(Event.QUESITON_FETCH_OK,questions));
-        }
-    };
-
-    public Runnable getQuestions(){
-        return this.getQuestions;
+            }
+            else {
+                Log.i(TAG,"----------from cached question---------");
+                List<Question> questions=Question.toQuestions(questionJSONS);
+                questions=questions.stream()
+                        .filter(question -> question!=null)
+                        .collect(Collectors.toList());
+                EventBus.getDefault().post(new Event<List<Question>>(Event.QUESITON_FETCH_OK,questions));
+            }
+        };
     }
 
     public Runnable getQuestions(int courseId,boolean toRefresh){
@@ -70,6 +66,11 @@ public class QuestionTask extends BaseTask {
             }
 
         };
+    }
+
+    @Override
+    public String getCacheName() {
+        return null;
     }
 }
 

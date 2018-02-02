@@ -3,6 +3,7 @@ package com.example.stack.welearn.tasks;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.example.stack.welearn.Cachable;
 import com.example.stack.welearn.entities.Bulletin;
 import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.entities.DefaultUser;
@@ -27,15 +28,21 @@ import java.util.stream.Collectors;
  * Created by stack on 1/28/18.
  */
 
-public class BulletinTask extends BaseTask {
+public class BulletinTask extends BaseTask implements Cachable {
     private CountDownLatch countDownLatch;
     private List<Runnable> getBulletinTasks;
 
     private Map<String,List<Bulletin>> bulletinsMap=new HashMap<>();
-    public BulletinTask(boolean toRefresh){
-        this.toRefresh=toRefresh;
+    private static BulletinTask instance;
+    private BulletinTask(){
     }
-    private Runnable getAllBulletinsTask=()->{
+    public static BulletinTask instance(){
+        if(instance==null){
+            instance=new BulletinTask();
+        }
+        return instance;
+    }
+    public Runnable getAllBulletinsTask(boolean toRefresh){return ()->{
         JSONArray myCoursesJsons=mCache.getAsJSONArray("my_course");
         if(toRefresh) {
             List<Course> courses = Course.toCourses(myCoursesJsons);
@@ -82,12 +89,10 @@ public class BulletinTask extends BaseTask {
                 EventBus.getDefault().post(event);
             }
         }
-    };
-    public void execute(){
-        ThreadPoolManager.getInstance().getService().execute(getAllBulletinsTask);
-    }
+    };}
+
     @Override
     public String getCacheName() {
-        return null;
+        return "bulletins";
     }
 }

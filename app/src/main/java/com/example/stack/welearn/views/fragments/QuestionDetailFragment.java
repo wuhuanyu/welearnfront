@@ -1,4 +1,4 @@
-package com.example.stack.welearn.fragments;
+package com.example.stack.welearn.views.fragments;
 
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -69,5 +69,10 @@ public class QuestionDetailFragment extends BaseFragment {
         QuestionDetailFragment fragment=new QuestionDetailFragment();
         fragment.setArguments(bundle);
         return fragment;
+    }
+
+    @Override
+    public void refresh() {
+
     }
 }

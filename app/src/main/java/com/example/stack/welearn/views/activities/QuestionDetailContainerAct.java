@@ -1,25 +1,19 @@
-package com.example.stack.welearn.activities;
+package com.example.stack.welearn.views.activities;
 
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentStatePagerAdapter;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
-import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
-import android.widget.TextView;
 
 import com.example.stack.welearn.R;
-import com.example.stack.welearn.WeLearnApp;
-import com.example.stack.welearn.fragments.CommentDialog;
-import com.example.stack.welearn.fragments.QuestionDetailFragment;
-import com.example.stack.welearn.utils.ToastUtils;
+import com.example.stack.welearn.views.fragments.CommentDialog;
+import com.example.stack.welearn.views.fragments.QuestionDetailFragment;
 
 import butterknife.BindView;
-import github.chenupt.springindicator.SpringIndicator;
 
 /**
  * Created by stack on 2018/1/5.
@@ -94,6 +88,11 @@ public class QuestionDetailContainerAct extends BaseActivity implements CommentD
 
     @Override
     public void onNegativeClick(CommentDialog dialog) {
+
+    }
+
+    @Override
+    public void refresh() {
 
     }
 }

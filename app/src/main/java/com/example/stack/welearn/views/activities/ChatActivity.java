@@ -1,4 +1,4 @@
-package com.example.stack.welearn.activities;
+package com.example.stack.welearn.views.activities;
 
 import android.os.Bundle;
 import android.util.Log;
@@ -11,7 +11,6 @@ import com.example.stack.welearn.entities.ChatMessage;
 import com.example.stack.welearn.entities.ChatUser;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.fixtures.MessagesFixtures;
-import com.example.stack.welearn.tasks.BaseTask;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
@@ -19,17 +18,13 @@ import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
 import java.util.Date;
 
-import butterknife.BindBitmap;
 import butterknife.BindView;
-import com.stfalcon.chatkit.R.*;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import javax.security.auth.callback.CallbackHandler;
 
 /**
  * Created by stack on 2018/1/9.
@@ -116,6 +111,11 @@ public class ChatActivity extends BaseActivity implements MessageInput.InputList
                     e.printStackTrace();
                 }
         }
+    }
+
+    @Override
+    public void refresh() {
+
     }
 }
 

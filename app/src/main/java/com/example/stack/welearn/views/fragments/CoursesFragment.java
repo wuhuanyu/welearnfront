@@ -1,4 +1,4 @@
-package com.example.stack.welearn.fragments;
+package com.example.stack.welearn.views.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -11,9 +11,10 @@ import android.widget.LinearLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.stack.welearn.R;
-import com.example.stack.welearn.activities.CourseDetailActivity;
+import com.example.stack.welearn.views.activities.CourseDetailActivity;
 import com.example.stack.welearn.adapters.CourseAdapter;
 import com.example.stack.welearn.adapters.GlideImageLoader;
+import com.example.stack.welearn.adapters.PremierCourseAdapter;
 import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.MyCoursesTask;
@@ -43,7 +44,7 @@ public class CoursesFragment extends BaseFragment {
     private LinearLayoutManager  mLayoutManager;
     private Handler mHandler=new Handler(Looper.getMainLooper());
     CourseAdapter myCourseAdapter;
-    CourseAdapter premierCourseAdapter;
+    PremierCourseAdapter premierCourseAdapter;
     List<Course> myCourseData=new ArrayList<>();
     List<Course> mPremierCourseData=new ArrayList<>();
     @BindView(R.id.my_course)
@@ -74,7 +75,6 @@ public class CoursesFragment extends BaseFragment {
 
     @Override
     public void doRegister() {
-//        EventBus.getDefault().register(this);
     }
 
     public void onCreate(Bundle savedInstanceState){
@@ -83,8 +83,8 @@ public class CoursesFragment extends BaseFragment {
     }
     @Override
     public void initView() {
-        ThreadPoolManager.getInstance().getService().submit(mCourseTask.getMyCourses());
-        ThreadPoolManager.getInstance().getService().submit(mPremierCourseTask.getPremierCourses());
+        ThreadPoolManager.getInstance().getService().submit(mCourseTask.getMyCourses(false));
+        ThreadPoolManager.getInstance().getService().submit(mPremierCourseTask.getPremierCourses(false));
 
         myCourseAdapter =new CourseAdapter(R.layout.item_course_card, myCourseData);
         myCourseAdapter.setOnItemClickListener(listener);
@@ -93,7 +93,7 @@ public class CoursesFragment extends BaseFragment {
         rvMyCourse.setAdapter(myCourseAdapter);
 
 
-        premierCourseAdapter=new CourseAdapter(R.layout.item_course_card, mPremierCourseData);
+        premierCourseAdapter=new PremierCourseAdapter(R.layout.item_premier_course, mPremierCourseData);
         premierCourseAdapter.setOnItemClickListener(listener);
         rvPremierCourse.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL,false));
         rvPremierCourse.setAdapter(premierCourseAdapter);
@@ -145,5 +145,11 @@ public class CoursesFragment extends BaseFragment {
                 break;
             default:break;
         }
+    }
+
+    @Override
+    public void refresh() {
+        ThreadPoolManager.getInstance().getService().submit(mCourseTask.getMyCourses(true));
+        ThreadPoolManager.getInstance().getService().submit(mPremierCourseTask.getPremierCourses(true));
     }
 }

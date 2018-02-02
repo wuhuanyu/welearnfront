@@ -1,4 +1,4 @@
-package com.example.stack.welearn.activities;
+package com.example.stack.welearn.views.activities;
 
 import android.app.Activity;
 import android.content.Context;

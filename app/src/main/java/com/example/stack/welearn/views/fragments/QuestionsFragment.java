@@ -1,25 +1,20 @@
-package com.example.stack.welearn.fragments;
+package com.example.stack.welearn.views.fragments;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.service.autofill.Dataset;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.WeLearnApp;
-import com.example.stack.welearn.activities.QuestionDetailActivity;
-import com.example.stack.welearn.activities.QuestionDetailContainerAct;
+import com.example.stack.welearn.views.activities.QuestionDetailActivity;
 import com.example.stack.welearn.adapters.CategorizedQuestionAdapter;
 import com.example.stack.welearn.adapters.GlideImageLoader;
 import com.example.stack.welearn.adapters.TestPaperAdapter;
 import com.example.stack.welearn.entities.CategorizedQuestionCourse;
-import com.example.stack.welearn.entities.Question;
 import com.example.stack.welearn.entities.TestPaper;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.CategorizedQuestionsTask;
-import com.example.stack.welearn.test.DataServer;
 import com.example.stack.welearn.test.DefaultUser;
 import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.utils.ToastUtils;
@@ -73,7 +68,7 @@ public class QuestionsFragment extends BaseFragment {
     @Override
     public void initView() {
 
-        ThreadPoolManager.getInstance().getService().execute(mCategorizedQuestionsTask.getCategorizedQuestion());
+        ThreadPoolManager.getInstance().getService().execute(mCategorizedQuestionsTask.getCategorizedQuestion(true));
         LinearLayoutManager mManager=new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         mBanner.setImageLoader(new GlideImageLoader());
         mBanner.setImages(Arrays.asList(mBannerImages));
@@ -123,4 +118,8 @@ public class QuestionsFragment extends BaseFragment {
         }
     }
 
+    @Override
+    public void refresh() {
+
+    }
 }

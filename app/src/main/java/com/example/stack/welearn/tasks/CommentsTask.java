@@ -64,10 +64,6 @@ public class CommentsTask extends BaseTask {
         this.courseId = courseId;
     }
 
-    @Override
-    public String getCacheName() {
-        return null;
-    }
 
     public Runnable getCourseComments(int courseId,boolean toRefresh,int start,int limit){
         return ()->{

@@ -1,10 +1,8 @@
-package com.example.stack.welearn.activities;
+package com.example.stack.welearn.views.activities;
 
 
-import android.nfc.Tag;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
-import android.support.v4.app.DialogFragment;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -26,10 +24,9 @@ import com.example.stack.welearn.adapters.CommentQuickAdapter;
 import com.example.stack.welearn.adapters.VideoAdapter;
 import com.example.stack.welearn.entities.Comment;
 import com.example.stack.welearn.entities.Course;
-import com.example.stack.welearn.entities.DefaultUser;
 import com.example.stack.welearn.entities.Video;
 import com.example.stack.welearn.events.Event;
-import com.example.stack.welearn.fragments.CommentDialog;
+import com.example.stack.welearn.views.fragments.CommentDialog;
 import com.example.stack.welearn.tasks.CommentsTask;
 import com.example.stack.welearn.tasks.CourseDetailTask;
 import com.example.stack.welearn.utils.ACache;
@@ -46,7 +43,6 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-import butterknife.BindBitmap;
 import butterknife.BindView;
 
 import static com.example.stack.welearn.WeLearnApp.getContext;
@@ -103,7 +99,7 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         Bundle bundle=getIntent().getExtras();
         courseId=bundle.getInt("course_id");
         //单例获取
-        mCourseDetailTask=CourseDetailTask.instance(courseId);
+        mCourseDetailTask=CourseDetailTask.instance();
         mCourseCommentsTask=CommentsTask.instance();
         setSupportActionBar(mToolbar);
 
@@ -123,7 +119,6 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         rvComments.setAdapter(mCommentAdapter);
         mSwipeRefresh.setOnRefreshListener(this);
         mCommentRefresh.setOnClickListener((v)->{
-            mCourseCommentsTask.setToRefresh(true);
             isRefresh=true;
             ThreadPoolManager.getInstance().getService().execute(
                     mCourseCommentsTask.getCourseComments(courseId,true,0,4)
@@ -144,7 +139,7 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         rvVideos.setAdapter(mVideoAdapter);
 
         isRefresh=true;
-        ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail());
+        ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail(courseId,isRefresh));
         ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,toRefresh,0,4));
     }
 
@@ -236,10 +231,8 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
 
     @Override
     public void onRefresh() {
-        mCourseCommentsTask.setToRefresh(true);
-        mCourseDetailTask.setToRefresh(true);
-        this.isRefresh=true;
-        ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail());
+        refresh();
+
     }
 
     private void refreshComment(){
@@ -307,6 +300,12 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
             );
         }
         return videos;
+    }
+
+    @Override
+    public void refresh() {
+        this.isRefresh=true;
+        ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail(courseId,true));
     }
 }
 

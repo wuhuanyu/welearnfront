@@ -1,7 +1,6 @@
-package com.example.stack.welearn.activities;
+package com.example.stack.welearn.views.activities;
 
 import android.support.v7.widget.Toolbar;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
@@ -43,5 +42,10 @@ public class QuestionEditActivity extends BaseActivity {
     @Override
     public int getLayout() {
         return R.layout.act_question_edit;
+    }
+
+    @Override
+    public void refresh() {
+
     }
 }

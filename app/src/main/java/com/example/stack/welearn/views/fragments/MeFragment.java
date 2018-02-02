@@ -1,4 +1,4 @@
-package com.example.stack.welearn.fragments;
+package com.example.stack.welearn.views.fragments;
 
 import com.example.stack.welearn.R;
 
@@ -19,6 +19,11 @@ public class MeFragment extends BaseFragment {
 
     @Override
     public void initView() {
+
+    }
+
+    @Override
+    public void refresh() {
 
     }
 }

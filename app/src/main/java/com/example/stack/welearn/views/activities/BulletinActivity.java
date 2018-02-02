@@ -1,4 +1,4 @@
-package com.example.stack.welearn.activities;
+package com.example.stack.welearn.views.activities;
 
 import android.graphics.Canvas;
 import android.os.Bundle;
@@ -15,6 +15,7 @@ import com.example.stack.welearn.adapters.BulletinsAdapter;
 import com.example.stack.welearn.entities.Bulletin;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.BulletinTask;
+import com.example.stack.welearn.utils.ThreadPoolManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -95,9 +96,10 @@ public class BulletinActivity extends BaseActivity {
         rvBulletins.setLayoutManager(mLayoutManager);
         rvBulletins.setAdapter(mDraggableAdapter);
         btnRefresh.setOnClickListener(v->{
-            new BulletinTask(true).execute();
+            ThreadPoolManager.getInstance().getService().execute(BulletinTask.instance().getAllBulletinsTask(true));
         });
-        new BulletinTask(true).execute();
+
+        ThreadPoolManager.getInstance().getService().execute(BulletinTask.instance().getAllBulletinsTask(true));
     }
 
     private void setUpBulletins(Map<String,List<Bulletin>> bulletins){
@@ -123,4 +125,8 @@ public class BulletinActivity extends BaseActivity {
         return R.layout.act_bulletin;
     }
 
+    @Override
+    public void refresh() {
+
+    }
 }

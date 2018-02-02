@@ -1,7 +1,6 @@
-package com.example.stack.welearn.activities;
+package com.example.stack.welearn.views.activities;
 
 import android.os.Handler;
-import android.os.Looper;
 
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.WeLearnApp;
@@ -78,5 +77,10 @@ public class SocketTestActivity extends BaseActivity {
     protected void onDestroy() {
         super.onDestroy();
         mSocket.disconnect();
+    }
+
+    @Override
+    public void refresh() {
+
     }
 }

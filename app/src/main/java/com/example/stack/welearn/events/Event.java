@@ -8,8 +8,11 @@ import android.support.annotation.Nullable;
  */
 
 public class Event<T>{
-    public static final int SUBSCRIBE_OK=10;
+    public static final int SUBSCRIBE_OK=100;
     public static final int SUBSCRIBE_FAIL=101;
+    public static final int DO_SUBSCRIBE=102;
+    public static final int DO_UNSUBSCRIBE=103;
+    public static final int MQTT_ERROR=104;
 
     /**
      * 网络事件
@@ -68,12 +71,12 @@ public class Event<T>{
     }
 
 
-    public Event(int code,String msg){
-        this.code=code;
-        this.msg=msg;
-        this.data=null;
-        this.next=0;
-    }
+//    public Event(int code,String msg){
+//        this.code=code;
+//        this.msg=msg;
+//        this.data=null;
+//        this.next=0;
+//    }
 
     public Event(int code){
         this.code=code;

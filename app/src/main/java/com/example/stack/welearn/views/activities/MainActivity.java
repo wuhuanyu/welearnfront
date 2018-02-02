@@ -1,4 +1,4 @@
-package com.example.stack.welearn.activities;
+package com.example.stack.welearn.views.activities;
 
 import android.content.Context;
 import android.content.Intent;
@@ -14,25 +14,18 @@ import android.view.View;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.example.stack.welearn.MQTTService;
 import com.example.stack.welearn.R;
-import com.example.stack.welearn.WeLearnApp;
-import com.example.stack.welearn.config.MQTTClient;
-import com.example.stack.welearn.events.Event;
-import com.example.stack.welearn.fragments.ChatFragment;
-import com.example.stack.welearn.fragments.QuestionsFragment;
-import com.example.stack.welearn.fragments.CoursesFragment;
-import com.example.stack.welearn.fragments.MeFragment;
-import com.example.stack.welearn.utils.ToastUtils;
+import com.example.stack.welearn.views.IView;
+import com.example.stack.welearn.views.fragments.ChatFragment;
+import com.example.stack.welearn.views.fragments.QuestionsFragment;
+import com.example.stack.welearn.views.fragments.CoursesFragment;
+import com.example.stack.welearn.views.fragments.MeFragment;
+import com.github.nisrulz.sensey.Sensey;
+import com.github.nisrulz.sensey.ShakeDetector;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
 
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONObject;
 
 import java.util.HashMap;
 
@@ -59,6 +52,7 @@ public class MainActivity extends BaseActivity {
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+        Sensey.getInstance().init(this);
         if(savedInstanceState==null){
             fragmentHashMap.put("course",new CoursesFragment());
             currentFragment=fragmentHashMap.get("course");
@@ -68,8 +62,20 @@ public class MainActivity extends BaseActivity {
     }
     @Override
     public void doRegister() {
+        Intent intent=new Intent(this, MQTTService.class);
+        Sensey.getInstance()
+                .startShakeDetection(new ShakeDetector.ShakeListener() {
+                    @Override
+                    public void onShakeDetected() {
 
+                    }
 
+                    @Override
+                    public void onShakeStopped() {
+                        refresh();
+                    }
+                });
+        startService(intent);
     }
 
     @Override
@@ -176,5 +182,15 @@ public class MainActivity extends BaseActivity {
                 transaction.hide(from).show(to).commit();
             }
         }
+    }
+
+    public void onDestroy(){
+        Sensey.getInstance().stop();
+        super.onDestroy();
+    }
+
+    @Override
+    public void refresh() {
+        ((IView)currentFragment).refresh();
     }
 }

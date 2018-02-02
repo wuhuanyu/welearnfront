@@ -1,4 +1,4 @@
-package com.example.stack.welearn.fragments;
+package com.example.stack.welearn.views.fragments;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 
 import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.utils.ACache;
+import com.example.stack.welearn.views.IView;
 
 import butterknife.ButterKnife;
 
@@ -19,7 +20,7 @@ import butterknife.ButterKnife;
  * Created by stack on 2018/1/4.
  */
 
-public abstract class BaseFragment extends Fragment {
+public abstract class BaseFragment extends Fragment implements IView {
     protected ACache mCache= WeLearnApp.cache();
     public abstract int getLayout();
     public abstract void doRegister();
@@ -39,6 +40,5 @@ public abstract class BaseFragment extends Fragment {
     public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
         super.onViewStateRestored(savedInstanceState);
     }
-
 
 }

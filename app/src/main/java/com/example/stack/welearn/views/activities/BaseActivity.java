@@ -1,4 +1,4 @@
-package com.example.stack.welearn.activities;
+package com.example.stack.welearn.views.activities;
 
 import android.os.Bundle;
 import android.os.Handler;
@@ -6,7 +6,7 @@ import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
 
 
-import com.example.stack.welearn.utils.ACache;
+import com.example.stack.welearn.views.IView;
 
 import butterknife.ButterKnife;
 
@@ -14,7 +14,7 @@ import butterknife.ButterKnife;
  * Created by stack on 2018/1/4.
  */
 
-public abstract class BaseActivity extends AppCompatActivity {
+public abstract class BaseActivity extends AppCompatActivity implements IView {
     protected Handler mHandler=new Handler(Looper.getMainLooper());
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);

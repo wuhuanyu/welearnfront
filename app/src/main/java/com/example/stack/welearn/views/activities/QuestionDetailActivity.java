@@ -1,14 +1,11 @@
-package com.example.stack.welearn.activities;
+package com.example.stack.welearn.views.activities;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.Menu;
-import android.view.MenuInflater;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
@@ -30,7 +27,6 @@ import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.List;
 
-import butterknife.BindBitmap;
 import butterknife.BindView;
 
 /**
@@ -199,4 +195,9 @@ public class QuestionDetailActivity extends BaseActivity {
 
 
     };
+
+    @Override
+    public void refresh() {
+
+    }
 }

@@ -1,4 +1,4 @@
-package com.example.stack.welearn.fragments;
+package com.example.stack.welearn.views.fragments;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,8 +12,6 @@ import android.view.View;
 import android.widget.EditText;
 
 import com.example.stack.welearn.R;
-
-import org.greenrobot.eventbus.util.ErrorDialogFragmentFactory;
 
 /**
  * Created by stack on 2018/1/5.

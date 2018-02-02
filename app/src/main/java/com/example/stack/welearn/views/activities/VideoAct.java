@@ -1,7 +1,6 @@
-package com.example.stack.welearn.activities;
+package com.example.stack.welearn.views.activities;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
 import android.webkit.WebSettings;
 import android.webkit.WebView;
 
@@ -35,5 +34,10 @@ public class VideoAct extends BaseActivity {
     @Override
     public int getLayout() {
         return R.layout.act_video;
+    }
+
+    @Override
+    public void refresh() {
+
     }
 }

@@ -26,50 +26,13 @@ public class MQTTClient {
     private  MqttAndroidClient client;
     private   boolean haveSetUpMqtt=false;
     public static final String TAG=MQTTClient.class.getSimpleName();
-    private MqttCallback mqttCallback=new MqttCallback() {
-        @Override
-        public void connectionLost(Throwable cause) {
 
-        }
-        @Override
-        public void messageArrived(String topic, MqttMessage message) throws Exception {
-            client.setCallback(new MqttCallback() {
-                @Override
-                public void connectionLost(Throwable cause) {
-                }
-                @Override
-                public void messageArrived(String topic, MqttMessage message) throws Exception {
-                    Log.i(TAG, new String(message.getPayload()));
-                    JSONObject jsonObject=new JSONObject(new String(message.getPayload()));
-                    if(jsonObject.has("type")){
-                        int type=jsonObject.getInt("type");
-                        switch (type){
-                            case Event.NEW_MESSAGE:
-                                EventBus.getDefault().post(new Event<JSONObject>(Event.NEW_MESSAGE,jsonObject.getJSONObject("payload")));
-                                break;
-                            default:break;
-                        }
-                    }
-                }
-                @Override
-                public void deliveryComplete(IMqttDeliveryToken token) {
-                }
-            });
-        }
-
-        @Override
-        public void deliveryComplete(IMqttDeliveryToken token) {
-
-        }
-    };
 
     /**
      * 内部静态类实现单例
      */
-
     private static class MQTTClientHolder {
         private static MQTTClient instance=new MQTTClient();
-
     }
     private MQTTClient(){
         this.client=new MqttAndroidClient(WeLearnApp.getContext(), Constants.Net.BROKER_URL, com.example.stack.welearn.test.DefaultUser.authorization);
@@ -77,8 +40,6 @@ public class MQTTClient {
     public static MQTTClient instance(){
         return MQTTClientHolder.instance;
     }
-
-
     public  MqttAndroidClient getClient(){
         if(this.client==null){
             this.client=new MqttAndroidClient(WeLearnApp.getContext(), Constants.Net.BROKER_URL, com.example.stack.welearn.test.DefaultUser.authorization);
@@ -130,10 +91,10 @@ public class MQTTClient {
 
     }
 
-    public void setUpCallback(){
+    public void setUpCallback(MqttCallback callback){
         if(client.isConnected()){
             if(!haveSetUpMqtt) {
-                client.setCallback(mqttCallback);
+                client.setCallback(callback);
                 haveSetUpMqtt=true;
             }
         }

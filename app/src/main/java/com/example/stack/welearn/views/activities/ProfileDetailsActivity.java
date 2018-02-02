@@ -1,4 +1,4 @@
-package com.example.stack.welearn.activities;
+package com.example.stack.welearn.views.activities;
 
 /**
  * Created by stack on 2018/1/5.
@@ -18,5 +18,10 @@ public class ProfileDetailsActivity extends BaseActivity {
     @Override
     public int getLayout() {
         return 0;
+    }
+
+    @Override
+    public void refresh() {
+
     }
 }

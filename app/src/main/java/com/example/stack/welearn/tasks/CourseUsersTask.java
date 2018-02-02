@@ -30,36 +30,35 @@ public class CourseUsersTask extends BaseTask{
         return instance;
     }
 
-    @Override
-    public String getCacheName() {
-        return null;
-    }
-    private Runnable getCourseUsers=new Runnable() {
-        @Override
-        public void run() {
-            List<Course> myCourses=Course.toCourses(mCache.getAsJSONArray("my_course"));
-            if(myCourses!=null){
-                tasks= myCourses.stream()
-                        .map(course -> new Runnable() {
-                            @Override
-                            public void run() {
-                                if (isToRefresh()) {
-                                    AndroidNetworking.get(Constants.Net.API_URL + "/course/" + course.getId() + "/users")
-                                            .build()
-                                            .getAsJSONObject(new JSONObjectRequestListener() {
-                                                @Override
-                                                public void onResponse(JSONObject response) {
-                                                }
 
-                                                @Override
-                                                public void onError(ANError anError) {
+    private Runnable getCourseUsers(boolean toRefresh){
+        return new Runnable() {
+            @Override
+            public void run() {
+                List<Course> myCourses=Course.toCourses(mCache.getAsJSONArray("my_course"));
+                if(myCourses!=null){
+                    tasks= myCourses.stream()
+                            .map(course -> new Runnable() {
+                                @Override
+                                public void run() {
+                                    if (toRefresh) {
+                                        AndroidNetworking.get(Constants.Net.API_URL + "/course/" + course.getId() + "/users")
+                                                .build()
+                                                .getAsJSONObject(new JSONObjectRequestListener() {
+                                                    @Override
+                                                    public void onResponse(JSONObject response) {
+                                                    }
 
-                                                }
-                                            });
+                                                    @Override
+                                                    public void onError(ANError anError) {
+
+                                                    }
+                                                });
+                                    }
                                 }
-                            }
-                        }).collect(Collectors.toList());
+                            }).collect(Collectors.toList());
+                }
             }
-        }
-    };
+        };
+    }
 }

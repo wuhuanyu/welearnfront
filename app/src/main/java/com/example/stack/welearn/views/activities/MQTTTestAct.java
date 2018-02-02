@@ -1,7 +1,6 @@
-package com.example.stack.welearn.activities;
+package com.example.stack.welearn.views.activities;
 
 import android.os.Bundle;
-import android.util.Log;
 
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.config.MQTTClient;
@@ -12,7 +11,6 @@ import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.greenrobot.eventbus.EventBus;
 
 /**
  * Created by stack on 2018/1/18.
@@ -101,5 +99,10 @@ public class MQTTTestAct extends BaseActivity {
     }
     public void onStop(){
         super.onStop();
+    }
+
+    @Override
+    public void refresh() {
+
     }
 }
