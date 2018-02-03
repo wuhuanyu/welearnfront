@@ -67,8 +67,6 @@ public class QuestionsFragment extends BaseFragment {
 
     @Override
     public void initView() {
-
-        ThreadPoolManager.getInstance().getService().execute(mCategorizedQuestionsTask.getCategorizedQuestion(true));
         LinearLayoutManager mManager=new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         mBanner.setImageLoader(new GlideImageLoader());
         mBanner.setImages(Arrays.asList(mBannerImages));
@@ -82,9 +80,11 @@ public class QuestionsFragment extends BaseFragment {
         mBanner.start();
         mAdapter=new CategorizedQuestionAdapter(R.layout.item_categorized_question);
         mAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
+            List<CategorizedQuestionCourse> data=(List<CategorizedQuestionCourse>)baseQuickAdapter.getData();
             Intent intent=new Intent(getActivity(), QuestionDetailActivity.class);
             int courseId=((List<CategorizedQuestionCourse>)baseQuickAdapter.getData()).get(i).getCourseId();
             intent.putExtra("course_id",courseId);
+            intent.putExtra("course_name",(data.get(i).getCourseName()));
             startActivity(intent);
         });
 
@@ -96,6 +96,8 @@ public class QuestionsFragment extends BaseFragment {
         mTestpaperAdapter=new TestPaperAdapter(R.layout.item_testpaper,Arrays.asList(new TestPaper[]{new TestPaper(),new TestPaper(),new TestPaper(),new TestPaper(),new TestPaper()}));
         mTestPapers.setLayoutManager(manager);
         mTestPapers.setAdapter(mTestpaperAdapter);
+
+        ThreadPoolManager.getInstance().getService().execute(mCategorizedQuestionsTask.getCategorizedQuestion(false));
     }
     public void onStop(){
         EventBus.getDefault().unregister(this);
@@ -120,6 +122,6 @@ public class QuestionsFragment extends BaseFragment {
 
     @Override
     public void refresh() {
-
+        ThreadPoolManager.getInstance().getService().execute(mCategorizedQuestionsTask.getCategorizedQuestion(true));
     }
 }

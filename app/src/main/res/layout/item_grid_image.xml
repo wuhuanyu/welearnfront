@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<android.support.constraint.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_gravity="center_horizontal"
+    android:layout_margin="3dp"
+    android:layout_height="wrap_content">
+
+
+    <ImageView
+        android:id="@+id/im_grid_image"
+        android:layout_width="wrap_content"
+        android:layout_height="250dp"
+        android:contentDescription="图片"
+        android:scaleType="fitCenter"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:srcCompat="@drawable/art2" />
+</android.support.constraint.ConstraintLayout>

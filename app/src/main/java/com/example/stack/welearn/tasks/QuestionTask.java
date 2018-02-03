@@ -54,16 +54,16 @@ public class QuestionTask extends BaseTask implements Cachable{
     public Runnable getQuestions(int courseId,boolean toRefresh){
         return ()->{
             JSONArray questionsJSONS=mCache.getAsJSONArray("course-"+courseId+"-questions");
-
-            try {
-                Thread.sleep(500);
-                if(questionsJSONS==null||toRefresh){
+            if(questionsJSONS==null||toRefresh){
                     Log.i(TAG,"no cache");
                 }
                 else EventBus.getDefault().post(new Event<List<Question>>(Event.QUESITON_FETCH_OK,Question.toQuestions(questionsJSONS)));
-            } catch (InterruptedException e) {
-                e.printStackTrace();
-            }
+//            try {
+//                Thread.sleep(500);
+//
+//            } catch (InterruptedException e) {
+//                e.printStackTrace();
+//            }
 
         };
     }

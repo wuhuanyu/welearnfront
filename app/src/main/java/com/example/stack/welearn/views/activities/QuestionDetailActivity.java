@@ -1,6 +1,7 @@
 package com.example.stack.welearn.views.activities;
 
 import android.os.Bundle;
+import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -8,16 +9,20 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.widget.GridLayout;
 import android.widget.TextView;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.adapters.CommentQuickAdapter;
+import com.example.stack.welearn.adapters.ImageAdapter;
 import com.example.stack.welearn.entities.Comment;
 import com.example.stack.welearn.entities.Question;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.CommentsTask;
 import com.example.stack.welearn.tasks.QuestionTask;
 import com.example.stack.welearn.utils.ThreadPoolManager;
+import com.example.stack.welearn.utils.ToastUtils;
 import com.github.nisrulz.sensey.Sensey;
 import com.github.nisrulz.sensey.TouchTypeDetector;
 
@@ -25,6 +30,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
+import java.util.ArrayList;
 import java.util.List;
 
 import butterknife.BindView;
@@ -37,7 +43,9 @@ public class QuestionDetailActivity extends BaseActivity {
     List<Question> questions;
     private static final String TAG=QuestionDetailActivity.class.getSimpleName();
     private String curQuestionId;
+    private int currentQuestionIdx=0;
     private int courseId;
+    private String courseName;
     @BindView(R.id.question_detail_root)
     View root;
 
@@ -51,8 +59,8 @@ public class QuestionDetailActivity extends BaseActivity {
 
     private CommentsTask mCommentsTask;
     private QuestionTask mQuestionTask;
-    private CommentQuickAdapter mAdapter;
-
+    private CommentQuickAdapter commentAdapter;
+    private ImageAdapter questionImageAdapter;
 
     public  void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
@@ -73,15 +81,26 @@ public class QuestionDetailActivity extends BaseActivity {
     @Override
     public void initView() {
         courseId=getIntent().getIntExtra("course_id",-1);
+        courseName=getIntent().getStringExtra("course_name");
         mQuestionTask= QuestionTask.instance();
         mCommentsTask=CommentsTask.instance();
         Sensey.getInstance().startTouchTypeDetection(this,touchTypListener);
         setSupportActionBar(mToolbar);
         getSupportActionBar().setDisplayShowTitleEnabled(true);
-        getSupportActionBar().setTitle("我的习题");
-        mAdapter=new CommentQuickAdapter(R.layout.item_comment);
+        getSupportActionBar().setTitle(courseName+"的习题");
+        commentAdapter =new CommentQuickAdapter(R.layout.item_comment);
+        commentAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         comments.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        comments.setAdapter(mAdapter);
+        comments.setAdapter(commentAdapter);
+
+
+        questionImageAdapter=new ImageAdapter(R.layout.item_grid_image,new ArrayList<>());
+//        GridLayoutManager gridLayoutManager=new GridLayoutManager(GridLayoutManager.HORIZONTAL,false);
+//        GridLayoutManager gridLayoutManager=new GridLayoutManager(this,GridLayoutManager.DEFAULT_SPAN_COUNT);
+        LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
+        images.setLayoutManager(linearLayoutManager);
+        images.setAdapter(questionImageAdapter);
+
         if(this.questions==null){
 
         }
@@ -100,10 +119,13 @@ public class QuestionDetailActivity extends BaseActivity {
         root.setVisibility(View.VISIBLE);
         this.curQuestionId=q.getId();
         body.setText(q.getBody());
+        getSupportActionBar().setTitle(courseName+"第"+(currentQuestionIdx+1)+"题");
+        if(q.getImages()!=null&&q.getImages().size()!=0)
+            questionImageAdapter.setNewData(q.getImages());
         ThreadPoolManager.getInstance().getService().execute(mCommentsTask.getQuestionComments(courseId,Integer.parseInt(curQuestionId),true,0,5));
     }
     private void setUpComments(List<Comment> comments){
-            mAdapter.setNewData(comments);
+        commentAdapter.setNewData(comments);
     }
 
 
@@ -131,14 +153,14 @@ public class QuestionDetailActivity extends BaseActivity {
 
     public void onStop(){
         EventBus.getDefault().unregister(this);
-        super.onStop();
         Sensey.getInstance().stopTouchTypeDetection();
         Sensey.getInstance().stop();
+        super.onStop();
     }
 
     public void onBackPressed(){
-        super.onBackPressed();
         this.finish();
+        super.onBackPressed();
     }
 
 
@@ -174,9 +196,19 @@ public class QuestionDetailActivity extends BaseActivity {
             switch (i){
                 case TouchTypeDetector.SWIPE_DIR_LEFT:
                     Log.i(TAG,"swipe left");
+                    if(currentQuestionIdx+1==questions.size()){
+                        ToastUtils.getInstance().showMsgShort("最后一题啦!");
+                        return;
+                    }
+                    else setUpQuestion(questions.get(++currentQuestionIdx));
                     break;
                 case TouchTypeDetector.SWIPE_DIR_RIGHT:
                     Log.i(TAG,"swipe right");
+                    if(currentQuestionIdx==0){
+                        ToastUtils.getInstance().showMsgShort("这是第一题啦!");
+                        return;
+                    }
+                    else setUpQuestion(questions.get(--currentQuestionIdx));
                     break;
                 default:break;
             }

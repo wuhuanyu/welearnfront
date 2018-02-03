@@ -27,7 +27,11 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".views.activities.CourseDetailActivity"/>
+        <activity android:name=".views.activities.CourseDetailActivity">
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".views.activities.MainActivity"/>
+        </activity>
         <activity android:name=".views.activities.BulletinActivity"/>
         <activity android:name=".views.activities.ChatActivity"/>
         <service android:name="org.eclipse.paho.android.service.MqttService" />

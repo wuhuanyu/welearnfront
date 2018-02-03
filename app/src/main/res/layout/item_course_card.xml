@@ -7,7 +7,7 @@
     android:layout_height="wrap_content"
     android:layout_marginBottom="2dp"
     app:cardCornerRadius="5dp"
-    app:cardElevation="@dimen/card_avaletion"
+    app:cardElevation="0dp"
     android:layout_marginRight="8dp"
     tools:layout_editor_absoluteY="25dp">
 

@@ -1,8 +1,11 @@
 package com.example.stack.welearn.views.activities;
 
 
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -45,6 +48,7 @@ import java.util.List;
 
 import butterknife.BindView;
 
+import static com.example.stack.welearn.WeLearnApp.cache;
 import static com.example.stack.welearn.WeLearnApp.getContext;
 
 /**
@@ -88,6 +92,12 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
 
     private int nextComment=0;
     private boolean isRefresh=false;
+    public static void start(Context context, Bundle data){
+        Intent intent=new Intent(context,CourseDetailActivity.class);
+        intent.putExtras(data);
+        context.startActivity(intent);
+    }
+
     @Override
     public void doRegister() {
         EventBus.getDefault().register(this);
@@ -98,11 +108,14 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
 
         Bundle bundle=getIntent().getExtras();
         courseId=bundle.getInt("course_id");
+
         //单例获取
         mCourseDetailTask=CourseDetailTask.instance();
         mCourseCommentsTask=CommentsTask.instance();
         setSupportActionBar(mToolbar);
-
+        getSupportActionBar().setTitle(bundle.getString("course_name"));
+//        getSupportActionBar().setHomeButtonEnabled(true);
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         LinearLayoutManager manager=new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
 
         rvComments.setLayoutManager(manager);
@@ -167,8 +180,11 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
                 if(!item.isChecked())
                     item.setIcon(R.drawable.ic_favorite);
                 else item.setIcon(R.drawable.ic_favorite_border);
-
                 break;
+            case android.R.id.home:
+                NavUtils.navigateUpFromSameTask(this);
+                break;
+            default: break;
         }
         return super.onOptionsItemSelected(item);
     }

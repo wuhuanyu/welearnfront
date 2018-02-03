@@ -33,14 +33,16 @@ public class Question {
     private long time;
     private int type= Constants.QA;
     private int teacherId;
+    private String teacherName;
 
     @NonNull
     public String getId() {
         return id;
     }
 
-    public void setId(@NonNull String id) {
+    public Question setId(@NonNull String id) {
         this.id = id;
+        return this;
     }
 
     @NonNull
@@ -48,8 +50,9 @@ public class Question {
         return courseId;
     }
 
-    public void setCourseId(@NonNull int courseId) {
+    public Question setCourseId(@NonNull int courseId) {
         this.courseId = courseId;
+        return this;
     }
 
     @NonNull
@@ -57,8 +60,9 @@ public class Question {
         return body;
     }
 
-    public void setBody(@NonNull String body) {
+    public Question setBody(@NonNull String body) {
         this.body = body;
+        return this;
     }
 
     @Nullable
@@ -66,8 +70,9 @@ public class Question {
         return images;
     }
 
-    public void setImages(@Nullable List<String> images) {
+    public Question setImages(@Nullable List<String> images) {
         this.images = images;
+        return this;
     }
 
     @Nullable
@@ -75,40 +80,54 @@ public class Question {
         return files;
     }
 
-    public void setFiles(@Nullable List<String> files) {
+    public Question setFiles(@Nullable List<String> files) {
         this.files = files;
+        return this;
     }
 
     public List<Answer> getAnswers() {
         return answers;
     }
 
-    public void setAnswers(List<Answer> answers) {
+    public Question setAnswers(List<Answer> answers) {
         this.answers = answers;
+        return this;
     }
 
     public long getTime() {
         return time;
     }
 
-    public void setTime(long time) {
+    public Question setTime(long time) {
         this.time = time;
+        return this;
     }
 
     public int getType() {
         return type;
     }
 
-    public void setType(int type) {
+    public Question setType(int type) {
         this.type = type;
+        return this;
     }
 
     public int getTeacherId() {
         return teacherId;
     }
 
-    public void setTeacherId(int teacherId) {
+    public Question setTeacherId(int teacherId) {
         this.teacherId = teacherId;
+        return this;
+    }
+
+    public String getTeacherName() {
+        return teacherName;
+    }
+
+    public Question setTeacherName(String teacherName) {
+        this.teacherName = teacherName;
+        return this;
     }
 
     public Question(String id, int courseId, String body, List<String> images, List<String> files, List<Answer> answers, long time, int type, int teacherId) {
@@ -164,6 +183,7 @@ public class Question {
             int courseId=courseJson.getInt("cId");
             String body=courseJson.getString("body");
             long time=courseJson.getLong("time");
+//            String teacherName=courseJson.getString("teacher_name");
             List<Answer> anss=null;
             List<String> images=null;
             if(courseJson.has("anss")&&courseJson.getJSONArray("anss").length()>0){

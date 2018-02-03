@@ -6,4 +6,5 @@ package com.example.stack.welearn.views;
 
 public interface IView {
     void refresh();
+//    void onRefreshFinished();
 }

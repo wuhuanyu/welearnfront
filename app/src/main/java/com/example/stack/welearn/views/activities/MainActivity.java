@@ -1,5 +1,8 @@
 package com.example.stack.welearn.views.activities;
 
+import android.app.Activity;
+import android.app.ActivityManager;
+import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.net.ConnectivityManager;
@@ -53,6 +56,18 @@ public class MainActivity extends BaseActivity {
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         Sensey.getInstance().init(this);
+        Sensey.getInstance()
+                .startShakeDetection(new ShakeDetector.ShakeListener() {
+                    @Override
+                    public void onShakeDetected() {
+                        Log.i(TAG,"Shake detected");
+                    }
+
+                    @Override
+                    public void onShakeStopped() {
+                        refresh();
+                    }
+                });
         if(savedInstanceState==null){
             fragmentHashMap.put("course",new CoursesFragment());
             currentFragment=fragmentHashMap.get("course");
@@ -62,20 +77,11 @@ public class MainActivity extends BaseActivity {
     }
     @Override
     public void doRegister() {
-        Intent intent=new Intent(this, MQTTService.class);
-        Sensey.getInstance()
-                .startShakeDetection(new ShakeDetector.ShakeListener() {
-                    @Override
-                    public void onShakeDetected() {
+        if(!isServiceRunning(MQTTService.class)){
+            Intent intent=new Intent(this, MQTTService.class);
+            startService(intent);
+        }
 
-                    }
-
-                    @Override
-                    public void onShakeStopped() {
-                        refresh();
-                    }
-                });
-        startService(intent);
     }
 
     @Override
@@ -167,8 +173,10 @@ public class MainActivity extends BaseActivity {
                 });
     }
     public void onStop(){
-        super.onStop();
         EventBus.getDefault().unregister(this);
+//        Sensey.getInstance().stopShakeDetection();
+        Sensey.getInstance().stop();
+        super.onStop();
     }
 
     private void switchFragment(Fragment from,Fragment to){
@@ -184,13 +192,26 @@ public class MainActivity extends BaseActivity {
         }
     }
 
+
     public void onDestroy(){
-        Sensey.getInstance().stop();
+//        Sensey.getInstance().stop();
         super.onDestroy();
     }
 
     @Override
     public void refresh() {
         ((IView)currentFragment).refresh();
+    }
+
+    private boolean isServiceRunning(Class<? extends Service> serviceClz){
+        ActivityManager manager=(ActivityManager) getSystemService(Context.ACTIVITY_SERVICE);
+        for(ActivityManager.RunningServiceInfo serviceInfo:manager.getRunningServices(Integer.MAX_VALUE)){
+            if(serviceClz.getName().equals(serviceInfo.service.getClassName())){
+                Log.i(TAG,"service"+serviceClz.getSimpleName()+" is running");
+                return true;
+            }
+        }
+        Log.i(TAG,"service"+serviceClz.getSimpleName()+" is not running");
+        return false;
     }
 }

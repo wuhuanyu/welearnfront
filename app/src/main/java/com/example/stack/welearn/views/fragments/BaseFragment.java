@@ -25,6 +25,7 @@ public abstract class BaseFragment extends Fragment implements IView {
     public abstract int getLayout();
     public abstract void doRegister();
     public abstract void initView();
+    protected boolean refresh=false;
     public Handler mHandler=new Handler(Looper.getMainLooper());
     @Nullable
     @Override
