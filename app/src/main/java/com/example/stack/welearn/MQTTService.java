@@ -129,7 +129,7 @@ public class MQTTService extends Service {
     public int onStartCommand(Intent intent, int flags, int startId) {
         Toast.makeText(this,TAG+" started",Toast.LENGTH_SHORT).show();
         icon= BitmapFactory.decodeResource(getResources(),R.mipmap.app_icon);
-        return START_STICKY;
+        return START_NOT_STICKY;
     }
 
     @Override

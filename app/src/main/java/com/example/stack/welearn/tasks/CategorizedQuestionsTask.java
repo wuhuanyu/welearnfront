@@ -63,7 +63,7 @@ public class CategorizedQuestionsTask extends BaseTask {
     public Runnable getCategorizedQuestion(boolean toRefresh) {
         return () -> {
             //假定我的课程已经缓存了 todo:check
-            JSONArray myCourseJSONS = WeLearnApp.cache().getAsJSONArray("my_course");
+            JSONArray myCourseJSONS = WeLearnApp.cache().getAsJSONArray("my_unfinished_courses");
             List<Course> myCourses = Course.toCourses(myCourseJSONS);
             //设置倒计时
             this.mCountDown = new CountDownLatch(myCourses.size());

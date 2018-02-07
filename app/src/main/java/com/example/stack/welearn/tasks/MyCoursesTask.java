@@ -1,6 +1,5 @@
 package com.example.stack.welearn.tasks;
 
-import android.nfc.Tag;
 import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
@@ -8,31 +7,18 @@ import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.stack.welearn.Cachable;
 import com.example.stack.welearn.WeLearnApp;
-import com.example.stack.welearn.config.MQTTClient;
 import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.utils.Constants;
-import com.example.stack.welearn.utils.ThreadPoolManager;
-import com.example.stack.welearn.utils.ToastUtils;
 
-import org.eclipse.paho.android.service.MqttAndroidClient;
-import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
-import org.eclipse.paho.client.mqttv3.IMqttToken;
-import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
-
-import static com.example.stack.welearn.WeLearnApp.info;
 
 /**
  * Created by stack on 2018/1/14.
@@ -62,17 +48,18 @@ public class MyCoursesTask extends BaseTask implements Cachable{
         instance.setId(useId);
         return instance;
     }
-    @Override
-    public String getCacheName() {
-        return "my_course";
+    public String getCacheName(String type) {
+        return "my_"+type+"_courses";
     }
-    public Runnable getMyCourses(boolean toRefresh){
+
+    private Runnable getCourses(boolean toRefresh, String type, Processor<List<Course>> processor){
         return  ()->{
-            JSONArray myCourseArray=mCache.getAsJSONArray(getCacheName());
+            JSONArray myCourseArray=mCache.getAsJSONArray(getCacheName(type));
             if(myCourseArray==null||toRefresh) {
                 AndroidNetworking.get(Constants.Net.API_URL + "/acc/stu/" + useId + "/course")
                         .addHeaders("authorization", autorizaiton)
                         .addHeaders("content-type", "application/json")
+                        .addQueryParameter("type",type)
                         .build()
                         .getAsJSONObject(new JSONObjectRequestListener() {
                             JSONArray data;
@@ -82,31 +69,63 @@ public class MyCoursesTask extends BaseTask implements Cachable{
                                     data = response.getJSONArray("data");
                                 } catch (Exception e) {
                                     e.printStackTrace();
-                                    EventBus.getDefault().post(new Event<List<Course>>(Event.MY_COURSE_FETCH_FAIL));
+                                    processor.FAIL(e);
                                 }
-                                mCache.put(getCacheName(), data);
+                                mCache.put(getCacheName(type), data);
                                 List<Course> myCourses = Course.toCourses(data);
-                                List<Integer> cIds=myCourses.stream().map(c->c.getId()).collect(Collectors.toList());
-                                for(Course c:myCourses){
-                                    Map<Integer,String> mycourse= WeLearnApp.info().getMyCourses();
-                                    mycourse.put(c.getId(),c.getName());
-                                }
-                                EventBus.getDefault().postSticky(new Event<List<Integer>>(Event.DO_SUBSCRIBE,cIds));
-                                EventBus.getDefault().post(new Event<>(Event.MY_COURSE_FETCH_OK, Course.toCourses(data)));
+                                processor.OK(myCourses);
                             }
                             @Override
                             public void onError(ANError anError) {
                                 Log.e(TAG, anError.getErrorBody());
-                                EventBus.getDefault().post(new Event<List<Course>>(Event.MY_COURSE_FETCH_FAIL));
+                                processor.FAIL(new Exception(anError.getMessage()));
                             }
                         });
             }
             else{
                 List<Course>courses=Course.toCourses(myCourseArray);
-                List<Integer> cIds=courses.stream().map(c->c.getId()).collect(Collectors.toList());
-                EventBus.getDefault().postSticky(new Event<List<Integer>>(Event.DO_SUBSCRIBE,cIds));
-                EventBus.getDefault().post(new Event<List<Course>>(Event.MY_COURSE_FETCH_OK,Course.toCourses(myCourseArray)));
+                processor.OK(courses);
             }
         };
+    }
+
+    public Runnable getMyUnfinishedCourses(boolean toRefresh){
+        return getCourses(toRefresh, "unfinished", new Processor<List<Course>>() {
+            @Override
+            public void OK(List<Course> data) {
+                List<Integer> cIds=data.stream().map(c->c.getId()).collect(Collectors.toList());
+                for(Course c:data){
+                    Map<Integer,String> mycourse= WeLearnApp.info().getMyCourses();
+                    mycourse.put(c.getId(),c.getName());
+                }
+                EventBus.getDefault().postSticky(new Event<List<Integer>>(Event.DO_SUBSCRIBE,cIds));
+                EventBus.getDefault().post(new Event<List<Course>>(Event.MY_COURSE_UNFINISHED_OK,data));
+            }
+
+            @Override
+            public void FAIL(Throwable error) {
+                error.printStackTrace();
+                EventBus.getDefault().post(new Event<List<Course>>(Event.MY_COURSE_UNFINISHED_FAIL));
+            }
+        });
+    }
+
+    public Runnable getMyFinishedCourses(boolean toRefresh){
+        return getCourses(toRefresh, "finished", new Processor<List<Course>>() {
+            @Override
+            public void OK(List<Course> data) {
+                EventBus.getDefault().post(new Event<List<Course>>(Event.MY_FINISHED_COURSE_OK, data));
+            }
+            @Override
+            public void FAIL(Throwable error) {
+                EventBus.getDefault().postSticky(new Event<List<Course>>(Event.MY_FINISHED_COURSE_FAIL));
+            }
+        });
+    }
+
+
+    @Override
+    public String getCacheName() {
+        return null;
     }
 }

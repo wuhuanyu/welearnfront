@@ -12,23 +12,23 @@
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_avtar"
-        android:layout_width="120dp"
-        android:layout_height="120dp"
-        android:layout_marginStart="36dp"
+        android:layout_width="100dp"
+        android:layout_height="100dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:scaleType="centerCrop"
         android:src="@drawable/avatar2"
         app:civ_border_color="@android:color/darker_gray"
         app:civ_border_width="2dp"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/button6"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
         android:id="@+id/me_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginStart="24dp"
-        android:layout_marginTop="20dp"
+        android:layout_marginStart="32dp"
+        android:layout_marginTop="24dp"
         android:text="环环环环等等我"
         android:textAppearance="@style/TextAppearance.AppCompat.Medium"
         app:layout_constraintStart_toEndOf="@+id/iv_avtar"
@@ -47,7 +47,7 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="@dimen/divider"
-        android:layout_marginTop="152dp"
+        android:layout_marginTop="130dp"
         android:background="@android:color/darker_gray"
         app:layout_constraintEnd_toEndOf="@+id/button6"
         app:layout_constraintStart_toStartOf="parent"
@@ -56,26 +56,24 @@
     <Button
         android:id="@+id/button"
         style="@android:style/Widget.Material.Light.Button.Borderless"
-        android:layout_width="340dp"
+        android:layout_width="0dp"
         android:layout_height="50dp"
-        android:gravity="start|center_vertical"
-        android:text="   已完成的课程"
         android:drawableLeft="@drawable/ic_course"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        android:gravity="start|center_vertical"
+        android:text="    我的成绩"
+        app:layout_constraintEnd_toEndOf="@+id/button6"
+        app:layout_constraintStart_toStartOf="@+id/button6"
         app:layout_constraintTop_toBottomOf="@+id/button6" />
 
     <Button
         android:id="@+id/button6"
         style="@android:style/Widget.Material.Light.Button.Borderless"
-        android:layout_width="340dp"
+        android:layout_width="0dp"
         android:layout_height="47dp"
-        android:layout_marginEnd="8dp"
-        android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:drawableLeft="@drawable/ic_comment"
         android:gravity="start|center_vertical"
-        android:text="   我的评论"
+        android:text="    我的评论"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/view" />
@@ -142,15 +140,16 @@
         app:layout_constraintEnd_toEndOf="@+id/button6"
         app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="@+id/button6"
-        app:layout_constraintTop_toBottomOf="@+id/button8" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_shedule" />
 
     <Button
-        android:id="@+id/button8"
+        android:id="@+id/btn_shedule"
         style="@android:style/Widget.Material.Light.Button.Borderless"
         android:layout_width="0dp"
         android:layout_height="48dp"
+        android:drawableLeft="@drawable/ic_timeline"
         android:gravity="start"
-        android:text="   待续"
+        android:text="    我的日程"
         app:layout_constraintEnd_toEndOf="@+id/button6"
         app:layout_constraintStart_toStartOf="@+id/button6"
         app:layout_constraintTop_toBottomOf="@+id/view2" />
@@ -171,11 +170,13 @@
         style="@android:style/Widget.DeviceDefault.Light.Button.Borderless.Small"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="60dp"
+        android:layout_marginBottom="8dp"
+        android:layout_marginTop="8dp"
         android:drawableLeft="@drawable/ic_right_arrow"
         android:gravity="center_vertical|center_horizontal"
+        app:layout_constraintBottom_toBottomOf="@+id/iv_avtar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        app:layout_constraintTop_toTopOf="@+id/iv_avtar" />
 
 </android.support.constraint.ConstraintLayout>
 

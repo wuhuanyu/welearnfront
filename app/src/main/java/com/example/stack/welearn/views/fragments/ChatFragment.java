@@ -34,7 +34,7 @@ public class ChatFragment extends BaseFragment implements DialogsListAdapter.OnD
 
     private DialogsListAdapter<Dialog> mDialogsAdapter;
     private Runnable getCoursesDialog=()->{
-        List<Course> myCourses=Course.toCourses(mCache.getAsJSONArray("my_course"));
+        List<Course> myCourses=Course.toCourses(mCache.getAsJSONArray("my_unfinished_courses"));
         if(myCourses!=null){
             List<Dialog> dialogs=myCourses.stream().map(course -> {
                 Dialog dialog= new Dialog()

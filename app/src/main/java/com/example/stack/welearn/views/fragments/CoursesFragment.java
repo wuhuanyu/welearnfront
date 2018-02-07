@@ -1,6 +1,5 @@
 package com.example.stack.welearn.views.fragments;
 
-import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
@@ -11,7 +10,6 @@ import android.widget.LinearLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.stack.welearn.R;
-import com.example.stack.welearn.utils.ToastUtils;
 import com.example.stack.welearn.views.activities.CourseDetailActivity;
 import com.example.stack.welearn.adapters.CourseAdapter;
 import com.example.stack.welearn.adapters.GlideImageLoader;
@@ -67,9 +65,7 @@ public class CoursesFragment extends BaseFragment {
         bundle.putInt("course_id",course.getId());
         bundle.putString("course_name",course.getName());
         CourseDetailActivity.start(getActivity(),bundle);
-//        Intent intent=new Intent(getContext(), CourseDetailActivity.class);
-//        intent.putExtras(bundle);
-//        startActivity(intent);
+
     };
     @Override
     public int getLayout() {
@@ -86,7 +82,7 @@ public class CoursesFragment extends BaseFragment {
     }
     @Override
     public void initView() {
-        ThreadPoolManager.getInstance().getService().submit(mCourseTask.getMyCourses(false));
+        ThreadPoolManager.getInstance().getService().submit(mCourseTask.getMyUnfinishedCourses(false));
         ThreadPoolManager.getInstance().getService().submit(mPremierCourseTask.getPremierCourses(false));
 
         myCourseAdapter =new CourseAdapter(R.layout.item_course_card, myCourseData);
@@ -123,27 +119,25 @@ public class CoursesFragment extends BaseFragment {
 
     @Override
     public void onStop() {
-        super.onStop();
         EventBus.getDefault().unregister(this);
         mBanner.stopAutoPlay();
+        super.onStop();
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(Event<List<Course>> event){
         List<Course> data;
         switch (event.code()){
-            case Event.MY_COURSE_FETCH_OK:
+            case Event.MY_COURSE_UNFINISHED_OK:
                 Log.i(TAG,"------start processing my course-------");
                 mHandler.post(()->{
                     myCourseAdapter.setNewData(event.t());
-//                    ToastUtils.getInstance().showMsgShort("刷新完毕");
                 });
                 break;
             case Event.PREMIER_COURSE_FETCH_OK:
                 Log.i(TAG,"--------start processing premier course-------");
                 mHandler.post(()->{
                     premierCourseAdapter.setNewData(event.t());
-//                    ToastUtils.getInstance().showMsgShort();
                 });
                 break;
             default:break;
@@ -153,7 +147,7 @@ public class CoursesFragment extends BaseFragment {
     @Override
     public void refresh() {
         refresh=true;
-        ThreadPoolManager.getInstance().getService().submit(mCourseTask.getMyCourses(true));
+        ThreadPoolManager.getInstance().getService().submit(mCourseTask.getMyUnfinishedCourses(true));
         ThreadPoolManager.getInstance().getService().submit(mPremierCourseTask.getPremierCourses(true));
     }
 }

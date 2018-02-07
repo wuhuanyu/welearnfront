@@ -17,8 +17,9 @@ public class Event<T>{
     /**
      * 网络事件
      */
-    public static final int MY_COURSE_FETCH_OK=11;
-    public static final int MY_COURSE_FETCH_FAIL=12;
+    public static final int MY_COURSE_UNFINISHED_OK =11;
+    public static final int MY_COURSE_UNFINISHED_FAIL =12;
+
 
     public static final int PREMIER_COURSE_FETCH_OK=13;
     public static final int PREMIER_COURSE_FETCH_FAIL=14;
@@ -40,6 +41,9 @@ public class Event<T>{
 
     public static final int BULLETIN_FETCH_OK=25;
     public static final int BULLETIN_FETCH_FAIL=26;
+
+    public static final int MY_FINISHED_COURSE_OK=27;
+    public static final int MY_FINISHED_COURSE_FAIL=28;
 
     /**
      * 通知事件
