@@ -1,8 +1,20 @@
 <resources>
-    <string name="app_name">Welearn</string>
+    <string name="app_name">我们爱学习</string>
 
     <string name="navigation_drawer_open">Open navigation drawer</string>
     <string name="navigation_drawer_close">Close navigation drawer</string>
 
     <string name="action_settings">Settings</string>
+    <string name="saved_info">saved_info</string>
+    <string name="saved_username">saved_username</string>
+    <string name="saved_type">saved_type</string>
+    <string name="saved_password">saved_password</string>
+    <string name="saved_id">save_id</string>
+    <string name="demo_question_body">"坚持实战实训、联战联训，坚持按纲施训、从严治训"，习主席的训令为全军树立起练兵备战的鲜明导向。中国特色社会主义进入了新时代，党和人民赋予了人民军队新的历史使命。聆听了习主席训令，广大官兵一致认为，提高军事训练实战化水平，必须坚持仗怎么打兵就怎么练，打仗需要什么就苦练什么。
+    </string>
+    <array name="pager_indicator_color">
+        <item>#000</item>
+    </array>
+    <string name="comment_ok">评论成功</string>
+    <string name="unauthorized">请登录后操作</string>
 </resources>

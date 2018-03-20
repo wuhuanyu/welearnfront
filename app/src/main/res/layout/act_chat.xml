@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+<com.stfalcon.chatkit.messages.MessagesList
+    android:id="@+id/messageList"
+    android:layout_width="match_parent"
+    android:layout_above="@+id/input"
+    android:layout_height="match_parent">
+</com.stfalcon.chatkit.messages.MessagesList>
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="1dp"
+        android:layout_marginLeft="16dp"
+        android:layout_marginRight="16dp"
+        android:background="@android:color/white"
+        android:layout_above="@id/input"/>
+
+    <com.stfalcon.chatkit.messages.MessageInput
+        android:layout_width="match_parent"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/input"
+        app:inputHint="输入"
+        app:showAttachmentButton="true"
+        android:layout_height="wrap_content">
+    </com.stfalcon.chatkit.messages.MessageInput>
+</RelativeLayout>
