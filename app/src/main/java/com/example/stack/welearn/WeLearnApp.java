@@ -85,7 +85,7 @@ public class WeLearnApp extends Application {
                         auth.put("password",myinfo.getPassword());
                         auth.put("action","login");
                         auth.put("type",myinfo.getUserType());
-//
+
                         ANRequest loginRequest=AndroidNetworking.post(Constants.Net.API_URL+"/acc")
                                 .addJSONObjectBody(auth)
                                 .build();

@@ -95,8 +95,7 @@ public class QuestionDetailActivity extends BaseActivity {
 
 
         questionImageAdapter=new ImageAdapter(R.layout.item_grid_image,new ArrayList<>());
-//        GridLayoutManager gridLayoutManager=new GridLayoutManager(GridLayoutManager.HORIZONTAL,false);
-//        GridLayoutManager gridLayoutManager=new GridLayoutManager(this,GridLayoutManager.DEFAULT_SPAN_COUNT);
+
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         images.setLayoutManager(linearLayoutManager);
         images.setAdapter(questionImageAdapter);
@@ -131,18 +130,18 @@ public class QuestionDetailActivity extends BaseActivity {
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(Event<?> event){
-        Log.i(TAG,"-----------on event---------");
-        Log.i(TAG,event.code()+"");
+        Log.d(TAG,"-----------on event---------");
+        Log.d(TAG,event.code()+"");
         switch (event.code()){
             case Event.QUESITON_FETCH_OK:
-                Log.i(TAG,"---------start processing question---------");
+                Log.d(TAG,"---------start processing question---------");
                 this.questions=(List<Question>)event.t();
                 mHandler.post(()->{
                     setUpQuestion(this.questions.get(0));
                 });
                 break;
             case Event.QUESTION_COMMENT_FETCH_OK:
-                Log.i(TAG,"----------start processing question comments-------");
+                Log.d(TAG,"----------start processing question comments-------");
                 mHandler.post(()->{
                     setUpComments((List<Comment>)event.t());
                 });

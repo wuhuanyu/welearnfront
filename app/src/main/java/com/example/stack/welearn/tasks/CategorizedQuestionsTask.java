@@ -60,10 +60,19 @@ public class CategorizedQuestionsTask extends BaseTask {
 
     private List<Runnable> tasks;
 
+//    public Runnable getCategorizedQuestion(boolean toRefresh){
+//        return ()->{
+//
+//        };
+//    }
+
+
+
     public Runnable getCategorizedQuestion(boolean toRefresh) {
         return () -> {
             //假定我的课程已经缓存了 todo:check
             JSONArray myCourseJSONS = WeLearnApp.cache().getAsJSONArray("my_unfinished_courses");
+
             List<Course> myCourses = Course.toCourses(myCourseJSONS);
             //设置倒计时
             this.mCountDown = new CountDownLatch(myCourses.size());
@@ -81,8 +90,8 @@ public class CategorizedQuestionsTask extends BaseTask {
                                         @Override
                                         public void onResponse(JSONObject response) {
                                             try {
-                                                Log.i(TAG, "-------fetch question ok of course " + courseId + "--------- ");
-                                                Log.i(TAG, response.toString());
+                                                Log.d(TAG, "-------fetch question ok of course " + courseId + "--------- ");
+                                                Log.d(TAG, response.toString());
                                                 JSONArray questionJsons = response.getJSONArray("data");
                                                 mCache.put("course-" + courseId + "-questions", questionJsons);
                                                 //再次转化
@@ -103,7 +112,7 @@ public class CategorizedQuestionsTask extends BaseTask {
                                 }
                                 //缓存中有
                                 else {
-                                    Log.i(TAG, "缓存中存在课程的习题----course id:" + courseId);
+                                    Log.d(TAG, "缓存中存在课程的习题----course id:" + courseId);
                                     categorizedQuestionCourses.add(toCategorizedQuestion(course, cachedQuestions));
                                     mCountDown.countDown();
                                 }

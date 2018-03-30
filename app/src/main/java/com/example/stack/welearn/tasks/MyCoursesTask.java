@@ -16,10 +16,7 @@ import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
-import java.nio.file.WatchEvent;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.CountDownLatch;
 import java.util.stream.Collectors;
 
 /**
@@ -29,15 +26,16 @@ import java.util.stream.Collectors;
 public class MyCoursesTask extends BaseTask implements Cachable{
     private static final String TAG=MyCoursesTask.class.getSimpleName();
     private static MyCoursesTask instance;
-    private String autorizaiton;
+    private String authorization;
+
     private int useId;
-    private CountDownLatch mCountDownLatch;
+
     private MyCoursesTask(String auth,int userId){
-        this.autorizaiton=auth;
+        this.authorization =auth;
         this.useId=userId;
     }
-    public void setAutorizaiton(String autorizaiton){
-        this.autorizaiton=autorizaiton;
+    public void setAuthorization(String authorization){
+        this.authorization = authorization;
     }
     public void setId(int id){
         this.useId=id;
@@ -46,7 +44,7 @@ public class MyCoursesTask extends BaseTask implements Cachable{
         if(instance==null){
             instance=new MyCoursesTask(auth,useId);
         }
-        instance.setAutorizaiton(auth);
+        instance.setAuthorization(auth);
         instance.setId(useId);
         return instance;
     }
@@ -59,7 +57,8 @@ public class MyCoursesTask extends BaseTask implements Cachable{
             JSONArray myCourseArray=mCache.getAsJSONArray(getCacheName(type));
             if(myCourseArray==null||toRefresh) {
                 AndroidNetworking.get(Constants.Net.API_URL + "/acc/stu/" + useId + "/course")
-                        .addHeaders("authorization", autorizaiton)
+
+//                        .addHeaders("authorization", authorization)
                         .addHeaders("content-type", "application/json")
                         .addQueryParameter("type",type)
                         .build()
@@ -97,12 +96,13 @@ public class MyCoursesTask extends BaseTask implements Cachable{
             public void OK(List<Course> data) {
                 List<Integer> cIds=data.stream().map(c->c.getId()).collect(Collectors.toList());
                 for(Course c:data){
-//                    Map<Integer,String> mycourse= WeLearnApp.info().getMyCourses();
                     SparseArray<String> myCourse= WeLearnApp.info().getMyCourses();
-//                    mycourse.put(c.getId(),c.getName());
                     myCourse.append(c.getId(),c.getName());
                 }
+
+                //订阅channel
                 EventBus.getDefault().postSticky(new Event<List<Integer>>(Event.DO_SUBSCRIBE,cIds));
+                // 更新UI
                 EventBus.getDefault().post(new Event<List<Course>>(Event.MY_COURSE_UNFINISHED_OK,data));
             }
 
@@ -122,7 +122,7 @@ public class MyCoursesTask extends BaseTask implements Cachable{
             }
             @Override
             public void FAIL(Throwable error) {
-                EventBus.getDefault().postSticky(new Event<List<Course>>(Event.MY_FINISHED_COURSE_FAIL));
+                EventBus.getDefault().post(new Event<List<Course>>(Event.MY_FINISHED_COURSE_FAIL));
             }
         });
     }
