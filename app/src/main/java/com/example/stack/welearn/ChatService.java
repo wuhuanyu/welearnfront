@@ -53,7 +53,7 @@ public class ChatService extends Service {
         JSONObject msgJson=new JSONObject();
         try {
             msgJson.put("body",msg);
-            msgJson.put("authorization", com.example.stack.welearn.test.DefaultUser.authorization);
+            msgJson.put("authorization",WeLearnApp.info().getAuth());
         } catch (JSONException e) {
             e.printStackTrace();
         }

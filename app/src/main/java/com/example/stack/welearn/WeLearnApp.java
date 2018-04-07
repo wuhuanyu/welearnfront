@@ -117,7 +117,7 @@ public class WeLearnApp extends Application {
     public void onCreate() {
         super.onCreate();
         WeLearnApp.context=getApplicationContext();
-        AndroidNetworking.initialize(WeLearnApp.context,httpClient());
+        AndroidNetworking.initialize(WeLearnApp.getContext());
         myinfo=new MYINFO();
         mCache=ACache.get(this);
         if(LeakCanary.isInAnalyzerProcess(this))
@@ -138,7 +138,18 @@ public class WeLearnApp extends Application {
         private  String password;
         private  int userType;
         private int id;
-//        private  Map<Integer,String> myCourses=new HashMap<>();
+        private String auth;
+
+        public String getAuth(){
+            return auth;
+        }
+
+        public MYINFO setAuth(String auth) {
+            this.auth = auth;
+            return this;
+        }
+
+        //        private  Map<Integer,String> myCourses=new HashMap<>();
         private SparseArray<String> myCourses=new SparseArray<>();
         private MYINFO(){};
         private String token;

@@ -265,7 +265,7 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
                 return;
             }
             AndroidNetworking.post(Constants.Net.API_URL+"/course/"+courseId+"/comment")
-                    .addHeaders("authorization", com.example.stack.welearn.test.DefaultUser.authorization)
+                    .addHeaders("authorization", WeLearnApp.info().getAuth())
                     .addHeaders("content-type","application/json")
                     .addJSONObjectBody(submitContent)
                     .build()

@@ -57,8 +57,7 @@ public class MyCoursesTask extends BaseTask implements Cachable{
             JSONArray myCourseArray=mCache.getAsJSONArray(getCacheName(type));
             if(myCourseArray==null||toRefresh) {
                 AndroidNetworking.get(Constants.Net.API_URL + "/acc/stu/" + useId + "/course")
-
-//                        .addHeaders("authorization", authorization)
+                        .addHeaders("authorization",authorization)
                         .addHeaders("content-type", "application/json")
                         .addQueryParameter("type",type)
                         .build()

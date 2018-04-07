@@ -51,6 +51,9 @@ public class Event<T>{
     public static final int LOGIN_OK=31;
     public static final int LOGIN_FAIL=32;
 
+    public static final int LOGOUT_OK=33;
+    public static final int LOGOUT_FAIL=34;
+
     /**
      * 通知事件
      */

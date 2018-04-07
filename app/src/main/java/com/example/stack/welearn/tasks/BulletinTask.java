@@ -4,6 +4,7 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.stack.welearn.Cachable;
+import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.entities.Bulletin;
 import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.entities.DefaultUser;
@@ -53,7 +54,7 @@ public class BulletinTask extends BaseTask implements Cachable {
                         .execute(new Runnable() {
                             public void run(){
                                 AndroidNetworking.get(Constants.Net.API_URL+"/course/"+course.getId()+"/bulletin")
-                                        .addHeaders("authorization", com.example.stack.welearn.test.DefaultUser.authorization)
+                                        .addHeaders("authorization", WeLearnApp.info().getAuth())
                                         .addHeaders("content-type","application/json")
                                         .build()
                                         .getAsJSONObject(new JSONObjectRequestListener() {

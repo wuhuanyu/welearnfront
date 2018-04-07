@@ -15,7 +15,6 @@ import com.example.stack.welearn.entities.CategorizedQuestionCourse;
 import com.example.stack.welearn.entities.TestPaper;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.CategorizedQuestionsTask;
-import com.example.stack.welearn.test.DefaultUser;
 import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.utils.ToastUtils;
 import com.youth.banner.Banner;
@@ -48,7 +47,7 @@ public class QuestionsFragment extends BaseFragment {
     TestPaperAdapter mTestpaperAdapter;
 
 
-    CategorizedQuestionsTask mCategorizedQuestionsTask=CategorizedQuestionsTask.instance(DefaultUser.authorization,DefaultUser.id);
+    CategorizedQuestionsTask mCategorizedQuestionsTask=CategorizedQuestionsTask.instance(WeLearnApp.info().getAuth(),WeLearnApp.info().getId());
     @BindView(R.id.rv_testpaper)
     RecyclerView mTestPapers;
     @Override

@@ -17,7 +17,9 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.events.Event;
+import com.example.stack.welearn.tasks.AccTask;
 import com.example.stack.welearn.utils.Constants;
+import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.utils.ToastUtils;
 
 import org.greenrobot.eventbus.EventBus;
@@ -40,8 +42,8 @@ public class SignUpLoginAct extends AppCompatActivity {
     @BindView(R.id.edit_password) EditText EditPass;
     @BindView(R.id.edit_username) EditText EditName;
     @BindView(R.id.ckBox_ifteacher) CheckBox ckBoxIfTeacher;
-    @BindView(R.id.text_signup) TextView TextSignUp;
-    @BindView(R.id.btn_sign) Button BtnSignIn;
+    @BindView(R.id.text_signup) TextView SignUpOrLogin;
+    @BindView(R.id.btn_sign) Button BtnSubmit;
 
     private static String TAG="[SignUpLoginAct]:";
 
@@ -61,8 +63,8 @@ public class SignUpLoginAct extends AppCompatActivity {
         //todo add animation
     void switchMode(View v){
         this.login=false;
-        TextSignUp.setVisibility(View.INVISIBLE);
-        BtnSignIn.setText("注册");
+        SignUpOrLogin.setVisibility(View.INVISIBLE);
+        BtnSubmit.setText("注册");
     }
     @OnClick(R.id.btn_sign)
     void btnPressed(View v){
@@ -87,61 +89,30 @@ public class SignUpLoginAct extends AppCompatActivity {
                 @Override
                 public void onResponse(JSONObject response) {
                     try {
-                        //{result:id,msg:msg}
                         int id=response.getInt("result");
-                        EventBus.getDefault().post(new AccEvent(AccEvent.ACC_SIGNUP,200,id));
+                        EventBus.getDefault().post(new Event<Integer>(Event.SIGNUP_OK,id));
                     } catch (JSONException e) {
                         e.printStackTrace();
+//                        EventBus.getDefault()
                     }
                 }
 
                 @Override
                 public void onError(ANError anError) {
                     if(anError.getErrorCode()!=0){
-                        EventBus.getDefault().post(new AccEvent(AccEvent.ACC_SIGNUP,anError.getErrorCode(),""));
+                        EventBus.getDefault().post(new Event<String>(Event.SIGNUP_FAIL));
                     }
                 }
             });
         }).start();
     }
-    //do actual work,sign in
+
     private void doLogin() {
         String name=EditName.getText().toString();
         String pass=EditPass.getText().toString();
         if(name.length()==0||pass.length()==0) return;
-
-        String url=Constants.Net.API_URL+"/acc";
         int type=(ckBoxIfTeacher.isChecked()?Constants.ACC_T_Tea:Constants.ACC_T_Stu);
-
-        new Thread(()->{
-            AndroidNetworking.post(url)
-                    .addBodyParameter("name",name)
-                    .addBodyParameter("password",pass)
-                    .addBodyParameter("type",""+type)
-                    .build().getAsJSONObject(new JSONObjectRequestListener() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        String token=response.getString("token");
-                        JSONObject authJson=new JSONObject();
-                        authJson.put("id",response.get("id"));
-                        authJson.put("token",response.get("token"));
-                        EventBus.getDefault().post(new Event<JSONObject>(Event.LOGIN_OK,authJson));
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-
-                @Override
-                public void onError(ANError anError) {
-                    if(anError.getErrorCode()!=0){
-//                        EventBus.getDefault().post(new AccEvent(AccEvent.ACC_LOGIN,anError.getErrorCode(),""));
-//                        EventBus.getDefault().post(new Event<>());
-                        EventBus.getDefault().post(new Event<String>(Event.LOGIN_FAIL,null));
-                    }
-                }
-            });
-        }).start();
+        ThreadPoolManager.getInstance().getService().submit(AccTask.instance().doLogin(name,pass,type));
     }
 
     @Override
@@ -152,8 +123,9 @@ public class SignUpLoginAct extends AppCompatActivity {
 
     @Override
     public void onStop(){
-        super.onStop();
         EventBus.getDefault().unregister(this);
+        super.onStop();
+
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -162,31 +134,35 @@ public class SignUpLoginAct extends AppCompatActivity {
         switch(code){
             case Event.LOGIN_OK:{
                 ToastUtils.getInstance(this).showMsgShort("Login Successfully");
-                //save information
-                SharedPreferences sharePre=getSharedPreferences(getString(R.string.saved_info), Context.MODE_PRIVATE);
-                JSONObject authJson=(JSONObject)event.t();
-                try {
-                    //store in file
-                    sharePre.edit()
-                            .putString(getString(R.string.saved_username),EditName.getText().toString())
-                            .putString(getString(R.string.saved_password),EditPass.getText().toString())
-                            .putInt(getString(R.string.saved_type),ckBoxIfTeacher.isChecked()?Constants.ACC_T_Tea:Constants.ACC_T_Stu)
-                            .putString("token",authJson.getString("token"))
-                            .putInt("id",authJson.getInt("id"))
-                            .apply();
-                    //store in memory
-                    WeLearnApp.info().setToken(authJson.getString("token"))
-                            .setId(authJson.getInt("id"))
-                            .setPassword(EditPass.getText().toString())
-                            .setUserName(EditName.getText().toString())
-                            .setUserType(ckBoxIfTeacher.isChecked()?Constants.ACC_T_Tea:Constants.ACC_T_Stu);
+                String name=EditName.getText().toString();
+                String pass=EditPass.getText().toString();
+                int type=ckBoxIfTeacher.isChecked()?Constants.ACC_T_Tea:Constants.ACC_T_Stu;
+                AccTask.instance().persist(name,pass,type,((Event<JSONObject>)event).t());
 
-                    MainActivity.start(this);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+                MainActivity.start(this);
 
-//                        .putInt(getString(R.string.saved_id),)
+                this.finish();
+
+//                SharedPreferences sharePre=getSharedPreferences(getString(R.string.saved_info), Context.MODE_PRIVATE);
+//                JSONObject authJson=(JSONObject)event.t();
+//                try {
+//                    sharePre.edit()
+//                            .putString(getString(R.string.saved_username),EditName.getText().toString())
+//                            .putString(getString(R.string.saved_password),EditPass.getText().toString())
+//                            .putInt(getString(R.string.saved_type),ckBoxIfTeacher.isChecked()?Constants.ACC_T_Tea:Constants.ACC_T_Stu)
+//                            .putString("token",authJson.getString("token"))
+//                            .putInt("id",authJson.getInt("id"))
+//                            .apply();
+//
+//                    WeLearnApp.info().setToken(authJson.getString("token"))
+//                            .setId(authJson.getInt("id"))
+//                            .setPassword(EditPass.getText().toString())
+//                            .setUserName(EditName.getText().toString())
+//                            .setUserType(ckBoxIfTeacher.isChecked()?Constants.ACC_T_Tea:Constants.ACC_T_Stu);
+//
+//                    MainActivity.start(this);
+
+
             } break;
             case Event.LOGIN_FAIL:{
                 ToastUtils.getInstance().showMsgShort("Login fail,check your name or password");
@@ -209,8 +185,8 @@ public class SignUpLoginAct extends AppCompatActivity {
         }
         else{
             this.login=true;
-            TextSignUp.setVisibility(View.VISIBLE);
-            BtnSignIn.setText("Signup");
+            SignUpOrLogin.setVisibility(View.VISIBLE);
+            BtnSubmit.setText("Signup");
         }
     }
 }

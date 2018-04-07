@@ -35,14 +35,14 @@ public class MQTTClient {
         private static MQTTClient instance=new MQTTClient();
     }
     private MQTTClient(){
-        this.client=new MqttAndroidClient(WeLearnApp.getContext(), Constants.Net.BROKER_URL, com.example.stack.welearn.test.DefaultUser.authorization);
+        this.client=new MqttAndroidClient(WeLearnApp.getContext(), Constants.Net.BROKER_URL,WeLearnApp.info().getToken());
     }
     public static MQTTClient instance(){
         return MQTTClientHolder.instance;
     }
     public  MqttAndroidClient getClient(){
         if(this.client==null){
-            this.client=new MqttAndroidClient(WeLearnApp.getContext(), Constants.Net.BROKER_URL, com.example.stack.welearn.test.DefaultUser.authorization);
+            this.client=new MqttAndroidClient(WeLearnApp.getContext(), Constants.Net.BROKER_URL, WeLearnApp.info().getToken());
         }
         return this.client;
     }

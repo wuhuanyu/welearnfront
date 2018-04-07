@@ -196,6 +196,7 @@ public class MQTTService extends Service {
                     }
                     @Override
                     public void onConnectionOK() {
+                        Log.d(TAG,"connect to mqtt server ok");
                         mqttClient.setUpCallback(mqttCallback);
                         doSubscribe(courses);
                     }
@@ -215,6 +216,7 @@ public class MQTTService extends Service {
         switch (code){
             case Event.DO_SUBSCRIBE:
                 subscribe((List<Integer>)event.t());
+                EventBus.getDefault().removeStickyEvent(event);
                 break;
             default:break;
         }
