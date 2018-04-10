@@ -7,7 +7,6 @@ import com.example.stack.welearn.Cachable;
 import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.entities.Bulletin;
 import com.example.stack.welearn.entities.Course;
-import com.example.stack.welearn.entities.DefaultUser;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.ThreadPoolManager;
@@ -17,13 +16,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.ContentHandler;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.stream.Collectors;
 
 /**
  * Created by stack on 1/28/18.
@@ -44,7 +40,7 @@ public class BulletinTask extends BaseTask implements Cachable {
         return instance;
     }
     public Runnable getAllBulletinsTask(boolean toRefresh){return ()->{
-        JSONArray myCoursesJsons=mCache.getAsJSONArray("my_course");
+        JSONArray myCoursesJsons=mCache.getAsJSONArray("my_unfinished_courses");
         if(toRefresh) {
             List<Course> courses = Course.toCourses(myCoursesJsons);
             countDownLatch = new CountDownLatch(courses.size());

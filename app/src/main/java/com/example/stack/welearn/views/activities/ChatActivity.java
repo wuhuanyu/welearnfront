@@ -1,31 +1,33 @@
 package com.example.stack.welearn.views.activities;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.Bundle;
-import android.util.Log;
+import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.stack.welearn.R;
+import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.entities.ChatMessage;
 import com.example.stack.welearn.entities.ChatUser;
-import com.example.stack.welearn.events.Event;
-import com.example.stack.welearn.fixtures.MessagesFixtures;
+import com.example.stack.welearn.tasks.ChatTask;
 import com.example.stack.welearn.utils.Constants;
+import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
 import com.stfalcon.chatkit.messages.MessagesListAdapter;
 
+import org.json.JSONException;
+import org.json.JSONObject;
+
 import java.util.Date;
 
 import butterknife.BindView;
-
-import org.greenrobot.eventbus.EventBus;
-import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 /**
  * Created by stack on 2018/1/9.
@@ -44,10 +46,27 @@ public class ChatActivity extends BaseActivity implements MessageInput.InputList
     private Menu menu;
     private int selectionCount;
     private Date lastLoadedDate;
+    private int courseId;
+
+    private BroadcastReceiver mMsgReceiver=new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            String dataJson=intent.getStringExtra("msg_json");
+            try {
+                JSONObject messageJson=new JSONObject(dataJson);
+                setUpMessage(messageJson);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+    };
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
+        LocalBroadcastManager.getInstance(this).registerReceiver(
+                mMsgReceiver,new IntentFilter("new_message")
+        );
+
     }
     @Override
     public void doRegister() {
@@ -55,6 +74,7 @@ public class ChatActivity extends BaseActivity implements MessageInput.InputList
     }
     @Override
     public void initView() {
+        this.courseId=getIntent().getIntExtra("course_id",-1);
         mImageLoader=new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url) {
@@ -62,7 +82,10 @@ public class ChatActivity extends BaseActivity implements MessageInput.InputList
             }
         };
         mMessageInput.setInputListener(this);
-        mMessageAdapter=new MessagesListAdapter<ChatMessage>("1",mImageLoader);
+        String myId=String.valueOf(WeLearnApp.info().getUserType())+":"+String.valueOf(WeLearnApp.info().getId());
+        mMessageAdapter=new MessagesListAdapter<ChatMessage>(
+                myId,
+                mImageLoader);
         mMessagesList.setAdapter(mMessageAdapter);
     }
 
@@ -76,49 +99,57 @@ public class ChatActivity extends BaseActivity implements MessageInput.InputList
 
     }
     public void onStop(){
-        EventBus.getDefault().unregister(this);
+        LocalBroadcastManager.getInstance(this).unregisterReceiver(mMsgReceiver);
         super.onStop();
     }
 
     @Override
     public boolean onSubmit(CharSequence input) {
-        mMessageAdapter.addToStart(MessagesFixtures.getTextMessage(input.toString()),true);
+        ThreadPoolManager.getInstance().getService()
+                .submit(ChatTask.instance().sendMsg(WeLearnApp.info().getAuth(),courseId,input.toString()));
         return true;
     }
 
-    @Subscribe(threadMode = ThreadMode.MAIN)
-    public void onEvent(Event<JSONObject> messageEvent){
-        int code=messageEvent.code();
-        switch (code){
-            case Event.NEW_MESSAGE:
-                JSONObject messageJson=messageEvent.t();
-                Log.d(TAG,messageJson.toString());
-                try {
-                    boolean isTeacher=messageJson.getInt("type")== Constants.ACC_T_Tea;
-                    int id=messageJson.getInt("id");
-                    ChatMessage message=new ChatMessage();
 
-                    message.setId(String.valueOf(id));
-                    ChatUser user=new ChatUser();
+    private void setUpMessage(JSONObject messageJson){
+        try {
+            int id=messageJson.getInt("id");
+            ChatMessage message=new ChatMessage();
 
-                    user.setId((isTeacher?"teacher":"student")+messageJson.getInt("sender_id"));
-                    //获取姓名
-                    user.setName(messageJson.getString("sender_name"));
-                    user.setAvatar(messageJson.getString("avatar"));
-                    message.setCreatedAt(new Date(messageJson.getLong("send_time")))
-                            .setText(messageJson.getString("body"))
-                            .setUser(user);
-                    mMessageAdapter.addToStart(message,true);
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
+            message.setId(String.valueOf(id));
+            ChatUser user=new ChatUser();
+            user.setId(
+                    String.valueOf(messageJson.getInt("type"))+":"+String.valueOf(messageJson.getInt("sender_id"))
+            );
+
+            user.setName(messageJson.getString("sender_name"));
+            user.setAvatar(messageJson.getString("avatar"));
+            message.setCreatedAt(new Date(messageJson.getLong("send_time")))
+                    .setText(messageJson.getString("body"))
+                    .setUser(user);
+            mMessageAdapter.addToStart(message,true);
+
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
+
+//    @Subscribe(threadMode = ThreadMode.MAIN)
+//    public void onEvent(Event<JSONObject> messageEvent){
+//        int code=messageEvent.code();
+//        switch (code){
+//            case Event.NEW_MESSAGE:
+//                JSONObject messageJson=messageEvent.t();
+//                Log.d(TAG,messageJson.toString());
+//
+//        }
+//    }
 
     @Override
     public void refresh() {
 
     }
+
 }
 
 

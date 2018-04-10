@@ -1,7 +1,5 @@
 package com.example.stack.welearn.entities;
 
-import android.support.v7.widget.LinearLayoutManager;
-
 import com.stfalcon.chatkit.commons.models.IDialog;
 import com.stfalcon.chatkit.commons.models.IUser;
 

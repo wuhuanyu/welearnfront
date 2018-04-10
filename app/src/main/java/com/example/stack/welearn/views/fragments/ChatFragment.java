@@ -6,13 +6,13 @@ import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
 import com.example.stack.welearn.R;
-import com.example.stack.welearn.views.activities.ChatActivity;
 import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.entities.Dialog;
 import com.example.stack.welearn.fixtures.DialogsFixtures;
 import com.example.stack.welearn.fixtures.MessagesFixtures;
 import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.ThreadPoolManager;
+import com.example.stack.welearn.views.activities.ChatActivity;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
@@ -79,7 +79,9 @@ public class ChatFragment extends BaseFragment implements DialogsListAdapter.OnD
 
     @Override
     public void onDialogClick(Dialog dialog) {
+        int courseId=Integer.parseInt(dialog.getId());
         Intent intent=new Intent(getActivity(), ChatActivity.class);
+        intent.putExtra("course_id",courseId);
         startActivity(intent);
     }
 

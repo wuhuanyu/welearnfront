@@ -1,6 +1,5 @@
 package com.example.stack.welearn.tasks;
 
-import android.app.ActivityManager;
 import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
@@ -11,7 +10,6 @@ import com.example.stack.welearn.entities.CategorizedQuestionCourse;
 import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.entities.Question;
 import com.example.stack.welearn.events.Event;
-import com.example.stack.welearn.utils.ACache;
 import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.ThreadPoolManager;
 
@@ -21,12 +19,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.concurrent.CountDownLatch;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -38,37 +32,26 @@ public class CategorizedQuestionsTask extends BaseTask {
     private static CategorizedQuestionsTask instance;
     private String auth;
     private int id;
-    private MyCoursesTask myCoursesTask;
+
     //请求倒计时
     private CountDownLatch mCountDown;
 
     //    private Map<Integer,List<Question>> categorizedQuestions=new HashMap<>();
     private List<CategorizedQuestionCourse> categorizedQuestionCourses = new ArrayList<>();
 
-    private CategorizedQuestionsTask(String auth, int id) {
-        this.auth = auth;
-        this.id = id;
-        myCoursesTask = MyCoursesTask.instance(auth, id);
+    private CategorizedQuestionsTask() {
     }
 
-    public static CategorizedQuestionsTask instance(String auth, int id) {
+    public static CategorizedQuestionsTask instance() {
         if (instance == null) {
-            instance = new CategorizedQuestionsTask(auth, id);
+            instance = new CategorizedQuestionsTask();
         }
         return instance;
     }
 
     private List<Runnable> tasks;
 
-//    public Runnable getCategorizedQuestion(boolean toRefresh){
-//        return ()->{
-//
-//        };
-//    }
-
-
-
-    public Runnable getCategorizedQuestion(boolean toRefresh) {
+    public Runnable getCategorizedQuestion(boolean toRefresh,String auth) {
         return () -> {
             //假定我的课程已经缓存了 todo:check
             JSONArray myCourseJSONS = WeLearnApp.cache().getAsJSONArray("my_unfinished_courses");

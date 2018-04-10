@@ -20,9 +20,13 @@ public final class Constants {
     public static final int QA=32;
 
 
-
+    public static String chooseHost(String virtual, String local){
+       return System.getProperty("os.arch").equals("i686")? virtual:local;
+    }
     public static final class Net{
-        public static final String HOST="10.0.3.2";
+        public static final String VIRTUAL="10.0.3.2";
+        public static final String LOCAL="192.168.1.105";
+        public static final String HOST= chooseHost(VIRTUAL,LOCAL);
         public static final String PORT="3000";
         public static final String API_URL="http://"+HOST+":"+PORT+"/api/v1";
         public static final String IMAGE_URL="http://"+HOST+":"+PORT+"/images/";

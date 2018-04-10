@@ -1,6 +1,5 @@
 package com.example.stack.welearn.entities;
 
-import android.bluetooth.BluetoothAssignedNumbers;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 

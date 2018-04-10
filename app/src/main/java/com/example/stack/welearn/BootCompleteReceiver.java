@@ -5,8 +5,6 @@ import android.content.Context;
 import android.content.Intent;
 import android.util.Log;
 
-import com.example.stack.welearn.utils.ToastUtils;
-
 /**
  * Created by stack on 2/2/18.
  */

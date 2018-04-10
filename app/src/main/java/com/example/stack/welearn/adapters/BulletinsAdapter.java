@@ -1,7 +1,5 @@
 package com.example.stack.welearn.adapters;
 
-import android.support.annotation.NonNull;
-import android.support.v7.util.SortedList;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -9,11 +7,9 @@ import com.chad.library.adapter.base.BaseItemDraggableAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.entities.Bulletin;
-import com.example.stack.welearn.entities.Message;
 import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.TimeUtils;
 
-import java.util.Comparator;
 import java.util.List;
 
 /**

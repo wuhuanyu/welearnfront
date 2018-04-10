@@ -1,7 +1,7 @@
 package com.example.stack.welearn.views.activities;
 
 import android.content.Context;
-import android.content.SharedPreferences;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v7.app.AppCompatActivity;
@@ -15,7 +15,6 @@ import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.stack.welearn.R;
-import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.AccTask;
 import com.example.stack.welearn.utils.Constants;
@@ -31,7 +30,6 @@ import org.json.JSONObject;
 import butterknife.BindView;
 import butterknife.ButterKnife;
 import butterknife.OnClick;
-import com.example.stack.welearn.events.AccEvent;
 
 /**
  * Created by stack on 2018/1/2.
@@ -143,26 +141,6 @@ public class SignUpLoginAct extends AppCompatActivity {
 
                 this.finish();
 
-//                SharedPreferences sharePre=getSharedPreferences(getString(R.string.saved_info), Context.MODE_PRIVATE);
-//                JSONObject authJson=(JSONObject)event.t();
-//                try {
-//                    sharePre.edit()
-//                            .putString(getString(R.string.saved_username),EditName.getText().toString())
-//                            .putString(getString(R.string.saved_password),EditPass.getText().toString())
-//                            .putInt(getString(R.string.saved_type),ckBoxIfTeacher.isChecked()?Constants.ACC_T_Tea:Constants.ACC_T_Stu)
-//                            .putString("token",authJson.getString("token"))
-//                            .putInt("id",authJson.getInt("id"))
-//                            .apply();
-//
-//                    WeLearnApp.info().setToken(authJson.getString("token"))
-//                            .setId(authJson.getInt("id"))
-//                            .setPassword(EditPass.getText().toString())
-//                            .setUserName(EditName.getText().toString())
-//                            .setUserType(ckBoxIfTeacher.isChecked()?Constants.ACC_T_Tea:Constants.ACC_T_Stu);
-//
-//                    MainActivity.start(this);
-
-
             } break;
             case Event.LOGIN_FAIL:{
                 ToastUtils.getInstance().showMsgShort("Login fail,check your name or password");
@@ -188,6 +166,11 @@ public class SignUpLoginAct extends AppCompatActivity {
             SignUpOrLogin.setVisibility(View.VISIBLE);
             BtnSubmit.setText("Signup");
         }
+    }
+
+    public static void start(Context context){
+        Intent intent=new Intent(context,SignUpLoginAct.class);
+        context.startActivity(intent);
     }
 }
 

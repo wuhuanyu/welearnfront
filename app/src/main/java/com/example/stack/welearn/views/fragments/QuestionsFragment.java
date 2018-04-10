@@ -7,7 +7,6 @@ import android.support.v7.widget.RecyclerView;
 
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.WeLearnApp;
-import com.example.stack.welearn.views.activities.QuestionDetailActivity;
 import com.example.stack.welearn.adapters.CategorizedQuestionAdapter;
 import com.example.stack.welearn.adapters.GlideImageLoader;
 import com.example.stack.welearn.adapters.TestPaperAdapter;
@@ -17,6 +16,7 @@ import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.CategorizedQuestionsTask;
 import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.utils.ToastUtils;
+import com.example.stack.welearn.views.activities.QuestionDetailActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 
@@ -47,7 +47,7 @@ public class QuestionsFragment extends BaseFragment {
     TestPaperAdapter mTestpaperAdapter;
 
 
-    CategorizedQuestionsTask mCategorizedQuestionsTask=CategorizedQuestionsTask.instance(WeLearnApp.info().getAuth(),WeLearnApp.info().getId());
+    CategorizedQuestionsTask mCategorizedQuestionsTask=CategorizedQuestionsTask.instance();
     @BindView(R.id.rv_testpaper)
     RecyclerView mTestPapers;
     @Override
@@ -96,7 +96,7 @@ public class QuestionsFragment extends BaseFragment {
         mTestPapers.setLayoutManager(manager);
         mTestPapers.setAdapter(mTestpaperAdapter);
 
-        ThreadPoolManager.getInstance().getService().execute(mCategorizedQuestionsTask.getCategorizedQuestion(false));
+        ThreadPoolManager.getInstance().getService().execute(mCategorizedQuestionsTask.getCategorizedQuestion(false,WeLearnApp.info().getAuth()));
     }
     public void onStop(){
         EventBus.getDefault().unregister(this);
@@ -121,6 +121,6 @@ public class QuestionsFragment extends BaseFragment {
 
     @Override
     public void refresh() {
-        ThreadPoolManager.getInstance().getService().execute(mCategorizedQuestionsTask.getCategorizedQuestion(true));
+        ThreadPoolManager.getInstance().getService().execute(mCategorizedQuestionsTask.getCategorizedQuestion(true,WeLearnApp.info().getAuth()));
     }
 }

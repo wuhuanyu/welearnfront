@@ -1,19 +1,13 @@
 package com.example.stack.welearn.views.fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
-import android.os.Looper;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Base64;
 import android.util.Log;
 import android.widget.LinearLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.stack.welearn.R;
-import com.example.stack.welearn.WeLearnApp;
-import com.example.stack.welearn.utils.Base64Utils;
-import com.example.stack.welearn.views.activities.CourseDetailActivity;
 import com.example.stack.welearn.adapters.CourseAdapter;
 import com.example.stack.welearn.adapters.GlideImageLoader;
 import com.example.stack.welearn.adapters.PremierCourseAdapter;
@@ -22,6 +16,7 @@ import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.MyCoursesTask;
 import com.example.stack.welearn.tasks.PremierCoursesTask;
 import com.example.stack.welearn.utils.ThreadPoolManager;
+import com.example.stack.welearn.views.activities.CourseDetailActivity;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 
@@ -53,7 +48,7 @@ public class CoursesFragment extends BaseFragment {
     @BindView(R.id.banner)
     Banner mBanner;
 
-    MyCoursesTask mCourseTask;
+    MyCoursesTask mCourseTask=MyCoursesTask.instance();
     PremierCoursesTask mPremierCourseTask=PremierCoursesTask.instance();
     Integer[] mBannerImages={
             R.drawable.math1,R.drawable.history1,R.drawable.history2,R.drawable.art2
@@ -77,11 +72,6 @@ public class CoursesFragment extends BaseFragment {
     }
 
     public void onCreate(Bundle savedInstanceState){
-        String auth= Base64.encodeToString(
-                (WeLearnApp.info().getUserType()+":"+WeLearnApp.info().getId()+":"+WeLearnApp.info().getToken()).getBytes(),
-                Base64.NO_WRAP);
-
-        this.mCourseTask=MyCoursesTask.instance(auth,WeLearnApp.info().getId());
         super.onCreate(savedInstanceState);
         EventBus.getDefault().register(this);
     }
@@ -134,13 +124,13 @@ public class CoursesFragment extends BaseFragment {
         List<Course> data;
         switch (event.code()){
             case Event.MY_COURSE_UNFINISHED_OK:
-                Log.i(TAG,"------start processing my course-------");
+                Log.d(TAG,"------start processing my course-------");
                 mHandler.post(()->{
                     myCourseAdapter.setNewData(event.t());
                 });
                 break;
             case Event.PREMIER_COURSE_FETCH_OK:
-                Log.i(TAG,"--------start processing premier course-------");
+                Log.d(TAG,"--------start processing premier course-------");
                 mHandler.post(()->{
                     premierCourseAdapter.setNewData(event.t());
                 });

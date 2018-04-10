@@ -9,7 +9,6 @@ import android.util.Log;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
-import com.example.stack.welearn.entities.DefaultUser;
 import com.example.stack.welearn.entities.Message;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.utils.Constants;
@@ -17,12 +16,8 @@ import com.example.stack.welearn.utils.ThreadPoolManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
-import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONException;
 import org.json.JSONObject;
-
-import java.util.HashMap;
-import java.util.concurrent.Callable;
 
 /**
  * Created by stack on 20/03/18.

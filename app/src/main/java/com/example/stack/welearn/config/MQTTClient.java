@@ -3,20 +3,15 @@ package com.example.stack.welearn.config;
 import android.util.Log;
 
 import com.example.stack.welearn.WeLearnApp;
-import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.utils.Constants;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.DisconnectedBufferOptions;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
-import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
 import org.eclipse.paho.client.mqttv3.MqttConnectOptions;
 import org.eclipse.paho.client.mqttv3.MqttException;
-import org.eclipse.paho.client.mqttv3.MqttMessage;
-import org.greenrobot.eventbus.EventBus;
-import org.json.JSONObject;
 
 /**
  * Created by stack on 2018/1/18.
@@ -51,11 +46,13 @@ public class MQTTClient {
         token.setActionCallback(new IMqttActionListener() {
             @Override
             public void onSuccess(IMqttToken asyncActionToken) {
+                Log.d(TAG,"connect to mqtt server ok");
                 cbk.onConnectionOK();
             }
 
             @Override
             public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+                Log.d(TAG,"connect to mqtt srver fail");
                 cbk.onConnectionFail(exception);
                 exception.printStackTrace();
             }

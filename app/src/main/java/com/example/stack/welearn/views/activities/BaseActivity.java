@@ -4,10 +4,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.v7.app.AppCompatActivity;
-import android.widget.Toast;
 
-
-import com.example.stack.welearn.utils.ToastUtils;
 import com.example.stack.welearn.views.IView;
 
 import butterknife.ButterKnife;

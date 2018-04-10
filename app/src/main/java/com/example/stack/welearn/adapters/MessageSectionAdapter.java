@@ -2,7 +2,6 @@ package com.example.stack.welearn.adapters;
 
 import com.chad.library.adapter.base.BaseSectionQuickAdapter;
 import com.chad.library.adapter.base.BaseViewHolder;
-import com.example.stack.welearn.R;
 import com.example.stack.welearn.entities.Message;
 import com.example.stack.welearn.entities.MessageSection;
 

@@ -112,7 +112,7 @@ public class Course {
     }
 
     public static List<Course> toCourses(JSONArray courseJsons){
-        if(courseJsons.length()==0)
+        if(courseJsons==null||courseJsons.length()==0)
             return null;
         List<Course> courses=new ArrayList<>();
         for(int i=0;i<courseJsons.length();i++){

@@ -1,9 +1,8 @@
 package com.example.stack.welearn.tasks;
 
-import android.app.ActivityManager;
 import android.content.Context;
 import android.content.SharedPreferences;
-import android.util.Base64;
+import android.util.Log;
 
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
@@ -11,6 +10,7 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.events.Event;
+import com.example.stack.welearn.utils.Base64Utils;
 import com.example.stack.welearn.utils.Constants;
 
 import org.greenrobot.eventbus.EventBus;
@@ -18,6 +18,7 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class AccTask {
+    public static final String TAG=AccTask.class.getSimpleName();
     static AccTask instance;
     public static AccTask instance(){
         if(instance==null){
@@ -29,6 +30,7 @@ public class AccTask {
 
     private Runnable doLoginOrLogout(String name,String password,int type,String action,Processor<JSONObject> processor){
         String url = Constants.Net.API_URL+"/acc";
+        Log.d(TAG,url);
         return  new Runnable() {
             @Override
             public void run() {
@@ -75,33 +77,45 @@ public class AccTask {
         return doLoginOrLogout(name, pass, type, "logout", new Processor<JSONObject>() {
             @Override
             public void OK(JSONObject data) {
-                EventBus.getDefault().post(new Event(Event.LOGIN_FAIL));
+                EventBus.getDefault().post(new Event(Event.LOGOUT_OK));
             }
 
             @Override
             public void FAIL(Throwable error) {
-
+                EventBus.getDefault().post(new Event(Event.LOGOUT_FAIL));
             }
         });
     }
 
 
 
-    public void persist(String username,String password,int type,JSONObject auth){
+    public void persist(String username,String password,int type,JSONObject idToken){
+        WeLearnApp.info().setUserType(type)
+                .setUserType(type)
+                .setPassword(password)
+                .setUserName(username);
         Context context=WeLearnApp.getContext();
+
         SharedPreferences sharedPreferences= WeLearnApp.getContext().getSharedPreferences(WeLearnApp.getContext().getString(R.string.saved_info), Context.MODE_PRIVATE);
         SharedPreferences.Editor editor=sharedPreferences.edit();
+
 
         editor.putString(context.getString(R.string.saved_username),username);
         editor.putString(context.getString(R.string.saved_password),password);
         editor.putInt(context.getString(R.string.saved_type),type);
-        if(auth!=null){
+
+        if(idToken!=null){
             try {
 
-                int id=auth.getInt("id");
-                String token=auth.getString("token");
+                int id=idToken.getInt("id");
+                String token=idToken.getString("token");
                 WeLearnApp.info().setToken(token);
+
+                WeLearnApp.info().setId(id);
                 editor.putInt(context.getString(R.string.saved_id),id);
+                WeLearnApp.info().setAuth(
+                        Base64Utils.encode(type,id,token)
+                );
             } catch (JSONException e) {
                 e.printStackTrace();
             }
@@ -112,12 +126,7 @@ public class AccTask {
     public void persist(String username,String password,int type){
         persist(username,password,type,null);
     }
-    private String auth(int type,int id,String token){
-        return Base64.encodeToString(
-                (type+":"+id+":"+token).getBytes(),
-                Base64.NO_WRAP
-        );
-    }
+
     public void persist(String token,int id){
         Context context=WeLearnApp.getContext();
         SharedPreferences sharedPreferences= WeLearnApp.getContext().getSharedPreferences(WeLearnApp.getContext().getString(R.string.saved_info), Context.MODE_PRIVATE);
@@ -130,7 +139,7 @@ public class AccTask {
         int type;
         if((type=sharedPreferences.getInt(context.getString(R.string.saved_type),-1))!=-1) {
             WeLearnApp.info().setUserType(type);
-            WeLearnApp.info().setAuth(auth(type,id,token));
+            WeLearnApp.info().setAuth(Base64Utils.encode(type,id,token));
         }
 
     }

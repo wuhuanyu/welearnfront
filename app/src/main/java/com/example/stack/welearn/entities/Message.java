@@ -1,11 +1,6 @@
 package com.example.stack.welearn.entities;
 
 import java.util.Date;
-import java.util.HashMap;
-import java.util.UUID;
-
-import cn.jiguang.imui.commons.models.IMessage;
-import cn.jiguang.imui.commons.models.IUser;
 
 /**
  * Created by stack on 2018/1/7.

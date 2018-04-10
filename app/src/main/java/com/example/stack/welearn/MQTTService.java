@@ -12,10 +12,8 @@ import android.media.RingtoneManager;
 import android.net.Uri;
 import android.os.Binder;
 import android.os.Bundle;
-import android.os.Handler;
 import android.os.IBinder;
-import android.os.health.SystemHealthManager;
-import android.support.annotation.Nullable;
+import android.support.v4.content.LocalBroadcastManager;
 import android.util.Log;
 import android.widget.Toast;
 
@@ -29,7 +27,6 @@ import org.eclipse.paho.client.mqttv3.IMqttActionListener;
 import org.eclipse.paho.client.mqttv3.IMqttDeliveryToken;
 import org.eclipse.paho.client.mqttv3.IMqttToken;
 import org.eclipse.paho.client.mqttv3.MqttCallback;
-import org.eclipse.paho.client.mqttv3.MqttClient;
 import org.eclipse.paho.client.mqttv3.MqttException;
 import org.eclipse.paho.client.mqttv3.MqttMessage;
 import org.greenrobot.eventbus.EventBus;
@@ -38,9 +35,7 @@ import org.greenrobot.eventbus.ThreadMode;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
 /**
  * Created by stack on 2/2/18.
@@ -48,12 +43,59 @@ import java.util.stream.IntStream;
 
 public class MQTTService extends Service {
     private int notificationId=0;
-//    private int[] haveSubscribe=new int[]{};
-    private List<Integer> haveSubscribe=new ArrayList<>();
-    private Handler mHandler;
+
+    private List<Integer> haveSubscribe;
+
     private Bitmap icon;
     private MQTTClient mqttClient=MQTTClient.instance();
     private static final String TAG=MQTTService.class.getSimpleName();
+
+
+    /**
+     *bind start here
+     */
+    private final IBinder mBinder=new MQTTBinder();
+    public class MQTTBinder extends Binder{
+        MQTTService getSerivce(){
+            return MQTTService.this;
+        }
+    }
+
+   public IBinder onBind(Intent intent){
+       return  mBinder;
+   }
+
+   public void unSubscribeAll(){
+        MqttAndroidClient client=mqttClient.getClient();
+         for(int c : haveSubscribe){
+            try{
+               IMqttToken token= client.unsubscribe(String.valueOf(c));
+               token.setActionCallback(new IMqttActionListener() {
+                   @Override
+                   public void onSuccess(IMqttToken asyncActionToken) {
+                       Log.d(TAG,"unsubscribe to "+c+" ok");
+                   }
+
+                   @Override
+                   public void onFailure(IMqttToken asyncActionToken, Throwable exception) {
+
+                   }
+               });
+            } catch (MqttException e) {
+                e.printStackTrace();
+            }
+        }
+   }
+
+    /*
+     * bind stop here
+     */
+
+
+
+
+
+
 
     private void notification(String msg,PendingIntent actionIntent){
         Uri sound= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
@@ -70,23 +112,26 @@ public class MQTTService extends Service {
         notification.defaults|=Notification.DEFAULT_VIBRATE;
         NotificationManager manager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(notificationId++,notification);
-//        startForeground(1,notification);
     }
     private MqttCallback mqttCallback=new MqttCallback() {
         @Override
         public void connectionLost(Throwable cause) {
-
+            Log.e(TAG,"connection to mqtt server lost");
+            ToastUtils.getInstance().showMsgShort("connection to mqtt server lost");
         }
         @Override
         public void messageArrived(String topic, MqttMessage message) throws Exception {
-            Log.i(TAG, new String(message.getPayload()));
             JSONObject jsonObject=new JSONObject(new String(message.getPayload()));
             if(jsonObject.has("type")){
                 int type=jsonObject.getInt("type");
                 JSONObject payload=jsonObject.getJSONObject("payload");
+
+                Log.d(TAG,"receive message from "+topic+" :"+payload.toString());
                 switch (type){
                     case Event.NEW_MESSAGE:
-                        EventBus.getDefault().post(new Event<JSONObject>(Event.NEW_MESSAGE,jsonObject.getJSONObject("payload")));
+                        Intent msgIntent=new Intent("new_message");
+                        msgIntent.putExtra("msg_json",payload.toString());
+                        LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(msgIntent);
                         break;
                     case Event.NEW_COMMENT_COURSE:
                     {
@@ -121,7 +166,8 @@ public class MQTTService extends Service {
 
     public void onCreate(){
         super.onCreate();
-        mHandler=new Handler(getMainLooper());
+        this.haveSubscribe=new ArrayList<>();
+
         EventBus.getDefault().register(this);
     }
 
@@ -132,16 +178,8 @@ public class MQTTService extends Service {
         return START_NOT_STICKY;
     }
 
-    @Override
-    public IBinder onBind(Intent intent) {
-        return null;
-    }
 
-    @Override
-    public boolean onUnbind(Intent intent) {
-        Log.i(TAG,"unbind service");
-        return super.onUnbind(intent);
-    }
+
 
     public void onDestroy(){
         EventBus.getDefault().unregister(this);
@@ -157,14 +195,8 @@ public class MQTTService extends Service {
         MqttAndroidClient client=MQTTClient.instance().getClient();
         if(!client.isConnected())
             return;
-        for(int c : haveSubscribe){
-            try{
-                client.unsubscribe(String.valueOf(c));
-            } catch (MqttException e) {
-                e.printStackTrace();
-            }
+        unSubscribeAll();
 
-        }
         for(int c:cs){
             try {
                 IMqttToken token=client.subscribe(String.valueOf(c),0);
@@ -192,11 +224,13 @@ public class MQTTService extends Service {
                 mqttClient.connect(new MQTTClient.ConnectCallback() {
                     @Override
                     public void onConnectionFail(Throwable e) {
+                        Log.d(TAG,"connect to mqtt server fail");
                         EventBus.getDefault().post(new Event<String>(Event.MQTT_ERROR,"连接消息服务器失败，请向开发者提交反馈，或者检查网络连接"));
                     }
                     @Override
                     public void onConnectionOK() {
                         Log.d(TAG,"connect to mqtt server ok");
+                        ToastUtils.getInstance().showMsgShort("连接消息服务器OK");
                         mqttClient.setUpCallback(mqttCallback);
                         doSubscribe(courses);
                     }
@@ -218,6 +252,9 @@ public class MQTTService extends Service {
                 subscribe((List<Integer>)event.t());
                 EventBus.getDefault().removeStickyEvent(event);
                 break;
+            case Event.DO_UNSUBSCRIBE:
+                unSubscribeAll();
+                EventBus.getDefault().removeStickyEvent(event);
             default:break;
         }
     }

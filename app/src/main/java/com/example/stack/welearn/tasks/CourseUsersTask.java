@@ -6,11 +6,9 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.utils.Constants;
 
-import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**

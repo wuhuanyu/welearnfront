@@ -1,7 +1,6 @@
 package com.example.stack.welearn.adapters;
 
 import android.support.annotation.Nullable;
-import android.util.Log;
 import android.widget.ImageView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;

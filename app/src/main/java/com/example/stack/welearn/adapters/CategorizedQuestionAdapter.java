@@ -1,6 +1,5 @@
 package com.example.stack.welearn.adapters;
 
-import android.media.Image;
 import android.support.annotation.Nullable;
 import android.widget.ImageView;
 

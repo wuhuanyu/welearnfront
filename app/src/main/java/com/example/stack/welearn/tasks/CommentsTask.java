@@ -1,11 +1,8 @@
 package com.example.stack.welearn.tasks;
 
-import android.util.Log;
-
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
-import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.entities.Comment;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.utils.Constants;

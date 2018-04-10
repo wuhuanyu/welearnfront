@@ -4,11 +4,11 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
+    android:layout_height="match_parent"
     >
 <android.support.constraint.ConstraintLayout
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="wrap_content">
 
     <de.hdodenhof.circleimageview.CircleImageView
         android:id="@+id/iv_avtar"
@@ -20,7 +20,7 @@
         android:src="@drawable/avatar2"
         app:civ_border_color="@android:color/darker_gray"
         app:civ_border_width="2dp"
-        app:layout_constraintStart_toStartOf="@+id/button6"
+        app:layout_constraintStart_toStartOf="@+id/btn_my_comment"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -49,24 +49,24 @@
         android:layout_height="@dimen/divider"
         android:layout_marginTop="130dp"
         android:background="@android:color/darker_gray"
-        app:layout_constraintEnd_toEndOf="@+id/button6"
+        app:layout_constraintEnd_toEndOf="@+id/btn_my_comment"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button"
+        android:id="@+id/btn_my_grade"
         style="@android:style/Widget.Material.Light.Button.Borderless"
         android:layout_width="0dp"
         android:layout_height="50dp"
         android:drawableLeft="@drawable/ic_course"
         android:gravity="start|center_vertical"
         android:text="    我的成绩"
-        app:layout_constraintEnd_toEndOf="@+id/button6"
-        app:layout_constraintStart_toStartOf="@+id/button6"
-        app:layout_constraintTop_toBottomOf="@+id/button6" />
+        app:layout_constraintEnd_toEndOf="@+id/btn_my_comment"
+        app:layout_constraintStart_toStartOf="@+id/btn_my_comment"
+        app:layout_constraintTop_toBottomOf="@+id/btn_my_comment" />
 
     <Button
-        android:id="@+id/button6"
+        android:id="@+id/btn_my_comment"
         style="@android:style/Widget.Material.Light.Button.Borderless"
         android:layout_width="0dp"
         android:layout_height="47dp"
@@ -106,16 +106,16 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <Button
-        android:id="@+id/button7"
+        android:id="@+id/btn_about"
         style="@android:style/Widget.Material.Light.Button.Borderless"
         android:layout_width="0dp"
         android:layout_height="51dp"
         android:gravity="start|center_vertical"
         android:text="    关于"
         android:drawableLeft="@drawable/ic_info"
-        app:layout_constraintEnd_toEndOf="@+id/button6"
+        app:layout_constraintEnd_toEndOf="@+id/btn_my_comment"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/button6"
+        app:layout_constraintStart_toStartOf="@+id/btn_my_comment"
         app:layout_constraintTop_toBottomOf="@+id/view3" />
 
     <Button
@@ -125,9 +125,9 @@
         android:layout_height="wrap_content"
         android:text="   待续"
         android:gravity="start"
-        app:layout_constraintEnd_toEndOf="@+id/button6"
+        app:layout_constraintEnd_toEndOf="@+id/btn_my_comment"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/button6"
+        app:layout_constraintStart_toStartOf="@+id/btn_my_comment"
         app:layout_constraintTop_toBottomOf="@+id/button3" />
 
     <Button
@@ -137,33 +137,36 @@
         android:layout_height="wrap_content"
         android:text="   待续"
         android:gravity="start"
-        app:layout_constraintEnd_toEndOf="@+id/button6"
+        app:layout_constraintEnd_toEndOf="@+id/btn_my_comment"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="@+id/button6"
-        app:layout_constraintTop_toBottomOf="@+id/btn_shedule" />
+        app:layout_constraintStart_toStartOf="@+id/btn_my_comment"
+        app:layout_constraintTop_toBottomOf="@+id/btn_my_schedule" />
 
     <Button
-        android:id="@+id/btn_shedule"
+        android:id="@+id/btn_my_schedule"
         style="@android:style/Widget.Material.Light.Button.Borderless"
         android:layout_width="0dp"
         android:layout_height="48dp"
         android:drawableLeft="@drawable/ic_timeline"
         android:gravity="start"
         android:text="    我的日程"
-        app:layout_constraintEnd_toEndOf="@+id/button6"
-        app:layout_constraintStart_toStartOf="@+id/button6"
+        app:layout_constraintEnd_toEndOf="@+id/btn_my_comment"
+        app:layout_constraintStart_toStartOf="@+id/btn_my_comment"
         app:layout_constraintTop_toBottomOf="@+id/view2" />
 
     <RatingBar
         android:id="@+id/ratingBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginBottom="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginStart="8dp"
-        android:layout_marginTop="28dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/button7" />
+        app:layout_constraintTop_toBottomOf="@+id/btn_about"
+        app:layout_constraintVertical_bias="0.0" />
 
     <Button
         android:id="@+id/button5"
@@ -177,6 +180,18 @@
         app:layout_constraintBottom_toBottomOf="@+id/iv_avtar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="@+id/iv_avtar" />
+
+    <Button
+        android:id="@+id/btn_logout"
+        style="@style/Widget.AppCompat.Button.Colored"
+        android:layout_width="300px"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:elevation="4dp"
+        android:text="Logout"
+        app:layout_constraintEnd_toEndOf="@+id/ratingBar"
+        app:layout_constraintStart_toStartOf="@+id/ratingBar"
+        app:layout_constraintTop_toBottomOf="@+id/ratingBar" />
 
 </android.support.constraint.ConstraintLayout>
 

@@ -1,7 +1,5 @@
 package com.example.stack.welearn.entities;
 
-import android.speech.tts.Voice;
-
 import com.stfalcon.chatkit.commons.models.IMessage;
 import com.stfalcon.chatkit.commons.models.IUser;
 import com.stfalcon.chatkit.commons.models.MessageContentType;

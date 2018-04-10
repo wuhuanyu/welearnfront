@@ -29,13 +29,13 @@ import com.example.stack.welearn.entities.Comment;
 import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.entities.Video;
 import com.example.stack.welearn.events.Event;
-import com.example.stack.welearn.views.fragments.CommentDialog;
 import com.example.stack.welearn.tasks.CommentsTask;
 import com.example.stack.welearn.tasks.CourseDetailTask;
 import com.example.stack.welearn.utils.ACache;
 import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.utils.ToastUtils;
+import com.example.stack.welearn.views.fragments.CommentDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -48,7 +48,6 @@ import java.util.List;
 
 import butterknife.BindView;
 
-import static com.example.stack.welearn.WeLearnApp.cache;
 import static com.example.stack.welearn.WeLearnApp.getContext;
 
 /**

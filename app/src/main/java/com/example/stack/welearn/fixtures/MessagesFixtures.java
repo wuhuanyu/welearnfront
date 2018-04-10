@@ -2,7 +2,6 @@ package com.example.stack.welearn.fixtures;
 
 import com.example.stack.welearn.entities.ChatMessage;
 import com.example.stack.welearn.entities.ChatUser;
-import com.example.stack.welearn.entities.Message;
 
 import java.util.ArrayList;
 import java.util.Calendar;

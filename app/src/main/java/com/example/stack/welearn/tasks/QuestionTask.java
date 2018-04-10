@@ -5,8 +5,6 @@ import android.util.Log;
 import com.example.stack.welearn.Cachable;
 import com.example.stack.welearn.entities.Question;
 import com.example.stack.welearn.events.Event;
-import com.example.stack.welearn.utils.ACache;
-import com.example.stack.welearn.utils.ThreadPoolManager;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;

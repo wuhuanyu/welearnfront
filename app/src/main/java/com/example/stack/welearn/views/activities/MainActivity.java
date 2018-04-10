@@ -1,6 +1,5 @@
 package com.example.stack.welearn.views.activities;
 
-import android.app.Activity;
 import android.app.ActivityManager;
 import android.app.Service;
 import android.content.Context;
@@ -21,14 +20,10 @@ import com.example.stack.welearn.MQTTService;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.views.IView;
 import com.example.stack.welearn.views.fragments.ChatFragment;
-import com.example.stack.welearn.views.fragments.QuestionsFragment;
 import com.example.stack.welearn.views.fragments.CoursesFragment;
 import com.example.stack.welearn.views.fragments.MeFragment;
-import com.github.nisrulz.sensey.Sensey;
-import com.github.nisrulz.sensey.ShakeDetector;
+import com.example.stack.welearn.views.fragments.QuestionsFragment;
 import com.ittianyu.bottomnavigationviewex.BottomNavigationViewEx;
-
-import org.greenrobot.eventbus.EventBus;
 
 import java.util.HashMap;
 
@@ -59,19 +54,7 @@ public class MainActivity extends BaseActivity {
     }
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
-        Sensey.getInstance().init(this);
-        Sensey.getInstance()
-                .startShakeDetection(new ShakeDetector.ShakeListener() {
-                    @Override
-                    public void onShakeDetected() {
-                        Log.i(TAG,"Shake detected");
-                    }
 
-                    @Override
-                    public void onShakeStopped() {
-                        refresh();
-                    }
-                });
         if(savedInstanceState==null){
             fragmentHashMap.put("course",new CoursesFragment());
             currentFragment=fragmentHashMap.get("course");
@@ -177,7 +160,7 @@ public class MainActivity extends BaseActivity {
                 });
     }
     public void onStop(){
-        EventBus.getDefault().unregister(this);
+//        EventBus.getDefault().unregister(this);
         super.onStop();
     }
 
