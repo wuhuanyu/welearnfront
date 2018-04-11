@@ -1,8 +1,10 @@
 package com.example.stack.welearn.entities;
 
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 
@@ -125,11 +127,40 @@ public class Live {
                 '}';
     }
 
-    public Live toLive(JSONObject liveJson){
+    public static Live toLive(JSONObject liveJson){
+        Live live=null;
+        try{
+            int id=liveJson.getInt("course_id");
+            String title=liveJson.getString("title");
+            long time=liveJson.getLong("time");
+            String url=liveJson.getString("url");
+            boolean isGoing=liveJson.getBoolean("is_going");
+            boolean isFinish=liveJson.getBoolean("finish");
 
+            live= new Live()
+                    .setId(id)
+                    .setTitle(title)
+                    .setTime(time)
+                    .setUrl(url)
+                    .setGoing(isGoing)
+                    .setFinish(isFinish);
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return live;
     }
 
-    public List<Live> toLives(JSONArray liveJSONS){
-
+    public static List<Live> toLives(JSONArray liveJSONS){
+        List<Live> lives=new ArrayList<>();
+        try{
+            for(int idx=0;idx<liveJSONS.length();idx++){
+                Live live=toLive(liveJSONS.getJSONObject(idx));
+                if(live!=null)
+                    lives.add(live);
+            }
+        }catch (JSONException e){
+            e.printStackTrace();
+        }
+        return lives;
     }
 }

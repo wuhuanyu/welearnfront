@@ -24,6 +24,7 @@ import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.adapters.CommentQuickAdapter;
+import com.example.stack.welearn.adapters.LiveAdapter;
 import com.example.stack.welearn.adapters.VideoAdapter;
 import com.example.stack.welearn.entities.Comment;
 import com.example.stack.welearn.entities.Course;
@@ -31,6 +32,7 @@ import com.example.stack.welearn.entities.Video;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.CommentsTask;
 import com.example.stack.welearn.tasks.CourseDetailTask;
+import com.example.stack.welearn.tasks.LiveTask;
 import com.example.stack.welearn.utils.ACache;
 import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.ThreadPoolManager;
@@ -97,6 +99,11 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         context.startActivity(intent);
     }
 
+    //live start here
+    private LiveAdapter mLiveAdapter;
+    private LinearLayoutManager mLiveLayoutManager;
+    //live stop here
+
     @Override
     public void doRegister() {
         EventBus.getDefault().register(this);
@@ -152,6 +159,9 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         isRefresh=true;
         ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail(courseId,isRefresh));
         ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,toRefresh,0,4));
+        ThreadPoolManager.getInstance().getService().execute(
+                LiveTask.instance().getLives(courseId,WeLearnApp.info().getAuth())
+        );
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -274,7 +284,6 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
                             runOnUiThread(()->{
                                 ToastUtils.getInstance().showMsgShort(getString(R.string.comment_ok));
                             });
-//                            ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,true,0,4));
                             refreshComment();
                         }
 

@@ -54,6 +54,9 @@ public class Event<T>{
     public static final int LOGOUT_OK=33;
     public static final int LOGOUT_FAIL=34;
 
+    public static final int FETCH_LIVE_OK=35;
+    public static final int FETCH_LIVE_FAIL=36;
+
     /**
      * 通知事件
      */
@@ -125,6 +128,7 @@ public class Event<T>{
     public String msg(){
         return this.msg;
     }
+
 
 }
 

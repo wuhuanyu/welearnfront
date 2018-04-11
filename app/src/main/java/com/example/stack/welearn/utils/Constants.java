@@ -33,6 +33,9 @@ public final class Constants {
         public static final int BROKER_PORT=1883;
         public static final String BROKER_URL="tcp://"+HOST+":"+BROKER_PORT;
         public static final String AVATAR_URL="http://"+HOST+":"+PORT+"/avatars/";
+
+        public static final int LIVE_PORT=1936;
+        public static final String LIVE_ENDPORT="rtmp://"+HOST+":"+PORT;
     }
 
 }

@@ -1,13 +1,14 @@
 package com.example.stack.welearn.views.activities;
 
 import com.example.stack.welearn.R;
+import com.example.stack.welearn.utils.Constants;
 
 import butterknife.BindView;
 import cn.nodemedia.NodePlayer;
 import cn.nodemedia.NodePlayerDelegate;
 import cn.nodemedia.NodePlayerView;
 
-public class LivePlayer extends BaseActivity implements NodePlayerDelegate{
+public class LivePlayerAct extends BaseActivity implements NodePlayerDelegate{
 
     NodePlayer player;
     @BindView(R.id.live_player)
@@ -21,10 +22,10 @@ public class LivePlayer extends BaseActivity implements NodePlayerDelegate{
        player.setHWEnable(true);
        player.setBufferTime(1000);
        player.setMaxBufferTime(1000);
+       String url=getIntent().getStringExtra("url");
+       player.setInputUrl(Constants.Net.LIVE_ENDPORT+url);
+       player.start();
 
-//       player.setInputUrl("rtmp://192.168.1.105:1936/live/course1?sign=1523549400-1645ccaae6fb80bc4ecb539643a784a2");
-
-//       player.start();
     }
 
 
@@ -44,7 +45,7 @@ public class LivePlayer extends BaseActivity implements NodePlayerDelegate{
     }
 
     @Override
-    public void onEventCallback(NodePlayer nodePlayer, int i, String s) {
+    public void onEventCallback(NodePlayer nodePlayer, int event, String s) {
 
     }
 }
