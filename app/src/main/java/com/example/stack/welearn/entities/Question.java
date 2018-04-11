@@ -29,8 +29,20 @@ public class Question {
     private List<String> files;
 
     private List<Answer> answers;
+    private boolean isOverdue=false;
 
-    private long time;
+    private long publishTime;
+    private long deadline;
+
+    public long getDeadline() {
+        return deadline;
+    }
+
+    public Question setDeadline(long deadline) {
+        this.deadline = deadline;
+        return this;
+    }
+
     private int type= Constants.QA;
     private int teacherId;
     private String teacherName;
@@ -94,14 +106,15 @@ public class Question {
         return this;
     }
 
-    public long getTime() {
-        return time;
+    public long getPublishTime() {
+        return publishTime;
     }
 
-    public Question setTime(long time) {
-        this.time = time;
+    public Question setPublishTime(long publishTime) {
+        this.publishTime = publishTime;
         return this;
     }
+
 
     public int getType() {
         return type;
@@ -130,34 +143,16 @@ public class Question {
         return this;
     }
 
-    public Question(String id, int courseId, String body, List<String> images, List<String> files, List<Answer> answers, long time, int type, int teacherId) {
-        this.id = id;
-        this.courseId = courseId;
-        this.body = body;
-        this.images = images;
-        this.files = files;
-        this.answers = answers;
-        this.time = time;
-        this.type = type;
-        this.teacherId = teacherId;
+    public boolean isOverdue() {
+        return isOverdue;
     }
 
-    public Question(String id, int courseId, String body, List<String> images, List<Answer> answers, long time) {
-        this.id = id;
-        this.courseId = courseId;
-        this.body = body;
-        this.images = images;
-        this.answers = answers;
-        this.time = time;
+    public Question setOverdue(boolean overdue) {
+        isOverdue = overdue;
+        return this;
     }
 
-    public Question(String id, int courseId, List<String> images, List<Answer> answers, int type) {
-        this.id = id;
-        this.courseId = courseId;
-        this.images = images;
-        this.answers = answers;
-        this.type = type;
-    }
+    public Question(){}
 
     @Override
     public String toString() {
@@ -168,7 +163,7 @@ public class Question {
                 ", images=" + images +
                 ", files=" + files +
                 ", answers=" + answers +
-                ", time=" + time +
+                ", publishTime=" + publishTime +
                 ", type=" + type +
                 ", teacherId=" + teacherId +
                 '}';
@@ -182,8 +177,8 @@ public class Question {
             int type=courseJson.getInt("type");
             int courseId=courseJson.getInt("cId");
             String body=courseJson.getString("body");
-            long time=courseJson.getLong("time");
-//            String teacherName=courseJson.getString("teacher_name");
+            long publishTime=courseJson.getLong("publish_time");
+            long deadline=courseJson.getLong("deadline");
             List<Answer> anss=null;
             List<String> images=null;
             if(courseJson.has("anss")&&courseJson.getJSONArray("anss").length()>0){
@@ -196,9 +191,21 @@ public class Question {
                     images.add(imageJsons.getString(i));
                 }
             }
-            question=new Question(id,courseId,images,anss,type);
-            question.setTime(time);
-            question.setBody(body);
+
+            boolean overdue=System.currentTimeMillis()>deadline;
+
+            question=new Question()
+                    .setId(id)
+                    .setCourseId(courseId)
+                    .setImages(images)
+                    .setAnswers(anss)
+                    .setType(type)
+                    .setPublishTime(publishTime)
+                    .setBody(body)
+                    .setDeadline(deadline)
+                    .setOverdue(overdue);
+
+            return question;
         } catch (JSONException e) {
             e.printStackTrace();
         }
@@ -209,12 +216,13 @@ public class Question {
         List<Question> questions=new ArrayList<>();
         for(int i=0;i<coursesJson.length();i++){
             try {
-                questions.add(toQuestion(coursesJson.getJSONObject(i)));
+                Question q=toQuestion(coursesJson.getJSONObject(i));
+                if(q!=null)
+                    questions.add(q);
             } catch (JSONException e) {
                 e.printStackTrace();
             }
         }
        return questions;
     }
-
 }

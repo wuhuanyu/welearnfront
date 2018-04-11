@@ -21,8 +21,8 @@ public abstract class BaseActivity extends AppCompatActivity implements IView {
         super.onCreate(savedInstanceState);
         setContentView(getLayout());
         ButterKnife.bind(this);
-        doRegister();
         initView();
+        doRegister();
     }
 
     public abstract void doRegister();

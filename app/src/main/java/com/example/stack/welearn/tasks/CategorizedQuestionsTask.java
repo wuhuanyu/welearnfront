@@ -138,8 +138,8 @@ public class CategorizedQuestionsTask extends BaseTask {
         long updateTime=0;
         for(int i=0;i<questions.size();i++){
             if(questions.get(i)!=null)
-                if(questions.get(i).getTime()>updateTime)
-                    updateTime=questions.get(i).getTime();
+                if(questions.get(i).getPublishTime()>updateTime)
+                    updateTime=questions.get(i).getPublishTime();
         }
         categorizedQuestionCourse=new CategorizedQuestionCourse(
                 image,updateTime,questions.size(),course.getId(),course.getName()

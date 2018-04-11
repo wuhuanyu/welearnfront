@@ -98,8 +98,8 @@ public class QuestionDetailActivity extends BaseActivity {
         images.setLayoutManager(linearLayoutManager);
         images.setAdapter(questionImageAdapter);
 
-        if(this.questions==null){
-
+        if(this.questions==null||this.questions.size()==0){
+            //TODO: hint
         }
         else {
             setUpQuestion(questions.get(0));
@@ -133,10 +133,14 @@ public class QuestionDetailActivity extends BaseActivity {
         switch (event.code()){
             case Event.QUESITON_FETCH_OK:
                 Log.d(TAG,"---------start processing question---------");
-                this.questions=(List<Question>)event.t();
-                mHandler.post(()->{
-                    setUpQuestion(this.questions.get(0));
-                });
+                List<Question> questions=(List<Question>)event.t();
+                if(questions!=null && questions.size()!=0){
+                    this.questions=questions;
+                    mHandler.post(()->{
+                        setUpQuestion(this.questions.get(0));
+                    });
+                }
+
                 break;
             case Event.QUESTION_COMMENT_FETCH_OK:
                 Log.d(TAG,"----------start processing question comments-------");
