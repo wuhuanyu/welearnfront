@@ -13,7 +13,7 @@ import butterknife.BindView;
  * Created by stack on 2018/1/5.
  */
 
-public class QuestionEditActivity extends BaseActivity {
+public class QuestionEditActDynamic extends DynamicBaseAct {
     @BindView(R.id.tb_edit_question)
     Toolbar mToolbar;
     @Override
@@ -22,7 +22,7 @@ public class QuestionEditActivity extends BaseActivity {
     }
 
     @Override
-    public void initView() {
+    public void setUp() {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(null);
         getSupportActionBar().setDisplayHomeAsUpEnabled(false);

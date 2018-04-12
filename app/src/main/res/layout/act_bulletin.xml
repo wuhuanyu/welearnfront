@@ -3,6 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:id="@+id/root_bulletin"
     android:orientation="vertical">
     <include layout="@layout/action_bar"
         android:layout_width="match_parent"
@@ -13,25 +14,33 @@
         android:layout_height="wrap_content"
         android:queryHint="搜索"
         />
+
     <FrameLayout
         android:layout_width="match_parent"
         android:layout_height="match_parent">
         <android.support.design.widget.FloatingActionButton
-            android:id="@+id/fb_bulletin_refresh"
+            android:id="@+id/fb_new_bulletin"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="60dp"
             android:layout_marginEnd="30dp"
+            android:visibility="gone"
             app:rippleColor="@color/colorPrimary"
             app:backgroundTint="@android:color/white"
             app:elevation="1dp"
             android:src="@drawable/ic_refresh"
             android:layout_gravity="bottom|end"
             />
-        <android.support.v7.widget.RecyclerView
-            android:id="@+id/rv_bulletins"
+        <android.support.v4.widget.SwipeRefreshLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent" />
+            android:id="@+id/swp_bulletin"
+            android:layout_height="wrap_content">
+            <android.support.v7.widget.RecyclerView
+                android:id="@+id/rv_bulletins"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+        </android.support.v4.widget.SwipeRefreshLayout>
+
     </FrameLayout>
 
 </LinearLayout>

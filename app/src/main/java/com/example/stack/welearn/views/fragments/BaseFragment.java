@@ -23,23 +23,22 @@ import butterknife.ButterKnife;
 public abstract class BaseFragment extends Fragment implements IView {
     protected ACache mCache= WeLearnApp.cache();
     public abstract int getLayout();
-    public abstract void doRegister();
-    public abstract void initView();
+    public abstract void register();
+    public abstract void setUp();
     protected boolean refresh=false;
     public Handler mHandler=new Handler(Looper.getMainLooper());
+    public abstract void prepareData();
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view=inflater.inflate(getLayout(),container,false);
         ButterKnife.bind(this,view);
-        initView();
-        doRegister();
+        setUp();
+        register();
+        prepareData();
         return view;
     }
 
-    @Override
-    public void onViewStateRestored(@Nullable Bundle savedInstanceState) {
-        super.onViewStateRestored(savedInstanceState);
-    }
+
 
 }

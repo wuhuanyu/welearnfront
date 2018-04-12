@@ -32,7 +32,7 @@ public class QuestionDetailFragment extends BaseFragment {
     }
 
     @Override
-    public void doRegister() {
+    public void register() {
         textQuestionFeedback.setOnClickListener((view)->{
             //feedback
         });
@@ -40,7 +40,7 @@ public class QuestionDetailFragment extends BaseFragment {
     }
 
     @Override
-    public void initView() {
+    public void setUp() {
 //        Bundle data=getArguments();
 //        String body=data.getString("body");
 //        String teacher=data.getString("teacher");

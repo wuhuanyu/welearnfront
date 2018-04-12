@@ -16,7 +16,7 @@ import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.CategorizedQuestionsTask;
 import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.utils.ToastUtils;
-import com.example.stack.welearn.views.activities.QuestionDetailActivity;
+import com.example.stack.welearn.views.activities.QuestionDetailActDynamic;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 
@@ -56,7 +56,7 @@ public class QuestionsFragment extends BaseFragment {
     }
 
     @Override
-    public void doRegister() {
+    public void register() {
 
     }
     public void onCreate(Bundle savedInstanceState){
@@ -65,7 +65,7 @@ public class QuestionsFragment extends BaseFragment {
     }
 
     @Override
-    public void initView() {
+    public void setUp() {
         LinearLayoutManager mManager=new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         mBanner.setImageLoader(new GlideImageLoader());
         mBanner.setImages(Arrays.asList(mBannerImages));
@@ -80,7 +80,7 @@ public class QuestionsFragment extends BaseFragment {
         mAdapter=new CategorizedQuestionAdapter(R.layout.item_categorized_question);
         mAdapter.setOnItemClickListener((baseQuickAdapter, view, i) -> {
             List<CategorizedQuestionCourse> data=(List<CategorizedQuestionCourse>)baseQuickAdapter.getData();
-            Intent intent=new Intent(getActivity(), QuestionDetailActivity.class);
+            Intent intent=new Intent(getActivity(), QuestionDetailActDynamic.class);
             int courseId=((List<CategorizedQuestionCourse>)baseQuickAdapter.getData()).get(i).getCourseId();
             intent.putExtra("course_id",courseId);
             intent.putExtra("course_name",(data.get(i).getCourseName()));

@@ -45,7 +45,7 @@ public class PremierCoursesTask extends BaseTask implements Cachable {
          */
             if(toRefresh||mPremierCourseJSONS==null){
                 AndroidNetworking.get(Constants.Net.API_URL+"/course/all")
-                        .addQueryParameter("start","0")
+                        .addQueryParameter("startAct","0")
                         .addQueryParameter("count","3")
                         .build().getAsJSONObject(new JSONObjectRequestListener() {
                     List<Course> data;

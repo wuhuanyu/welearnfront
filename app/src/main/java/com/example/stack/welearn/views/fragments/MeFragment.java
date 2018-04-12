@@ -33,7 +33,7 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
 
     /**
      *
-     * bind start here
+     * bind startAct here
      */
 
 
@@ -59,12 +59,12 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
     }
 
     @Override
-    public void doRegister() {
+    public void register() {
 
     }
 
     @Override
-    public void initView() {
+    public void setUp() {
         btnLogout.setOnClickListener(this);
     }
 

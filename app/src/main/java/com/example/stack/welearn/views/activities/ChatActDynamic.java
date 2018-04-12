@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
 import android.view.Menu;
+import android.view.ViewGroup;
 import android.widget.ImageView;
 
 import com.bumptech.glide.Glide;
@@ -33,8 +34,8 @@ import butterknife.BindView;
  * Created by stack on 2018/1/9.
  */
 
-public class ChatActivity extends BaseActivity implements MessageInput.InputListener,MessageInput.AttachmentsListener {
-    private static final String TAG=ChatActivity.class.getSimpleName();
+public class ChatActDynamic extends DynamicBaseAct implements MessageInput.InputListener,MessageInput.AttachmentsListener {
+    private static final String TAG=ChatActDynamic.class.getSimpleName();
     @BindView(R.id.messageList)
     MessagesList mMessagesList;
     @BindView(R.id.input)
@@ -68,17 +69,14 @@ public class ChatActivity extends BaseActivity implements MessageInput.InputList
         );
 
     }
-    @Override
-    public void doRegister() {
 
-    }
     @Override
-    public void initView() {
+    public void setUp() {
         this.courseId=getIntent().getIntExtra("course_id",-1);
         mImageLoader=new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url) {
-                Glide.with(ChatActivity.this).load(Constants.Net.AVATAR_URL+url).into(imageView);
+                Glide.with(ChatActDynamic.this).load(Constants.Net.AVATAR_URL+url).into(imageView);
             }
         };
         mMessageInput.setInputListener(this);
@@ -95,9 +93,30 @@ public class ChatActivity extends BaseActivity implements MessageInput.InputList
     }
 
     @Override
+    public void prepareData() {
+
+    }
+
+    @Override
+    public ViewGroup getRoot() {
+        return null;
+    }
+
+    @Override
     public void onAddAttachments() {
 
     }
+
+    @Override
+    public void register() {
+
+    }
+
+    @Override
+    public void unRegister() {
+
+    }
+
     public void onStop(){
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMsgReceiver);
         super.onStop();
@@ -134,16 +153,6 @@ public class ChatActivity extends BaseActivity implements MessageInput.InputList
         }
     }
 
-//    @Subscribe(threadMode = ThreadMode.MAIN)
-//    public void onEvent(Event<JSONObject> messageEvent){
-//        int code=messageEvent.code();
-//        switch (code){
-//            case Event.NEW_MESSAGE:
-//                JSONObject messageJson=messageEvent.t();
-//                Log.d(TAG,messageJson.toString());
-//
-//        }
-//    }
 
     @Override
     public void refresh() {

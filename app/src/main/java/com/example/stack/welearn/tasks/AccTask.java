@@ -87,6 +87,36 @@ public class AccTask {
         });
     }
 
+    public Runnable signUp(String name,String pass,int type){
+        return ()->{
+            AndroidNetworking.post(Constants.Net.API_URL+"/acc/"+(type==Constants.ACC_T_Tea?"tea":"stu"))
+                    .addBodyParameter("name",name)
+                    .addBodyParameter("password",pass)
+                    .addBodyParameter("gender",String.valueOf(Constants.MALE))
+                    .build()
+                    .getAsJSONObject(new JSONObjectRequestListener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                int id=response.getInt("result");
+                                EventBus.getDefault().post(
+                                        new Event<Integer>(id,Event.SIGNUP_OK)
+                                );
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
+                        }
+
+                        @Override
+                        public void onError(ANError anError) {
+                            EventBus.getDefault().post(
+                                    new Event(Event.SIGNUP_FAIL)
+                            );
+                        }
+                    });
+        };
+    }
+
 
 
     public void persist(String username,String password,int type,JSONObject idToken){

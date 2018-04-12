@@ -12,7 +12,7 @@ import com.example.stack.welearn.fixtures.DialogsFixtures;
 import com.example.stack.welearn.fixtures.MessagesFixtures;
 import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.ThreadPoolManager;
-import com.example.stack.welearn.views.activities.ChatActivity;
+import com.example.stack.welearn.views.activities.ChatActDynamic;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
@@ -55,11 +55,11 @@ public class ChatFragment extends BaseFragment implements DialogsListAdapter.OnD
     }
 
     @Override
-    public void doRegister() {
+    public void register() {
     }
 
     @Override
-    public void initView() {
+    public void setUp() {
         this.mImageLoader=new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url) {
@@ -80,7 +80,7 @@ public class ChatFragment extends BaseFragment implements DialogsListAdapter.OnD
     @Override
     public void onDialogClick(Dialog dialog) {
         int courseId=Integer.parseInt(dialog.getId());
-        Intent intent=new Intent(getActivity(), ChatActivity.class);
+        Intent intent=new Intent(getActivity(), ChatActDynamic.class);
         intent.putExtra("course_id",courseId);
         startActivity(intent);
     }

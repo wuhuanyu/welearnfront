@@ -37,9 +37,9 @@ import butterknife.BindView;
  * Created by stack on 2018/1/15.
  */
 
-public class QuestionDetailActivity extends BaseActivity {
+public class QuestionDetailActDynamic extends DynamicBaseAct {
     List<Question> questions;
-    private static final String TAG=QuestionDetailActivity.class.getSimpleName();
+    private static final String TAG=QuestionDetailActDynamic.class.getSimpleName();
     private String curQuestionId;
     private int currentQuestionIdx=0;
     private int courseId;
@@ -77,7 +77,7 @@ public class QuestionDetailActivity extends BaseActivity {
     }
 
     @Override
-    public void initView() {
+    public void setUp() {
         courseId=getIntent().getIntExtra("course_id",-1);
         courseName=getIntent().getStringExtra("course_name");
         mQuestionTask= QuestionTask.instance();
@@ -132,7 +132,7 @@ public class QuestionDetailActivity extends BaseActivity {
         Log.d(TAG,event.code()+"");
         switch (event.code()){
             case Event.QUESITON_FETCH_OK:
-                Log.d(TAG,"---------start processing question---------");
+                Log.d(TAG,"---------startAct processing question---------");
                 List<Question> questions=(List<Question>)event.t();
                 if(questions!=null && questions.size()!=0){
                     this.questions=questions;
@@ -143,7 +143,7 @@ public class QuestionDetailActivity extends BaseActivity {
 
                 break;
             case Event.QUESTION_COMMENT_FETCH_OK:
-                Log.d(TAG,"----------start processing question comments-------");
+                Log.d(TAG,"----------startAct processing question comments-------");
                 mHandler.post(()->{
                     setUpComments((List<Comment>)event.t());
                 });

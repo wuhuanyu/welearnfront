@@ -15,6 +15,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -28,7 +29,6 @@ import com.example.stack.welearn.R;
 import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.adapters.CommentQuickAdapter;
 import com.example.stack.welearn.adapters.LiveAdapter;
-import com.example.stack.welearn.adapters.VideoAdapter;
 import com.example.stack.welearn.entities.Comment;
 import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.entities.Live;
@@ -61,9 +61,9 @@ import static com.example.stack.welearn.WeLearnApp.getContext;
  * Created by stack on 2018/1/5.
  */
 
-public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,CommentDialog.CommentDialogListener,LiveReserveDialog.LiveReserveListener {
+public class CourseDetailAct extends DynamicBaseAct implements SwipeRefreshLayout.OnRefreshListener,CommentDialog.CommentDialogListener,LiveReserveDialog.LiveReserveListener {
 
-    public static final String TAG= CourseDetailActivity.class.getSimpleName();
+    public static final String TAG= CourseDetailAct.class.getSimpleName();
     private int courseId;
     private boolean noMoreComment=false;
     private boolean isChecked=false;
@@ -101,33 +101,21 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     private int nextComment=0;
     private boolean isRefresh=false;
     public static void start(Context context, Bundle data){
-        Intent intent=new Intent(context,CourseDetailActivity.class);
+        Intent intent=new Intent(context,CourseDetailAct.class);
         intent.putExtras(data);
         context.startActivity(intent);
     }
 
-    //live start here
+    //live startAct here
     private LiveAdapter mLiveAdapter;
-    private LinearLayoutManager mLiveLayoutManager;
     private LiveTask mLiveTask=LiveTask.instance();
     //live stop here
 
     @Override
-    public void doRegister() {
-        EventBus.getDefault().register(this);
-        btnAddLive.setOnClickListener(view -> {
-            FragmentManager fragmentManager=getSupportFragmentManager();
-            LiveReserveDialog dialog=new LiveReserveDialog();
-            dialog.show(fragmentManager,"LiveReserve");
-        });
-    }
-
-    @Override
-    public void initView() {
+    public void setUp() {
 
         Bundle bundle=getIntent().getExtras();
         courseId=bundle.getInt("course_id");
-
 
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(bundle.getString("course_name"));
@@ -170,14 +158,14 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
             }
         });
         rvLives.setAdapter(mLiveAdapter);
-
+        btnAddLive.setOnClickListener(view -> {
+            FragmentManager fragmentManager=getSupportFragmentManager();
+            LiveReserveDialog dialog=new LiveReserveDialog();
+            dialog.show(fragmentManager,"LiveReserve");
+        });
 
         isRefresh=true;
-        ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail(courseId,isRefresh));
-        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,toRefresh,0,4));
-        ThreadPoolManager.getInstance().getService().execute(
-                mLiveTask.getLives(courseId,WeLearnApp.info().getAuth())
-        );
+
     }
 
     public boolean onCreateOptionsMenu(Menu menu){
@@ -213,12 +201,25 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         return super.onOptionsItemSelected(item);
     }
 
-
-
     @Override
     public int getLayout() {
         return R.layout.act_course_detail;
     }
+
+    @Override
+    public void prepareData() {
+        ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail(courseId,isRefresh));
+        ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,toRefresh,0,4));
+        ThreadPoolManager.getInstance().getService().execute(
+                mLiveTask.getLives(courseId,WeLearnApp.info().getAuth())
+        );
+    }
+
+    @Override
+    public ViewGroup getRoot() {
+        return findViewById(R.id.video_drawer);
+    }
+
     private void setUpCourseDetail(Course courseDetail){
         Log.i(TAG,courseDetail.toString());
         Glide.with(this)
@@ -267,8 +268,13 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         }
     }
 
-    public void onStop(){
-        super.onStop();
+    @Override
+    public void register() {
+        EventBus.getDefault().register(this);
+    }
+
+    @Override
+    public void unRegister() {
         EventBus.getDefault().unregister(this);
     }
 
@@ -279,7 +285,6 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     @Override
     public void onRefresh() {
         refresh();
-
     }
 
     private void refreshComment(){
@@ -288,38 +293,11 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     }
 
     private void submitComment(String input){
-        Runnable submitTask=()->{
-            JSONObject submitContent=new JSONObject();
-            try {
-                submitContent.put("body",input);
-            } catch (JSONException e) {
-                e.printStackTrace();
-                return;
-            }
-            AndroidNetworking.post(Constants.Net.API_URL+"/course/"+courseId+"/comment")
-                    .addHeaders("authorization", WeLearnApp.info().getAuth())
-                    .addHeaders("content-type","application/json")
-                    .addJSONObjectBody(submitContent)
-                    .build()
-                    .getAsJSONObject(new JSONObjectRequestListener() {
-                        @Override
-                        public void onResponse(JSONObject response) {
-                            runOnUiThread(()->{
-                                ToastUtils.getInstance().showMsgShort(getString(R.string.comment_ok));
-                            });
-                            refreshComment();
-                        }
-
-                        @Override
-                        public void onError(ANError anError) {
-                            if(anError.getErrorCode()==403){
-                                Log.i(TAG,"Un authorized operation");
-                                ToastUtils.getInstance().showMsgShort(getString(R.string.unauthorized));
-                            }
-                        }
-                    });
-        };
-        ThreadPoolManager.getInstance().getService().execute(submitTask);
+        ThreadPoolManager.getInstance().getService().submit(
+                CommentsTask.instance().publishCourseComment(
+                        WeLearnApp.info().getAuth(),courseId,input
+                )
+        );
     }
 
     @Override

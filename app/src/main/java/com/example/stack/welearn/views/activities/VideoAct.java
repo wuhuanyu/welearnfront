@@ -13,7 +13,7 @@ import butterknife.BindView;
  * Created by stack on 1/31/18.
  */
 
-public class VideoAct extends BaseActivity {
+public class VideoAct extends DynamicBaseAct {
     @BindView(R.id.wv_video)
     WebView mWebView;
     public void onCreate(Bundle savedInstanceState){
@@ -27,7 +27,7 @@ public class VideoAct extends BaseActivity {
     }
 
     @Override
-    public void initView() {
+    public void setUp() {
         mWebView.loadUrl("http://"+Constants.Net.HOST+":"+Constants.Net.PORT+"/video");
     }
 

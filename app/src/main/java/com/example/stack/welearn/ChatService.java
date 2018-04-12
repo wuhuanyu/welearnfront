@@ -39,7 +39,7 @@ public class ChatService extends Service {
 
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
-        Log.d(TAG,"Chat Service start");
+        Log.d(TAG,"Chat Service startAct");
         EventBus.getDefault().register(this);
         return START_NOT_STICKY;
     }
@@ -79,7 +79,7 @@ public class ChatService extends Service {
         int code =event.code();
         switch (code){
             case Event.SEND_MSG:{
-                Log.d(TAG,"Receive send msg comand,start send msg");
+                Log.d(TAG,"Receive send msg comand,startAct send msg");
                 Event<Message> e=(Event<Message>)event;
                 String msg=e.t().getBody();
                 int courseId=e.t().getCourseId();

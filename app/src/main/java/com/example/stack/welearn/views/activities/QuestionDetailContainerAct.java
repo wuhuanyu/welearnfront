@@ -19,7 +19,7 @@ import butterknife.BindView;
  * Created by stack on 2018/1/5.
  */
 //TODO:add pager indicator
-public class QuestionDetailContainerAct extends BaseActivity implements CommentDialog.CommentDialogListener {
+public class QuestionDetailContainerAct extends DynamicBaseAct implements CommentDialog.CommentDialogListener {
     int current;
     @BindView(R.id.my_toolbar)
     Toolbar mToolbar;
@@ -58,7 +58,7 @@ public class QuestionDetailContainerAct extends BaseActivity implements CommentD
     }
 
     @Override
-    public void initView() {
+    public void setUp() {
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle("题目");
         pagerAdapter=new QuestionPagerAdapter(getSupportFragmentManager());

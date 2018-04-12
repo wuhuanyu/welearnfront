@@ -8,14 +8,12 @@ import android.widget.Button;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.utils.Constants;
 
-import org.w3c.dom.Node;
-
 import butterknife.BindView;
 import cn.nodemedia.NodeCameraView;
 import cn.nodemedia.NodePublisher;
 import cn.nodemedia.NodePublisherDelegate;
 
-public class LivePublisher extends BaseActivity implements View.OnClickListener,NodePublisherDelegate {
+public class LivePublisher extends DynamicBaseAct implements View.OnClickListener,NodePublisherDelegate {
     boolean isCamOn=true;
     boolean isStarted=false;
 
@@ -33,7 +31,7 @@ public class LivePublisher extends BaseActivity implements View.OnClickListener,
     }
 
     @Override
-    public void initView() {
+    public void setUp() {
         mPublisher=new NodePublisher(this);
         mPublisher.setNodePublisherDelegate(this);
         mPublisher.setCameraPreview(nodeCameraView,NodePublisher.CAMERA_FRONT,true);

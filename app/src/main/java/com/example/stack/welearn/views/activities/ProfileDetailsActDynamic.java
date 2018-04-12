@@ -1,17 +1,17 @@
 package com.example.stack.welearn.views.activities;
 
 /**
- * Created by stack on 2018/1/13.
+ * Created by stack on 2018/1/5.
  */
 
-public class GuideActivity extends BaseActivity {
+public class ProfileDetailsActDynamic extends DynamicBaseAct {
     @Override
     public void doRegister() {
 
     }
 
     @Override
-    public void initView() {
+    public void setUp() {
 
     }
 

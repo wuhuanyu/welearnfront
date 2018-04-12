@@ -125,6 +125,16 @@ public class WeLearnApp extends Application {
         private int id;
         private String auth;
         private String avatar;
+        private boolean isTeacher;
+
+        public boolean isTeacher() {
+            return isTeacher;
+        }
+
+        public MYINFO setTeacher(boolean teacher) {
+            isTeacher = teacher;
+            return this;
+        }
 
         public String getAvatar() {
             return avatar;
@@ -190,6 +200,7 @@ public class WeLearnApp extends Application {
 
         public MYINFO setUserType(int userType) {
             this.userType = userType;
+            this.isTeacher=(this.userType==Constants.ACC_T_Tea);
             return this;
         }
 

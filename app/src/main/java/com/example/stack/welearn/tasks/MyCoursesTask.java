@@ -40,14 +40,14 @@ public class MyCoursesTask extends BaseTask implements Cachable{
         return "my_"+type+"_courses";
     }
 
-    private Runnable getCourses(boolean toRefresh,String auth,String type, int userId,Processor<List<Course>> processor){
+    private Runnable getCourses(boolean toRefresh,String auth,String actionType,int userType,int userId,Processor<List<Course>> processor){
+        String url=Constants.Net.API_URL+"/acc/"+(userType==Constants.ACC_T_Tea?"tea/":"stu/")+userId+"/course";
         return  ()->{
-            JSONArray myCourseArray=mCache.getAsJSONArray(getCacheName(type));
+            JSONArray myCourseArray=mCache.getAsJSONArray(getCacheName(actionType));
             if(myCourseArray==null||toRefresh) {
-                AndroidNetworking.get(Constants.Net.API_URL + "/acc/stu/"+userId + "/course")
+                AndroidNetworking.get(url)
                         .addHeaders("authorization",auth)
-                        .addHeaders("content-type", "application/json")
-                        .addQueryParameter("type",type)
+                        .addQueryParameter("type",actionType)
                         .build()
                         .getAsJSONObject(new JSONObjectRequestListener() {
                             JSONArray data;
@@ -59,7 +59,7 @@ public class MyCoursesTask extends BaseTask implements Cachable{
                                     e.printStackTrace();
                                     processor.FAIL(e);
                                 }
-                                mCache.put(getCacheName(type), data);
+                                mCache.put(getCacheName(actionType), data);
                                 List<Course> myCourses = Course.toCourses(data);
                                 processor.OK(myCourses);
                             }
@@ -77,8 +77,16 @@ public class MyCoursesTask extends BaseTask implements Cachable{
         };
     }
 
-    public Runnable getMyUnfinishedCourses(boolean toRefresh){
-        return getCourses(toRefresh,WeLearnApp.info().getAuth(), "unfinished",WeLearnApp.info().getId(), new Processor<List<Course>>() {
+    /**
+     * for teacher,is his all courses
+     * @param auth
+     * @param userType
+     * @param userId
+     * @param isRefresh
+     * @return
+     */
+    public Runnable getMyUnfinishedCourses(String auth,int userType,int userId,boolean isRefresh){
+        return getCourses(isRefresh,auth, "unfinished",userType,userId, new Processor<List<Course>>() {
             @Override
             public void OK(List<Course> data) {
                 List<Integer> cIds=data.stream().map(c->c.getId()).collect(Collectors.toList());
@@ -101,8 +109,8 @@ public class MyCoursesTask extends BaseTask implements Cachable{
         });
     }
 
-    public Runnable getMyFinishedCourses(boolean toRefresh){
-        return getCourses(toRefresh,WeLearnApp.info().getAuth(),"finished",WeLearnApp.info().getId(), new Processor<List<Course>>() {
+    public Runnable getMyFinishedCourses(String auth,int stuId,boolean isRefresh){
+        return getCourses(isRefresh,auth,"finished",Constants.ACC_T_Stu,stuId,new Processor<List<Course>>() {
             @Override
             public void OK(List<Course> data) {
                 EventBus.getDefault().post(new Event<List<Course>>(Event.MY_FINISHED_COURSE_OK, data));

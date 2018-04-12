@@ -16,7 +16,7 @@ import org.eclipse.paho.client.mqttv3.MqttMessage;
  * Created by stack on 2018/1/18.
  */
 
-public class MQTTTestAct extends BaseActivity {
+public class MQTTTestAct extends DynamicBaseAct {
     private MQTTClient mClient;
     private MqttAndroidClient mDefeferdClient;
     public void onCreate(Bundle savedInstanceState){
@@ -29,7 +29,7 @@ public class MQTTTestAct extends BaseActivity {
     }
 
     @Override
-    public void initView() {
+    public void setUp() {
         mClient=MQTTClient.instance();
         mDefeferdClient=mClient.getClient();
         try {

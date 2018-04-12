@@ -3,6 +3,7 @@ package com.example.stack.welearn.tasks;
 import com.androidnetworking.AndroidNetworking;
 import com.androidnetworking.error.ANError;
 import com.androidnetworking.interfaces.JSONObjectRequestListener;
+import com.androidnetworking.interfaces.OkHttpResponseListener;
 import com.example.stack.welearn.entities.Comment;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.utils.Constants;
@@ -13,6 +14,8 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+
+import okhttp3.Response;
 
 /**
  * Created by stack on 2018/1/14.
@@ -67,7 +70,7 @@ public class CommentsTask extends BaseTask {
             JSONArray commentsJsons=null;
             if(commentsJsons==null||toRefresh){
                  AndroidNetworking.get(Constants.Net.API_URL+"/course/"+courseId+"/comment")
-                        .addQueryParameter("start",String.valueOf(start))
+                        .addQueryParameter("startAct",String.valueOf(start))
                         .addQueryParameter("limit",String.valueOf(limit))
                         .build()
                         .getAsJSONObject(new JSONObjectRequestListener() {
@@ -98,7 +101,7 @@ public class CommentsTask extends BaseTask {
             JSONArray commentsJSON=null;
             if(commentsJSON==null||toRefresh){
                 AndroidNetworking.get(Constants.Net.API_URL+"/course/"+courseId+"/question/"+questionId+"/comment")
-                        .addQueryParameter("start",String.valueOf(start))
+                        .addQueryParameter("startAct",String.valueOf(start))
                         .addQueryParameter("limit",String.valueOf(limit))
                         .build()
                         .getAsJSONObject(new JSONObjectRequestListener() {
@@ -121,6 +124,72 @@ public class CommentsTask extends BaseTask {
                         });
             }
         };
+    }
+
+
+    private Runnable publishComment(String auth,int courseId,int questionId,String comment,Processor processor){
+        String url;
+        if(questionId==-1){
+           url=Constants.Net.API_URL+"/course/"+courseId+"/comment";
+        }else {
+            url=Constants.Net.API_URL+"/course/"+courseId+"/question/"+questionId+"/comment";
+        }
+        return new Runnable() {
+            @Override
+            public void run() {
+                AndroidNetworking.post(url)
+                        .addHeaders("authorization",auth)
+                        .addBodyParameter("body",comment)
+                        .build()
+                        .getAsOkHttpResponse(new OkHttpResponseListener() {
+                            @Override
+                            public void onResponse(Response response) {
+                                processor.OK(null);
+                            }
+
+                            @Override
+                            public void onError(ANError anError) {
+                                processor.FAIL(null);
+                            }
+                        });
+            }
+        };
+    }
+
+    public Runnable publishCourseComment(String auth,int courseId,String comment){
+        return publishComment(auth, courseId, -1, comment, new Processor() {
+            @Override
+            public void OK(Object data) {
+                EventBus.getDefault().post(
+                        new Event(Event.PUBLISH_COURSE_COMMENT_OK)
+                );
+            }
+
+            @Override
+            public void FAIL(Throwable error) {
+                EventBus.getDefault().post(
+                        new Event(Event.PUBLISH_COURSE_COMMETN_FAIL)
+                );
+            }
+        });
+    }
+
+    public Runnable publishQuestionComment(String auth,int courseId,int questionId,String comment){
+        return publishComment(auth, courseId, questionId, comment, new Processor() {
+            @Override
+            public void OK(Object data) {
+                EventBus.getDefault().post(
+                        new Event(Event.PUBLISH_QUESTION_COMMENT_OK)
+                );
+            }
+
+            @Override
+            public void FAIL(Throwable error) {
+                EventBus.getDefault().post(
+                        new Event(Event.PUBLISH_QUESTION_COMMENT_FAIL)
+                );
+            }
+        });
     }
 
 }

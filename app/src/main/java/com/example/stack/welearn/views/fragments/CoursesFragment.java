@@ -4,10 +4,12 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.View;
 import android.widget.LinearLayout;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.stack.welearn.R;
+import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.adapters.CourseAdapter;
 import com.example.stack.welearn.adapters.GlideImageLoader;
 import com.example.stack.welearn.adapters.PremierCourseAdapter;
@@ -16,7 +18,7 @@ import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.MyCoursesTask;
 import com.example.stack.welearn.tasks.PremierCoursesTask;
 import com.example.stack.welearn.utils.ThreadPoolManager;
-import com.example.stack.welearn.views.activities.CourseDetailActivity;
+import com.example.stack.welearn.views.activities.CourseDetailAct;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 
@@ -24,7 +26,6 @@ import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
@@ -36,11 +37,9 @@ import butterknife.BindView;
 
 public class CoursesFragment extends BaseFragment {
     public static final String TAG=CoursesFragment.class.getSimpleName();
-    private LinearLayoutManager  mLayoutManager;
     CourseAdapter myCourseAdapter;
     PremierCourseAdapter premierCourseAdapter;
-    List<Course> myCourseData=new ArrayList<>();
-    List<Course> mPremierCourseData=new ArrayList<>();
+
     @BindView(R.id.my_course)
     RecyclerView rvMyCourse;
     @BindView(R.id.premier_course)
@@ -48,8 +47,6 @@ public class CoursesFragment extends BaseFragment {
     @BindView(R.id.banner)
     Banner mBanner;
 
-    MyCoursesTask mCourseTask=MyCoursesTask.instance();
-    PremierCoursesTask mPremierCourseTask=PremierCoursesTask.instance();
     Integer[] mBannerImages={
             R.drawable.math1,R.drawable.history1,R.drawable.history2,R.drawable.art2
     };
@@ -59,7 +56,7 @@ public class CoursesFragment extends BaseFragment {
         Bundle bundle =new Bundle();
         bundle.putInt("course_id",course.getId());
         bundle.putString("course_name",course.getName());
-        CourseDetailActivity.start(getActivity(),bundle);
+        CourseDetailAct.start(getActivity(),bundle);
 
     };
     @Override
@@ -68,7 +65,7 @@ public class CoursesFragment extends BaseFragment {
     }
 
     @Override
-    public void doRegister() {
+    public void register() {
     }
 
     public void onCreate(Bundle savedInstanceState){
@@ -76,23 +73,14 @@ public class CoursesFragment extends BaseFragment {
         EventBus.getDefault().register(this);
     }
     @Override
-    public void initView() {
-        ThreadPoolManager.getInstance().getService().submit(mCourseTask.getMyUnfinishedCourses(false));
-        ThreadPoolManager.getInstance().getService().submit(mPremierCourseTask.getPremierCourses(false));
+    public void setUp() {
 
-        myCourseAdapter =new CourseAdapter(R.layout.item_course_card, myCourseData);
+        myCourseAdapter =new CourseAdapter(R.layout.item_course_card);
         myCourseAdapter.setOnItemClickListener(listener);
-        mLayoutManager=new LinearLayoutManager(getActivity(),LinearLayoutManager.HORIZONTAL,false);
-        rvMyCourse.setLayoutManager(mLayoutManager);
+        rvMyCourse.setLayoutManager(
+                new LinearLayoutManager(getActivity(),LinearLayout.HORIZONTAL,false)
+        );
         rvMyCourse.setAdapter(myCourseAdapter);
-
-
-        premierCourseAdapter=new PremierCourseAdapter(R.layout.item_premier_course, mPremierCourseData);
-        premierCourseAdapter.setOnItemClickListener(listener);
-        rvPremierCourse.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL,false));
-        rvPremierCourse.setAdapter(premierCourseAdapter);
-
-
         mBanner.setImageLoader(new GlideImageLoader());
         mBanner.setImages(Arrays.asList(mBannerImages));
         mBanner.setOnBannerListener(new OnBannerListener() {
@@ -100,10 +88,35 @@ public class CoursesFragment extends BaseFragment {
             public void OnBannerClick(int position) {
                 Bundle bundle =new Bundle();
                 bundle.putInt("course_id",1);
-                CourseDetailActivity.start(getActivity(),bundle);
+                CourseDetailAct.start(getActivity(),bundle);
             }
         });
         mBanner.start();
+
+        if(!WeLearnApp.info().isTeacher()){
+            premierCourseAdapter=new PremierCourseAdapter(R.layout.item_premier_course);
+            premierCourseAdapter.setOnItemClickListener(listener);
+            rvPremierCourse.setLayoutManager(new LinearLayoutManager(getActivity(), LinearLayout.HORIZONTAL,false));
+            rvPremierCourse.setAdapter(premierCourseAdapter);
+        }
+    }
+
+    @Override
+    public void prepareData() {
+        ThreadPoolManager.getInstance().getService()
+                .submit(MyCoursesTask.instance().getMyUnfinishedCourses(
+                        WeLearnApp.info().getAuth(),
+                        WeLearnApp.info().getUserType(),
+                        WeLearnApp.info().getId(),
+                        true
+                ));
+        if(!WeLearnApp.info().isTeacher()){
+            ThreadPoolManager.getInstance().getService()
+                    .submit(PremierCoursesTask.instance().getPremierCourses(true));
+        }
+        else {
+            rvPremierCourse.setVisibility(View.GONE);
+        }
     }
 
     @Override
@@ -124,16 +137,18 @@ public class CoursesFragment extends BaseFragment {
         List<Course> data;
         switch (event.code()){
             case Event.MY_COURSE_UNFINISHED_OK:
-                Log.d(TAG,"------start processing my course-------");
+                Log.d(TAG,"------startAct processing my course-------");
                 mHandler.post(()->{
                     myCourseAdapter.setNewData(event.t());
                 });
                 break;
             case Event.PREMIER_COURSE_FETCH_OK:
-                Log.d(TAG,"--------start processing premier course-------");
-                mHandler.post(()->{
-                    premierCourseAdapter.setNewData(event.t());
-                });
+                if(!WeLearnApp.info().isTeacher()){
+                    Log.d(TAG,"--------startAct processing premier course-------");
+                    mHandler.post(()->{
+                        premierCourseAdapter.setNewData(event.t());
+                    });
+                }
                 break;
             default:break;
         }
@@ -142,7 +157,18 @@ public class CoursesFragment extends BaseFragment {
     @Override
     public void refresh() {
         refresh=true;
-        ThreadPoolManager.getInstance().getService().submit(mCourseTask.getMyUnfinishedCourses(true));
-        ThreadPoolManager.getInstance().getService().submit(mPremierCourseTask.getPremierCourses(true));
+        ThreadPoolManager.getInstance().getService().submit(
+                MyCoursesTask.instance().getMyUnfinishedCourses(
+                        WeLearnApp.info().getAuth(),
+                        WeLearnApp.info().getUserType(),
+                        WeLearnApp.info().getId(),
+                        true
+                )
+        );
+        if(!WeLearnApp.info().isTeacher()){
+            ThreadPoolManager.getInstance().getService().submit(
+                    PremierCoursesTask.instance().getPremierCourses(true)
+            );
+        }
     }
 }

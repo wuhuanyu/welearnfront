@@ -60,6 +60,16 @@ public class Event<T>{
     public static final int SUBMIT_LIVE_OK=37;
     public static final int SUBMIT_LIVE_FAIL=38;
 
+    public static final int PUBLISH_BULLETIN_OK=40;
+    public static final int PUBLISH_BULLETIN_FAIL=41;
+
+    public static final int PUBLISH_COURSE_COMMENT_OK=42;
+    public static final int PUBLISH_COURSE_COMMETN_FAIL=43;
+
+    public static final int PUBLISH_QUESTION_COMMENT_OK=44;
+    public static final int PUBLISH_QUESTION_COMMENT_FAIL=45;
+
+
     /**
      * 通知事件
      */

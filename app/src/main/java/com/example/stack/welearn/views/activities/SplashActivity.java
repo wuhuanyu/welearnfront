@@ -4,10 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.os.Bundle;
 import android.os.Handler;
-import android.support.annotation.Nullable;
-import android.support.v7.app.AppCompatActivity;
 
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.WeLearnApp;
@@ -25,12 +22,14 @@ import org.json.JSONObject;
  * Created by stack on 2018/1/2.
  */
 
-public class SplashActivity extends AppCompatActivity{
+public class SplashActivity extends StaticBaseAct{
     @Override
-    public void onCreate(@Nullable Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        //TODO gif location
-        setContentView(R.layout.activity_splash);
+    public int getLayout() {
+        return R.layout.activity_splash;
+    }
+
+    @Override
+    public void setUp() {
         SharedPreferences sharedPreferences=getApplicationContext().getSharedPreferences(getString(R.string.saved_info),Context.MODE_PRIVATE);
         String name=sharedPreferences.getString(getApplicationContext().getString(R.string.saved_username),null);
         String password=sharedPreferences.getString(getApplicationContext().getString(R.string.saved_password),null);
@@ -50,17 +49,15 @@ public class SplashActivity extends AppCompatActivity{
         }
     }
 
-
-    public void onStart(){
-        super.onStart();
+    @Override
+    public void register() {
         EventBus.getDefault().register(this);
     }
 
-    public void onStop(){
+    @Override
+    public void unRegister() {
         EventBus.getDefault().unregister(this);
-        super.onStop();
     }
-
 
 
     @Subscribe(threadMode = ThreadMode.MAIN)
@@ -69,9 +66,8 @@ public class SplashActivity extends AppCompatActivity{
             case Event.LOGIN_OK:
                 JSONObject idToken=((Event<JSONObject>) event).t();
                 ToastUtils.getInstance().showMsgShort("Login successfully");
-                //assume username,password exists;
                 AccTask.instance().persist(idToken);
-                startAct(MainActivity.class);
+                startAct(MainAct.class);
                 break;
             case Event.LOGIN_FAIL:
                 ToastUtils.getInstance().showMsgShort("Login fail");

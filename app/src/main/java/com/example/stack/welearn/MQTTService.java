@@ -20,7 +20,7 @@ import android.widget.Toast;
 import com.example.stack.welearn.config.MQTTClient;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.utils.ToastUtils;
-import com.example.stack.welearn.views.activities.CourseDetailActivity;
+import com.example.stack.welearn.views.activities.CourseDetailAct;
 
 import org.eclipse.paho.android.service.MqttAndroidClient;
 import org.eclipse.paho.client.mqttv3.IMqttActionListener;
@@ -52,7 +52,7 @@ public class MQTTService extends Service {
 
 
     /**
-     *bind start here
+     *bind startAct here
      */
     private final IBinder mBinder=new MQTTBinder();
     public class MQTTBinder extends Binder{
@@ -138,7 +138,7 @@ public class MQTTService extends Service {
                         String courseName=payload.getString("course_name");
                         int courseId=Integer.parseInt(payload.getString("forId"));
                         String notification="你的课程"+courseName+"有新的评论啦!   "+payload.getString("body");
-                        Intent intent=new Intent(getApplicationContext(),CourseDetailActivity.class);
+                        Intent intent=new Intent(getApplicationContext(),CourseDetailAct.class);
                         Bundle bundle=new Bundle();
                         bundle.putInt("course_id",courseId);
                         bundle.putString("course_name",payload.getString("course_name"));
@@ -257,5 +257,10 @@ public class MQTTService extends Service {
                 EventBus.getDefault().removeStickyEvent(event);
             default:break;
         }
+    }
+
+    public static void startService(Context context){
+        Intent intent=new Intent(context,MQTTService.class);
+        context.startService(intent);
     }
 }

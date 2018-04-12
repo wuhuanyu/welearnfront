@@ -18,12 +18,12 @@ import io.socket.engineio.client.Transport;
  * Created by stack on 2018/1/8.
  */
 
-public class SocketTestActivity extends BaseActivity {
+public class SocketTestActDynamic extends DynamicBaseAct {
 
     Socket mSocket;
     Handler mHandler=new Handler();
     IO.Options options=new IO.Options();
-    static final String TAG=SocketTestActivity.class.getSimpleName();
+    static final String TAG=SocketTestActDynamic.class.getSimpleName();
     @Override
     public void doRegister() {
 
@@ -63,7 +63,7 @@ public class SocketTestActivity extends BaseActivity {
     }
 
     @Override
-    public void initView() {
+    public void setUp() {
 
     }
 

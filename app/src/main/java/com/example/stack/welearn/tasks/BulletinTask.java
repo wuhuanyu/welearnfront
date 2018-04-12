@@ -92,4 +92,28 @@ public class BulletinTask extends BaseTask implements Cachable {
     public String getCacheName() {
         return "bulletins";
     }
+
+    public Runnable publishBulletin(String auth,int courseId,String newBulletin){
+        return ()->{
+            AndroidNetworking.post(Constants.Net.API_URL+"/course/"+courseId+"/bulletin")
+                    .addHeaders("authorization",auth)
+                    .addBodyParameter("body",newBulletin)
+                    .build()
+                    .getAsJSONObject(new JSONObjectRequestListener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            EventBus.getDefault().post(
+                                    new Event(Event.PUBLISH_BULLETIN_OK)
+                            );
+                        }
+                        @Override
+                        public void onError(ANError anError) {
+                            anError.printStackTrace();
+                            EventBus.getDefault().post(
+                                    new Event(Event.PUBLISH_BULLETIN_FAIL)
+                            );
+                        }
+                    });
+        };
+    }
 }
