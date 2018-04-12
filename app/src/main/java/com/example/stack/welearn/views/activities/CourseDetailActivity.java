@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -13,6 +14,8 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -28,6 +31,7 @@ import com.example.stack.welearn.adapters.LiveAdapter;
 import com.example.stack.welearn.adapters.VideoAdapter;
 import com.example.stack.welearn.entities.Comment;
 import com.example.stack.welearn.entities.Course;
+import com.example.stack.welearn.entities.Live;
 import com.example.stack.welearn.entities.Video;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.CommentsTask;
@@ -37,6 +41,7 @@ import com.example.stack.welearn.utils.ACache;
 import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.utils.ToastUtils;
+import com.example.stack.welearn.views.dialogs.LiveReserveDialog;
 import com.example.stack.welearn.views.fragments.CommentDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -56,7 +61,7 @@ import static com.example.stack.welearn.WeLearnApp.getContext;
  * Created by stack on 2018/1/5.
  */
 
-public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,CommentDialog.CommentDialogListener {
+public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLayout.OnRefreshListener,CommentDialog.CommentDialogListener,LiveReserveDialog.LiveReserveListener {
 
     public static final String TAG= CourseDetailActivity.class.getSimpleName();
     private int courseId;
@@ -70,8 +75,8 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     @BindView(R.id.rv_course_detail_comment)
     RecyclerView rvComments;
     CommentQuickAdapter mCommentAdapter;
-    CourseDetailTask mCourseDetailTask;
-    CommentsTask mCourseCommentsTask;
+    CourseDetailTask mCourseDetailTask=CourseDetailTask.instance();
+    CommentsTask mCourseCommentsTask=CommentsTask.instance();
     @BindView(R.id.iv_course_detail_main)
     ImageView courseImage;
     @BindView(R.id.text_course_detail_desc)
@@ -82,14 +87,16 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     @BindView(R.id.sw_course_detail)
     SwipeRefreshLayout mSwipeRefresh;
 
+    @BindView(R.id.btn_add_live)
+    Button btnAddLive;
+
     @BindView(R.id.text_course_detail_refresh)
     TextView mCommentRefresh;
 
     @BindView(R.id.fb_write_course_comment)
     FloatingActionButton fbWriteComment;
-    @BindView(R.id.rv_video)
-    RecyclerView  rvVideos;
-    VideoAdapter mVideoAdapter;
+    @BindView(R.id.rv_live)
+    RecyclerView  rvLives;
 
     private int nextComment=0;
     private boolean isRefresh=false;
@@ -102,11 +109,17 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     //live start here
     private LiveAdapter mLiveAdapter;
     private LinearLayoutManager mLiveLayoutManager;
+    private LiveTask mLiveTask=LiveTask.instance();
     //live stop here
 
     @Override
     public void doRegister() {
         EventBus.getDefault().register(this);
+        btnAddLive.setOnClickListener(view -> {
+            FragmentManager fragmentManager=getSupportFragmentManager();
+            LiveReserveDialog dialog=new LiveReserveDialog();
+            dialog.show(fragmentManager,"LiveReserve");
+        });
     }
 
     @Override
@@ -115,16 +128,13 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         Bundle bundle=getIntent().getExtras();
         courseId=bundle.getInt("course_id");
 
-        //单例获取
-        mCourseDetailTask=CourseDetailTask.instance();
-        mCourseCommentsTask=CommentsTask.instance();
+
         setSupportActionBar(mToolbar);
         getSupportActionBar().setTitle(bundle.getString("course_name"));
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-        LinearLayoutManager manager=new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
 
-        rvComments.setLayoutManager(manager);
-
+        LinearLayoutManager commentsLayoutManager=new LinearLayoutManager(getContext(), LinearLayoutManager.VERTICAL,false);
+        rvComments.setLayoutManager(commentsLayoutManager);
         mCommentAdapter=new CommentQuickAdapter(R.layout.item_comment);
         mCommentAdapter.setOnLoadMoreListener(new BaseQuickAdapter.RequestLoadMoreListener() {
             @Override
@@ -135,6 +145,7 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
         });
         mCommentAdapter.openLoadAnimation(BaseQuickAdapter.SLIDEIN_LEFT);
         rvComments.setAdapter(mCommentAdapter);
+
         mSwipeRefresh.setOnRefreshListener(this);
         mCommentRefresh.setOnClickListener((v)->{
             isRefresh=true;
@@ -146,21 +157,26 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
             CommentDialog commentDialog=new CommentDialog();
             commentDialog.show(getSupportFragmentManager(),"comment_dialog");
         });
-        //set up video adapter
-        mVideoAdapter=new VideoAdapter(R.layout.item_video,generateVideo(10));
-        mVideoAdapter.setOnItemClickListener((b,v,i)->{
-//            ToastUtils.getInstance().showMsgShort("you clicked" +i);
-            Log.i(TAG,"you click "+i);
-        });
 
-        rvVideos.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
-        rvVideos.setAdapter(mVideoAdapter);
+
+        LinearLayoutManager liveLayoutManager=new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
+        rvLives.setLayoutManager(liveLayoutManager);
+        mLiveAdapter=new LiveAdapter(R.layout.item_live);
+        mLiveAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
+            @Override
+            public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+                List<Live> lives=baseQuickAdapter.getData();
+                LivePlayerAct.startAct(getContext(),lives.get(i).getUrl());
+            }
+        });
+        rvLives.setAdapter(mLiveAdapter);
+
 
         isRefresh=true;
         ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail(courseId,isRefresh));
         ThreadPoolManager.getInstance().getService().execute(mCourseCommentsTask.getCourseComments(courseId,toRefresh,0,4));
         ThreadPoolManager.getInstance().getService().execute(
-                LiveTask.instance().getLives(courseId,WeLearnApp.info().getAuth())
+                mLiveTask.getLives(courseId,WeLearnApp.info().getAuth())
         );
     }
 
@@ -225,7 +241,7 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
-    public void setUpCourseDetail(Event<?> event){
+    public void onEvent(Event<?> event){
         switch (event.code()){
             case Event.COURSE_DETAIL_FETCH_OK:
                 if(mSwipeRefresh.isRefreshing())
@@ -239,6 +255,13 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
                 setUpCourseComments((List<Comment>)event.t());
                 if(mSwipeRefresh.isRefreshing())
                     mSwipeRefresh.setRefreshing(false);
+                break;
+            case Event.FETCH_LIVE_OK:
+                List<Live> lives=((Event<List>)event).t();
+                mLiveAdapter.setNewData(lives);
+
+            case Event.SUBMIT_LIVE_OK:
+                ToastUtils.getInstance().showMsgShort("Live Reserved OK");
                 break;
             default:break;
         }
@@ -329,6 +352,11 @@ public class CourseDetailActivity extends BaseActivity implements SwipeRefreshLa
     public void refresh() {
         this.isRefresh=true;
         ThreadPoolManager.getInstance().getService().execute(mCourseDetailTask.getCourseDetail(courseId,true));
+    }
+
+    @Override
+    public void onSubmit(long time, String title) {
+        ThreadPoolManager.getInstance().getService().submit(mLiveTask.reserve(courseId,WeLearnApp.info().getAuth(),time,title));
     }
 }
 

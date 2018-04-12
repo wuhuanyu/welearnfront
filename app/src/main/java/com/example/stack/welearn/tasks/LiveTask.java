@@ -71,4 +71,29 @@ public class LiveTask {
         };
     }
 
+    public Runnable reserve(int courseId,String auth,long time,String title){
+        return ()->{
+            AndroidNetworking.post(Constants.Net.API_URL+"/course/"+courseId+"/live")
+                    .addHeaders("authorization",auth)
+                    .addBodyParameter("time",String.valueOf(time))
+                    .addBodyParameter("title",title)
+                    .build()
+                    .getAsJSONObject(new JSONObjectRequestListener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                           EventBus.getDefault().post(
+                                   new Event(Event.SUBMIT_LIVE_OK)
+                           );
+                        }
+
+                        @Override
+                        public void onError(ANError anError) {
+                            EventBus.getDefault().post(
+                                    new Event(Event.SUBMIT_LIVE_FAIL)
+                            );
+                        }
+                    });
+        };
+    }
+
 }

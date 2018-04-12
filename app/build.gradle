@@ -42,6 +42,7 @@ dependencies {
     compile 'com.github.vlonjatg:progress-activity:v2.0.3'
     compile 'org.eclipse.paho:org.eclipse.paho.client.mqttv3:1.1.0'
     compile 'com.github.ashqal:MD360Player4Android:2.5.0'
+    compile 'joda-time:joda-time:2.9.9'
     compile 'org.eclipse.paho:org.eclipse.paho.android.service:1.1.1'
     compile 'com.balsikandar.android:crashreporter:1.0.9'
     compile 'com.github.NodeMedia:NodeMediaClient-Android:2.4.2'

@@ -57,6 +57,9 @@ public class Event<T>{
     public static final int FETCH_LIVE_OK=35;
     public static final int FETCH_LIVE_FAIL=36;
 
+    public static final int SUBMIT_LIVE_OK=37;
+    public static final int SUBMIT_LIVE_FAIL=38;
+
     /**
      * 通知事件
      */
@@ -74,6 +77,7 @@ public class Event<T>{
     public static final int SEND_MSG=93;
 
     public static final int NEW_MESSAGE=50;
+
 
 
     private int code;

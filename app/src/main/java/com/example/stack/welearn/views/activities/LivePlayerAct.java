@@ -1,5 +1,8 @@
 package com.example.stack.welearn.views.activities;
 
+import android.content.Context;
+import android.content.Intent;
+
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.utils.Constants;
 
@@ -47,5 +50,11 @@ public class LivePlayerAct extends BaseActivity implements NodePlayerDelegate{
     @Override
     public void onEventCallback(NodePlayer nodePlayer, int event, String s) {
 
+    }
+
+    public static void startAct(Context context,String url){
+        Intent intent=new Intent(context,LivePlayerAct.class);
+        intent.putExtra("url",url);
+        context.startActivity(intent);
     }
 }

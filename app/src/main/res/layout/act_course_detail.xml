@@ -12,13 +12,26 @@
             />
     </FrameLayout>
 
-    <android.support.v7.widget.RecyclerView
+    <LinearLayout
         android:layout_width="300dp"
-        android:layout_height="match_parent"
-        android:id="@+id/rv_video"
-        android:background="@color/colorPrimary"
+        android:orientation="vertical"
         android:layout_gravity="start"
-        android:choiceMode="singleChoice"
-        >
-    </android.support.v7.widget.RecyclerView>
+        android:layout_height="match_parent">
+        <Button
+            android:layout_width="wrap_content"
+            android:text="Reserve"
+            android:id="@+id/btn_add_live"
+            android:layout_height="wrap_content" />
+        <android.support.v7.widget.RecyclerView
+            android:layout_width="300dp"
+            android:layout_height="match_parent"
+            android:id="@+id/rv_live"
+            android:background="@color/white"
+            android:choiceMode="singleChoice"
+            >
+        </android.support.v7.widget.RecyclerView>
+
+    </LinearLayout>
+
+
 </android.support.v4.widget.DrawerLayout>

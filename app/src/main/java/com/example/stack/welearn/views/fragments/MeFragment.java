@@ -99,6 +99,7 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
                 EventBus.getDefault().postSticky(new Event(Event.DO_UNSUBSCRIBE));
                 //clear info
                 WeLearnApp.reset();
+                mCache.clear();
                 SharedPreferences persistedInfo=getActivity().getSharedPreferences(getString(R.string.saved_info), Context.MODE_PRIVATE);
                 SharedPreferences.Editor editor=persistedInfo.edit();
                 editor.clear();

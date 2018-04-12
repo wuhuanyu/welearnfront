@@ -25,7 +25,7 @@ public final class Constants {
     }
     public static final class Net{
         public static final String VIRTUAL="10.0.3.2";
-        public static final String LOCAL="192.168.1.105";
+        public static final String LOCAL="192.168.1.106";
         public static final String HOST= chooseHost(VIRTUAL,LOCAL);
         public static final String PORT="3000";
         public static final String API_URL="http://"+HOST+":"+PORT+"/api/v1";
@@ -35,7 +35,7 @@ public final class Constants {
         public static final String AVATAR_URL="http://"+HOST+":"+PORT+"/avatars/";
 
         public static final int LIVE_PORT=1936;
-        public static final String LIVE_ENDPORT="rtmp://"+HOST+":"+PORT;
+        public static final String LIVE_ENDPORT="rtmp://"+HOST+":"+LIVE_PORT;
     }
 
 }
