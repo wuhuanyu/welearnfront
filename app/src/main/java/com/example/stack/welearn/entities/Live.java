@@ -11,7 +11,6 @@ import java.util.Objects;
 public class Live {
     int id;
     int courseId;
-    int teacherId;
     String title;
     long time;
     String url;
@@ -38,14 +37,7 @@ public class Live {
         return this;
     }
 
-    public int getTeacherId() {
-        return teacherId;
-    }
 
-    public Live setTeacherId(int teacherId) {
-        this.teacherId = teacherId;
-        return this;
-    }
 
     public String getTitle() {
         return title;
@@ -99,7 +91,6 @@ public class Live {
         Live live = (Live) o;
         return id == live.id &&
                 courseId == live.courseId &&
-                teacherId == live.teacherId &&
                 time == live.time &&
                 isGoing == live.isGoing &&
                 isFinish == live.isFinish &&
@@ -110,7 +101,7 @@ public class Live {
     @Override
     public int hashCode() {
 
-        return Objects.hash(id, courseId, teacherId, title, time, url, isGoing, isFinish);
+        return Objects.hash(id, courseId, title, time, url, isGoing, isFinish);
     }
 
     @Override
@@ -118,7 +109,6 @@ public class Live {
         return "Live{" +
                 "id=" + id +
                 ", courseId=" + courseId +
-                ", teacherId=" + teacherId +
                 ", title='" + title + '\'' +
                 ", time=" + time +
                 ", url='" + url + '\'' +
@@ -130,7 +120,8 @@ public class Live {
     public static Live toLive(JSONObject liveJson){
         Live live=null;
         try{
-            int id=liveJson.getInt("course_id");
+            int id=liveJson.getInt("id");
+            int courseId=liveJson.getInt("course_id");
             String title=liveJson.getString("title");
             long time=liveJson.getLong("time");
             String url=liveJson.getString("url");
@@ -143,7 +134,8 @@ public class Live {
                     .setTime(time)
                     .setUrl(url)
                     .setGoing(isGoing)
-                    .setFinish(isFinish);
+                    .setFinish(isFinish)
+                    .setCourseId(courseId);
         }catch (JSONException e){
             e.printStackTrace();
         }

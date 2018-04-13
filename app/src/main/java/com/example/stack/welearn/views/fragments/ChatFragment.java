@@ -12,7 +12,9 @@ import com.example.stack.welearn.fixtures.DialogsFixtures;
 import com.example.stack.welearn.fixtures.MessagesFixtures;
 import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.ThreadPoolManager;
-import com.example.stack.welearn.views.activities.ChatActDynamic;
+import com.example.stack.welearn.views.activities.ChatAct;
+import com.example.stack.welearn.views.fragments.ifrag.BaseDynamicFrag;
+import com.example.stack.welearn.views.fragments.ifrag.BaseFragment;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.dialogs.DialogsList;
 import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
@@ -26,7 +28,7 @@ import butterknife.BindView;
  * Created by stack on 2018/1/14.
  */
 
-public class ChatFragment extends BaseFragment implements DialogsListAdapter.OnDialogClickListener<Dialog>{
+public class ChatFragment extends BaseDynamicFrag implements DialogsListAdapter.OnDialogClickListener<Dialog>{
 
     private ImageLoader mImageLoader;
     @BindView(R.id.dialog_list)
@@ -54,9 +56,7 @@ public class ChatFragment extends BaseFragment implements DialogsListAdapter.OnD
         return R.layout.frag_chat;
     }
 
-    @Override
-    public void register() {
-    }
+
 
     @Override
     public void setUp() {
@@ -66,10 +66,25 @@ public class ChatFragment extends BaseFragment implements DialogsListAdapter.OnD
                 Glide.with(getContext()).load(url).into(imageView);
             }
         };
+
         mDialogsAdapter =new DialogsListAdapter<Dialog>(this.mImageLoader);
-//        mDialogsAdapter.setItems(DialogsFixtures.getDialogs());
         mDialogsAdapter.setOnDialogClickListener(this);
         mDialogs.setAdapter(mDialogsAdapter);
+    }
+
+    @Override
+    public void register() {
+
+    }
+
+    @Override
+    public void unregister() {
+
+    }
+
+    @Override
+    public void prepareData() {
+
     }
 
     public void onActivityCreated(Bundle savedInstanceState){
@@ -80,7 +95,7 @@ public class ChatFragment extends BaseFragment implements DialogsListAdapter.OnD
     @Override
     public void onDialogClick(Dialog dialog) {
         int courseId=Integer.parseInt(dialog.getId());
-        Intent intent=new Intent(getActivity(), ChatActDynamic.class);
+        Intent intent=new Intent(getActivity(), ChatAct.class);
         intent.putExtra("course_id",courseId);
         startActivity(intent);
     }

@@ -8,6 +8,8 @@ import android.widget.TextView;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.adapters.CommentAdapter;
 import com.example.stack.welearn.entities.Comment;
+import com.example.stack.welearn.views.fragments.ifrag.BaseFragment;
+import com.example.stack.welearn.views.fragments.ifrag.BaseStaticFrag;
 
 import java.util.ArrayList;
 
@@ -17,7 +19,7 @@ import butterknife.BindView;
  * Created by stack on 2018/1/5.
  */
 
-public class QuestionDetailFragment extends BaseFragment {
+public class QuestionDetailFragment extends BaseStaticFrag {
     @BindView(R.id.rv_question_comment)
     RecyclerView rvComments;
     @BindView(R.id.text_question_teacher)
@@ -40,14 +42,13 @@ public class QuestionDetailFragment extends BaseFragment {
     }
 
     @Override
+    public void unregister() {
+
+    }
+
+    @Override
     public void setUp() {
-//        Bundle data=getArguments();
-//        String body=data.getString("body");
-//        String teacher=data.getString("teacher");
-//        ArrayList<Comment> comments = data.getParcelableArrayList("comments");
-//        textQuestionTeacher.setText(teacher);
-//        textQuestionBody.setText(body);
-        //set up comments
+
         ArrayList<Comment> comments=new ArrayList<>();
         for(int i=0;i<4;i++){
             comments.add(new Comment(""+i,"This is comment"+i,"Author"+i,"上午九点"));
@@ -57,6 +58,7 @@ public class QuestionDetailFragment extends BaseFragment {
         rvComments.setLayoutManager(manager);
         rvComments.setAdapter(adapter);
     }
+
 
     public static QuestionDetailFragment newIntance(String body,ArrayList<String> images, String teacher, ArrayList<Comment> comments){
         Bundle bundle=new Bundle();
@@ -71,8 +73,5 @@ public class QuestionDetailFragment extends BaseFragment {
         return fragment;
     }
 
-    @Override
-    public void refresh() {
 
-    }
 }

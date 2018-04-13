@@ -1,4 +1,4 @@
-package com.example.stack.welearn.views.fragments;
+package com.example.stack.welearn.views.dialogs;
 
 import android.app.Activity;
 import android.app.AlertDialog;

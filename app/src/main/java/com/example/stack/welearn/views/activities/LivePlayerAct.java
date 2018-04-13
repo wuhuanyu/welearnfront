@@ -5,7 +5,12 @@ import android.content.Intent;
 import android.view.ViewGroup;
 
 import com.example.stack.welearn.R;
+import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.utils.Constants;
+import com.example.stack.welearn.utils.ThreadPoolManager;
+import com.example.stack.welearn.views.activities.iactivity.DynamicBaseAct;
+
+import org.greenrobot.eventbus.EventBus;
 
 import butterknife.BindView;
 import cn.nodemedia.NodePlayer;
@@ -71,6 +76,8 @@ public class LivePlayerAct extends DynamicBaseAct implements NodePlayerDelegate{
 
     @Override
     public void unRegister() {
+        player.stop();
+        player.release();
 
     }
 }

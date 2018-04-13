@@ -19,6 +19,9 @@ import com.example.stack.welearn.tasks.MyCoursesTask;
 import com.example.stack.welearn.tasks.PremierCoursesTask;
 import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.views.activities.CourseDetailAct;
+import com.example.stack.welearn.views.activities.iactivity.DynamicBaseAct;
+import com.example.stack.welearn.views.fragments.ifrag.BaseDynamicFrag;
+import com.example.stack.welearn.views.fragments.ifrag.BaseFragment;
 import com.youth.banner.Banner;
 import com.youth.banner.listener.OnBannerListener;
 
@@ -35,7 +38,7 @@ import butterknife.BindView;
  * Created by stack on 2018/1/4.
  */
 
-public class CoursesFragment extends BaseFragment {
+public class CoursesFragment extends BaseDynamicFrag {
     public static final String TAG=CoursesFragment.class.getSimpleName();
     CourseAdapter myCourseAdapter;
     PremierCourseAdapter premierCourseAdapter;
@@ -66,12 +69,17 @@ public class CoursesFragment extends BaseFragment {
 
     @Override
     public void register() {
+        EventBus.getDefault().register(this);
+        mBanner.startAutoPlay();
     }
 
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
+    @Override
+    public void unregister() {
+        mBanner.stopAutoPlay();
+        EventBus.getDefault().unregister(this);
     }
+
+
     @Override
     public void setUp() {
 
@@ -103,6 +111,9 @@ public class CoursesFragment extends BaseFragment {
 
     @Override
     public void prepareData() {
+//        string auth=welearnapp.info().getauth();
+//        log.d(tag,welearnapp.info().getauth());
+
         ThreadPoolManager.getInstance().getService()
                 .submit(MyCoursesTask.instance().getMyUnfinishedCourses(
                         WeLearnApp.info().getAuth(),
@@ -119,18 +130,7 @@ public class CoursesFragment extends BaseFragment {
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        mBanner.startAutoPlay();
-    }
 
-    @Override
-    public void onStop() {
-        EventBus.getDefault().unregister(this);
-        mBanner.stopAutoPlay();
-        super.onStop();
-    }
 
     @Subscribe(threadMode = ThreadMode.MAIN)
     public void onEvent(Event<List<Course>> event){

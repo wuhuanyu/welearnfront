@@ -17,12 +17,11 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
-import com.androidnetworking.AndroidNetworking;
-import com.androidnetworking.error.ANError;
-import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.stack.welearn.R;
@@ -41,18 +40,18 @@ import com.example.stack.welearn.utils.ACache;
 import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.utils.ToastUtils;
+import com.example.stack.welearn.views.activities.iactivity.DynamicBaseAct;
 import com.example.stack.welearn.views.dialogs.LiveReserveDialog;
-import com.example.stack.welearn.views.fragments.CommentDialog;
+import com.example.stack.welearn.views.dialogs.CommentDialog;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
 
+import butterknife.BindBitmap;
 import butterknife.BindView;
 
 import static com.example.stack.welearn.WeLearnApp.getContext;
@@ -97,6 +96,7 @@ public class CourseDetailAct extends DynamicBaseAct implements SwipeRefreshLayou
     FloatingActionButton fbWriteComment;
     @BindView(R.id.rv_live)
     RecyclerView  rvLives;
+
 
     private int nextComment=0;
     private boolean isRefresh=false;
@@ -150,21 +150,64 @@ public class CourseDetailAct extends DynamicBaseAct implements SwipeRefreshLayou
         LinearLayoutManager liveLayoutManager=new LinearLayoutManager(getContext(),LinearLayoutManager.VERTICAL,false);
         rvLives.setLayoutManager(liveLayoutManager);
         mLiveAdapter=new LiveAdapter(R.layout.item_live);
+
+
+//        mLiveAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
+//            @Override
+//            public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
+//                if(!(view.getId()==R.id.hint_is_reserved)) return;
+//                Live live=(Live)(baseQuickAdapter.getData().get(i));
+//                CheckBox cbx=(CheckBox)view;
+//                if(!cbx.isChecked()){
+//                    //TODO add confirm dialog
+//                    ThreadPoolManager.getInstance().getService()
+//                            .submit(LiveTask.instance().unReserve(
+//                                    WeLearnApp.info().getAuth(),
+//                                    live.getCourseId(),
+//                                    live.getId()
+//                            ));
+//                }
+//            }
+//        });
+
         mLiveAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
             public void onItemClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
                 List<Live> lives=baseQuickAdapter.getData();
-                LivePlayerAct.startAct(getContext(),lives.get(i).getUrl());
+                Live live=lives.get(i);
+                if(WeLearnApp.info().getUserType()==Constants.ACC_T_Tea){
+                    long now=System.currentTimeMillis();
+                    if(now<live.getTime()-5*60*1000){
+                        Toast.makeText(getApplicationContext(),"Too early !",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    else if(now>live.getTime()+10*60*1000){
+                        Toast.makeText(getApplicationContext(),"Too late !",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    if(live.isFinish()){
+                        Toast.makeText(getApplicationContext(),"Live has finished",Toast.LENGTH_SHORT).show();
+                        return;
+                    }
+                    LivePublisher.startAct(getContext(),live.getUrl(),live.getCourseId(),live.getId());
+                }
+                else
+                    LivePlayerAct.startAct(getContext(),lives.get(i).getUrl());
             }
         });
         rvLives.setAdapter(mLiveAdapter);
-        btnAddLive.setOnClickListener(view -> {
-            FragmentManager fragmentManager=getSupportFragmentManager();
-            LiveReserveDialog dialog=new LiveReserveDialog();
-            dialog.show(fragmentManager,"LiveReserve");
-        });
+        if(WeLearnApp.info().isTeacher()){
+            btnAddLive.setVisibility(View.VISIBLE);
+            btnAddLive.setOnClickListener(view -> {
+                FragmentManager fragmentManager=getSupportFragmentManager();
+                LiveReserveDialog dialog=new LiveReserveDialog();
+                dialog.show(fragmentManager,"LiveReserve");
+            });
+
+        }
 
         isRefresh=true;
+
 
     }
 

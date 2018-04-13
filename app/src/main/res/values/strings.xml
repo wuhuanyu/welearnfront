@@ -18,4 +18,5 @@
     <string name="comment_ok">评论成功</string>
     <string name="unauthorized">请登录后操作</string>
     <string name="hint_no_network">No Internet Connection !</string>
+
 </resources>

@@ -1,32 +1,26 @@
-package com.example.stack.welearn.views.fragments;
+package com.example.stack.welearn.views.fragments.ifrag;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
-import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.utils.ACache;
 import com.example.stack.welearn.views.IView;
 
 import butterknife.ButterKnife;
 
-/**
- * Created by stack on 2018/1/4.
- */
-
-public abstract class BaseFragment extends Fragment implements IView {
+public abstract class BaseDynamicFrag extends BaseFragment implements IView {
     protected ACache mCache= WeLearnApp.cache();
     public abstract int getLayout();
-    public abstract void register();
     public abstract void setUp();
     protected boolean refresh=false;
-    public Handler mHandler=new Handler(Looper.getMainLooper());
     public abstract void prepareData();
     @Nullable
     @Override
@@ -34,11 +28,8 @@ public abstract class BaseFragment extends Fragment implements IView {
         View view=inflater.inflate(getLayout(),container,false);
         ButterKnife.bind(this,view);
         setUp();
-        register();
         prepareData();
         return view;
     }
-
-
 
 }

@@ -1,7 +1,6 @@
 package com.example.stack.welearn.views.activities;
 
 import android.graphics.Canvas;
-import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.LinearLayoutManager;
@@ -21,6 +20,7 @@ import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.BulletinTask;
 import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.utils.ToastUtils;
+import com.example.stack.welearn.views.activities.iactivity.DynamicBaseAct;
 import com.example.stack.welearn.views.dialogs.AddBulletinDialog;
 
 import org.greenrobot.eventbus.EventBus;
@@ -28,7 +28,6 @@ import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 import java.util.Map;
 

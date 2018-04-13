@@ -55,14 +55,15 @@ public class QuestionTask extends BaseTask implements Cachable{
             if(questionsJSONS==null||toRefresh){
                     Log.i(TAG,"no cache");
                 }
-                else EventBus.getDefault().post(new Event<List<Question>>(Event.QUESITON_FETCH_OK,Question.toQuestions(questionsJSONS)));
-//            try {
-//                Thread.sleep(500);
-//
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-
+                else {
+                try {
+                    //todo
+                    Thread.sleep(50);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                }
+                EventBus.getDefault().post(new Event<List<Question>>(Event.QUESITON_FETCH_OK,Question.toQuestions(questionsJSONS)));
+            }
         };
     }
 

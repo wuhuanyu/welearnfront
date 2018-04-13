@@ -11,9 +11,12 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
+import com.anthonycr.grant.PermissionsManager;
+import com.anthonycr.grant.PermissionsResultAction;
 import com.example.stack.welearn.MQTTService;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.views.IView;
+import com.example.stack.welearn.views.activities.iactivity.DynamicBaseAct;
 import com.example.stack.welearn.views.fragments.ChatFragment;
 import com.example.stack.welearn.views.fragments.CoursesFragment;
 import com.example.stack.welearn.views.fragments.MeFragment;
@@ -46,12 +49,24 @@ public class MainAct extends DynamicBaseAct {
     }
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
+
         if(savedInstanceState==null){
             fragmentHashMap.put("course",new CoursesFragment());
             currentFragment=fragmentHashMap.get("course");
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container,currentFragment).commit();
         }
+        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this, new PermissionsResultAction() {
+            @Override
+            public void onGranted() {
+
+            }
+
+            @Override
+            public void onDenied(String permission) {
+
+            }
+        });
     }
     @Override
     public void setUp() {

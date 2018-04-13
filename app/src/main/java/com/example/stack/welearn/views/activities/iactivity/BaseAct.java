@@ -1,4 +1,4 @@
-package com.example.stack.welearn.views.activities;
+package com.example.stack.welearn.views.activities.iactivity;
 
 import android.app.ActivityManager;
 import android.app.Service;

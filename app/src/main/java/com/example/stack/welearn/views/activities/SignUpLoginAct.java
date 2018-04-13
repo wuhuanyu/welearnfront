@@ -15,6 +15,7 @@ import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.NetworkUtils;
 import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.utils.ToastUtils;
+import com.example.stack.welearn.views.activities.iactivity.StaticBaseAct;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;

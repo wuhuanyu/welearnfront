@@ -12,6 +12,7 @@ import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.AccTask;
 import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.utils.ToastUtils;
+import com.example.stack.welearn.views.activities.iactivity.StaticBaseAct;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -22,7 +23,7 @@ import org.json.JSONObject;
  * Created by stack on 2018/1/2.
  */
 
-public class SplashActivity extends StaticBaseAct{
+public class SplashActivity extends StaticBaseAct {
     @Override
     public int getLayout() {
         return R.layout.activity_splash;

@@ -69,6 +69,16 @@ public class Event<T>{
     public static final int PUBLISH_QUESTION_COMMENT_OK=44;
     public static final int PUBLISH_QUESTION_COMMENT_FAIL=45;
 
+    public static final int START_LIVE_OK=46;
+    public static final int START_LIVE_FAIL=47;
+
+    public static final int STOP_LIVE_OK=48;
+    public static final int STOP_LIVE_FAIL=49;
+
+    public static final int UNRESERVE_LIVE_OK=51;
+    public static final int UNRESERVE_LIVE_FAIL=52;
+
+
 
     /**
      * 通知事件
@@ -86,7 +96,13 @@ public class Event<T>{
 
     public static final int SEND_MSG=93;
 
-    public static final int NEW_MESSAGE=50;
+    public static final int NEW_MESSAGE=92;
+
+    public static final int NEW_LIVE_RESERVED=91;
+    public static final int NEW_LIVE_STARTED=90;
+
+
+
 
 
 

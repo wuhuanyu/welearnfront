@@ -18,6 +18,7 @@ import com.example.stack.welearn.entities.ChatUser;
 import com.example.stack.welearn.tasks.ChatTask;
 import com.example.stack.welearn.utils.Constants;
 import com.example.stack.welearn.utils.ThreadPoolManager;
+import com.example.stack.welearn.views.activities.iactivity.DynamicBaseAct;
 import com.stfalcon.chatkit.commons.ImageLoader;
 import com.stfalcon.chatkit.messages.MessageInput;
 import com.stfalcon.chatkit.messages.MessagesList;
@@ -34,8 +35,8 @@ import butterknife.BindView;
  * Created by stack on 2018/1/9.
  */
 
-public class ChatActDynamic extends DynamicBaseAct implements MessageInput.InputListener,MessageInput.AttachmentsListener {
-    private static final String TAG=ChatActDynamic.class.getSimpleName();
+public class ChatAct extends DynamicBaseAct implements MessageInput.InputListener,MessageInput.AttachmentsListener {
+    private static final String TAG=ChatAct.class.getSimpleName();
     @BindView(R.id.messageList)
     MessagesList mMessagesList;
     @BindView(R.id.input)
@@ -76,7 +77,7 @@ public class ChatActDynamic extends DynamicBaseAct implements MessageInput.Input
         mImageLoader=new ImageLoader() {
             @Override
             public void loadImage(ImageView imageView, String url) {
-                Glide.with(ChatActDynamic.this).load(Constants.Net.AVATAR_URL+url).into(imageView);
+                Glide.with(ChatAct.this).load(Constants.Net.AVATAR_URL+url).into(imageView);
             }
         };
         mMessageInput.setInputListener(this);

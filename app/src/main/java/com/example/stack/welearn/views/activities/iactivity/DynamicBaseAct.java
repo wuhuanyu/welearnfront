@@ -1,9 +1,8 @@
-package com.example.stack.welearn.views.activities;
+package com.example.stack.welearn.views.activities.iactivity;
 
 import android.os.Bundle;
 import android.os.Handler;
 import android.os.Looper;
-import android.support.v7.app.AppCompatActivity;
 import android.view.View;
 import android.view.ViewGroup;
 
@@ -39,14 +38,6 @@ public abstract class DynamicBaseAct extends BaseAct implements IView {
     public abstract int getLayout();
     public abstract void prepareData();
     public abstract ViewGroup getRoot();
-    public void onStart(){
-        super.onStart();
-    }
-
-    public void onStop(){
-        super.onStop();
-    }
-
 
     protected void setAllChildrenGone(ViewGroup container){
         for(int idx=0;idx<container.getChildCount();idx++){

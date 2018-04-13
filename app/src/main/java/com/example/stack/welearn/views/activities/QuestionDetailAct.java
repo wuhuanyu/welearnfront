@@ -1,6 +1,5 @@
 package com.example.stack.welearn.views.activities;
 
-import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -8,6 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
+import android.view.ViewGroup;
 import android.widget.TextView;
 
 import com.chad.library.adapter.base.BaseQuickAdapter;
@@ -21,6 +21,7 @@ import com.example.stack.welearn.tasks.CommentsTask;
 import com.example.stack.welearn.tasks.QuestionTask;
 import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.utils.ToastUtils;
+import com.example.stack.welearn.views.activities.iactivity.DynamicBaseAct;
 import com.github.nisrulz.sensey.Sensey;
 import com.github.nisrulz.sensey.TouchTypeDetector;
 
@@ -37,9 +38,9 @@ import butterknife.BindView;
  * Created by stack on 2018/1/15.
  */
 
-public class QuestionDetailActDynamic extends DynamicBaseAct {
+public class QuestionDetailAct extends DynamicBaseAct {
     List<Question> questions;
-    private static final String TAG=QuestionDetailActDynamic.class.getSimpleName();
+    private static final String TAG=QuestionDetailAct.class.getSimpleName();
     private String curQuestionId;
     private int currentQuestionIdx=0;
     private int courseId;
@@ -60,15 +61,7 @@ public class QuestionDetailActDynamic extends DynamicBaseAct {
     private CommentQuickAdapter commentAdapter;
     private ImageAdapter questionImageAdapter;
 
-    public  void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
-        Sensey.getInstance().init(this);
-    }
-    @Override
-    public void doRegister() {
 
-    }
 
     @Override
     public boolean dispatchTouchEvent(MotionEvent ev) {
@@ -104,13 +97,24 @@ public class QuestionDetailActDynamic extends DynamicBaseAct {
         else {
             setUpQuestion(questions.get(0));
         }
-        ThreadPoolManager.getInstance().getService().execute(mQuestionTask.getQuestions(courseId,false));
     }
 
     @Override
     public int getLayout() {
         return R.layout.act_question_detail;
     }
+
+    @Override
+    public void prepareData() {
+
+        ThreadPoolManager.getInstance().getService().execute(mQuestionTask.getQuestions(courseId,false));
+    }
+
+    @Override
+    public ViewGroup getRoot() {
+        return null;
+    }
+
     private void setUpQuestion(Question q){
         if(q==null) return;
         root.setVisibility(View.VISIBLE);
@@ -152,12 +156,19 @@ public class QuestionDetailActDynamic extends DynamicBaseAct {
         }
     }
 
-    public void onStop(){
+    @Override
+    public void register() {
+        EventBus.getDefault().register(this);
+        Sensey.getInstance().init(this);
+    }
+
+    @Override
+    public void unRegister() {
         EventBus.getDefault().unregister(this);
         Sensey.getInstance().stopTouchTypeDetection();
         Sensey.getInstance().stop();
-        super.onStop();
     }
+
 
     public void onBackPressed(){
         this.finish();

@@ -14,6 +14,9 @@ import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.AccTask;
 import com.example.stack.welearn.utils.ThreadPoolManager;
 import com.example.stack.welearn.views.activities.SignUpLoginAct;
+import com.example.stack.welearn.views.activities.iactivity.StaticBaseAct;
+import com.example.stack.welearn.views.fragments.ifrag.BaseFragment;
+import com.example.stack.welearn.views.fragments.ifrag.BaseStaticFrag;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -25,7 +28,7 @@ import butterknife.BindView;
  * Created by stack on 2018/1/4.
  */
 
-public class MeFragment extends BaseFragment implements View.OnClickListener {
+public class MeFragment extends BaseStaticFrag implements View.OnClickListener {
     public static final String TAG=MeFragment.class.getSimpleName();
     @BindView(R.id.btn_logout)
     Button btnLogout;
@@ -49,7 +52,6 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EventBus.getDefault().register(this);
     }
 
     @Override
@@ -60,21 +62,18 @@ public class MeFragment extends BaseFragment implements View.OnClickListener {
 
     @Override
     public void register() {
+        EventBus.getDefault().register(this);
+    }
 
+    @Override
+    public void unregister() {
+       EventBus.getDefault().unregister(this);
     }
 
     @Override
     public void setUp() {
         btnLogout.setOnClickListener(this);
     }
-
-    @Override
-    public void refresh() {
-
-    }
-
-
-
 
     @Override
     public void onClick(View view) {

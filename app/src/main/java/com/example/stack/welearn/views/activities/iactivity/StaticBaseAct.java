@@ -1,13 +1,15 @@
-package com.example.stack.welearn.views.activities;
+package com.example.stack.welearn.views.activities.iactivity;
 
 import android.os.Bundle;
-import android.support.v7.app.AppCompatActivity;
+
+import butterknife.ButterKnife;
 
 public abstract class StaticBaseAct extends BaseAct {
 
     public void onCreate(Bundle savedInstanceState){
         super.onCreate(savedInstanceState);
         setContentView(getLayout());
+        ButterKnife.bind(this);
         setUp();
     }
 

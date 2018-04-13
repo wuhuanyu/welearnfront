@@ -42,6 +42,7 @@ public class LiveReserveDialog extends DialogFragment {
 
         datePicker=(DatePicker)root.findViewById(R.id.dp_live_reserve_date);
         timePicker=(TimePicker)root.findViewById(R.id.tp_live_reserve_time);
+        timePicker.setIs24HourView(true);
         txTime=(TextView)root.findViewById(R.id.text_live_reserve_time);
         editTitle=(EditText)root.findViewById(R.id.edit_live_reserve_title);
 
@@ -50,8 +51,10 @@ public class LiveReserveDialog extends DialogFragment {
                 .setPositiveButton("Submit",(dialogInterface, i) -> {
                    try{
                        LiveReserveListener listener=(LiveReserveListener)getActivity();
-                       long left=new DateTime(year,month,day,hour,minute, DateTimeZone.UTC).getMillis();
-                       listener.onSubmit(left,editTitle.getText().toString());
+                       Calendar calendar=Calendar.getInstance();
+                       calendar.set(year,month+1,day,hour,minute);
+
+                       listener.onSubmit(calendar.getTimeInMillis(),editTitle.getText().toString());
                        this.getDialog().dismiss();
                    }catch (ClassCastException e){
                        e.printStackTrace();
@@ -68,7 +71,7 @@ public class LiveReserveDialog extends DialogFragment {
     }
 
     private void setUpTime(){
-        txTime.setText("Reserved at "+year+"/"+month+"/"+day+" "+hour+":"+minute);
+        txTime.setText("Reserved at "+year+"/"+(month+1)+"/"+day+" "+hour+":"+minute);
     }
 
     private void initTime(){

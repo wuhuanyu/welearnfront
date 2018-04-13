@@ -6,6 +6,7 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 
 import com.example.stack.welearn.R;
+import com.example.stack.welearn.views.activities.iactivity.StaticBaseAct;
 
 import butterknife.BindView;
 
@@ -13,13 +14,10 @@ import butterknife.BindView;
  * Created by stack on 2018/1/5.
  */
 
-public class QuestionEditActDynamic extends DynamicBaseAct {
+public class QuestionEditAct extends StaticBaseAct {
     @BindView(R.id.tb_edit_question)
     Toolbar mToolbar;
-    @Override
-    public void doRegister() {
 
-    }
 
     @Override
     public void setUp() {
@@ -44,8 +42,14 @@ public class QuestionEditActDynamic extends DynamicBaseAct {
         return R.layout.act_question_edit;
     }
 
+
     @Override
-    public void refresh() {
+    public void register() {
+
+    }
+
+    @Override
+    public void unRegister() {
 
     }
 }
