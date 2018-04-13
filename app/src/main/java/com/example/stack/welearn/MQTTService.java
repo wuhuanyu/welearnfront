@@ -19,6 +19,7 @@ import android.widget.Toast;
 
 import com.example.stack.welearn.config.MQTTClient;
 import com.example.stack.welearn.events.Event;
+import com.example.stack.welearn.utils.TimeUtils;
 import com.example.stack.welearn.utils.ToastUtils;
 import com.example.stack.welearn.views.activities.CourseDetailAct;
 
@@ -93,22 +94,20 @@ public class MQTTService extends Service {
 
 
 
-
-
-
-
     private void notification(String msg,PendingIntent actionIntent){
         Uri sound= RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION);
-        Notification notification=new Notification.Builder(getApplicationContext())
+        Notification.Builder builder=new Notification.Builder(getApplicationContext())
                 .setContentTitle(getString(R.string.app_name))
                 .setContentText(msg)
                 .setSmallIcon(R.mipmap.app_icon)
                 .setLargeIcon(icon)
                 .setWhen(System.currentTimeMillis())
                 .setAutoCancel(true)
-                .setSound(sound)
-                .setContentIntent(actionIntent)
-                .build();
+                .setSound(sound);
+        if(actionIntent!=null){
+            builder.setContentIntent(actionIntent);
+        }
+        Notification notification=builder.build();
         notification.defaults|=Notification.DEFAULT_VIBRATE;
         NotificationManager manager=(NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         manager.notify(notificationId++,notification);
@@ -153,6 +152,23 @@ public class MQTTService extends Service {
                     {
 
                     } break;
+
+                    case Event.NEW_LIVE_RESERVED:
+                    {
+                        String reservedTime= TimeUtils.toDate(payload.getLong("time"));
+
+                        String courseName=payload.getString("course_name");
+                        String title=payload.getString("title");
+                        String notification=courseName+" has a new live reservation ! "+title+" at "+reservedTime;
+                        notification(notification,null);
+                    }break;
+                    case Event.NEW_LIVE_STARTED:
+                    {
+                        String courseName=payload.getString("course_name");
+                        String title=payload.getString("title");
+                        String notification=courseName+" live started !";
+                        notification(notification,null);
+                    }break;
                     default:break;
                 }
             }
