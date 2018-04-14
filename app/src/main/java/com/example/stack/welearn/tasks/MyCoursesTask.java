@@ -9,6 +9,7 @@ import com.androidnetworking.interfaces.JSONObjectRequestListener;
 import com.example.stack.welearn.Cachable;
 import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.entities.Course;
+import com.example.stack.welearn.entities.Grade;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.utils.Constants;
 
@@ -118,6 +119,33 @@ public class MyCoursesTask extends BaseTask implements Cachable{
             @Override
             public void FAIL(Throwable error) {
                 EventBus.getDefault().post(new Event<List<Course>>(Event.MY_FINISHED_COURSE_FAIL));
+            }
+        });
+    }
+
+    public Runnable getMyGrades(String auth,int stuId,boolean toRefresh){
+        return getCourses(toRefresh, auth, "finished", Constants.ACC_T_Stu, stuId, new Processor<List<Course>>() {
+            @Override
+            public void OK(List<Course> data) {
+                if((data!=null)&&(data.size()!=0)){
+                    List<Grade> grades=data.stream()
+                            .filter(course -> course.getGrade()!=0)
+                            .map(course -> {
+                                return new Grade()
+                                        .setGrade(course.getGrade())
+                                        .setCourseName(course.getName())
+                                        .setCourseId(course.getId());
+                            }).collect(Collectors.toList());
+
+                    EventBus.getDefault().post(new Event<List<Grade>>(Event.FETCH_GRADE_OK,grades));
+                    }
+                    else
+                        EventBus.getDefault().post(new Event(Event.FETCH_GRADE_FAIL));
+                }
+            @Override
+            public void FAIL(Throwable error) {
+                error.printStackTrace();
+                EventBus.getDefault().post(new Event(Event.FETCH_GRADE_FAIL));
             }
         });
     }

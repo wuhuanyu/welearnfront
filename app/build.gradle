@@ -35,6 +35,7 @@ dependencies {
     compile 'com.github.ittianyu:BottomNavigationViewEx:1.2.4'
     compile 'com.youth.banner:banner:1.4.10'
     compile 'de.hdodenhof:circleimageview:2.2.0'
+    compile 'com.evrencoskun.library:tableview:0.8.6'
     compile 'com.github.chenupt.android:springindicator:1.0.2@aar'
     compile 'com.github.stfalcon:chatkit:0.2.2'
     compile 'cn.jiguang.imui:messagelist:0.5.8'

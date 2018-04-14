@@ -54,6 +54,7 @@ import java.util.List;
 import butterknife.BindBitmap;
 import butterknife.BindView;
 
+import static com.example.stack.welearn.WeLearnApp.cache;
 import static com.example.stack.welearn.WeLearnApp.getContext;
 
 /**
@@ -293,6 +294,7 @@ public class CourseDetailAct extends DynamicBaseAct implements SwipeRefreshLayou
                 setUpCourseDetail((Course)event.t());
                 break;
             case Event.COURSE_DETAIL_FETCH_FAIL:
+
                 break;
             case  Event.COURSE_COMMENT_FETCH_OK:
                 this.nextComment=event.next();
@@ -303,9 +305,15 @@ public class CourseDetailAct extends DynamicBaseAct implements SwipeRefreshLayou
             case Event.FETCH_LIVE_OK:
                 List<Live> lives=((Event<List>)event).t();
                 mLiveAdapter.setNewData(lives);
+                break;
+            case Event.FETCH_LIVE_FAIL:
+                ToastUtils.getInstance().showMsgShort("该课程暂时没有直播");
 
             case Event.SUBMIT_LIVE_OK:
-                ToastUtils.getInstance().showMsgShort("Live Reserved OK");
+                ToastUtils.getInstance().showMsgShort("直播预订成功");
+                break;
+            case Event.SUBMIT_LIVE_FAIL:
+                ToastUtils.getInstance().showMsgShort("直播预订失败");
                 break;
             default:break;
         }

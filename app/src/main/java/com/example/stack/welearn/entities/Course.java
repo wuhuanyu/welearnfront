@@ -19,8 +19,18 @@ public class Course {
     private List<String> images;
     private int id;
     private String teacher;
+    private double grade;
 
-    public Course(String name, String desc, int id,String teacheer) {
+    public double getGrade() {
+        return grade;
+    }
+
+    public Course setGrade(double grade) {
+        this.grade = grade;
+        return this;
+    }
+
+    public Course(String name, String desc, int id, String teacheer) {
         this.name = name;
         this.desc = desc;
         this.id = id;
@@ -96,14 +106,21 @@ public class Course {
             if(object.has("teacher")&&!object.isNull("teacher")){
                 teacher=object.getString("teacher");
             }
-//            String teacher=(String) object.get("teacher",);
+
             JSONArray imageArray=object.getJSONArray("images");
 
             List<String> images=new ArrayList<>();
             for(int i=0;i<imageArray.length();i++){
                 images.add(imageArray.getString(i));
             }
+
             Course course=new Course(name,desc,images,id,teacher);
+            if(object.has("finished")){
+                if((object.getBoolean("finished"))&&object.has("score")){
+                    course.setGrade(object.getDouble("score"));
+                }
+            }
+
             return course;
         } catch (JSONException e) {
             e.printStackTrace();

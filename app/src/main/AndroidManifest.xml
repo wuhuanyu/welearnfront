@@ -47,6 +47,8 @@
         <service android:name=".MQTTService"/>
         <activity android:name=".views.activities.QuestionDetailAct"/>
         <activity android:name=".views.activities.LivePlayerAct"/>
+        <activity android:name=".views.activities.MyGradeAct"/>
+        <activity android:name=".views.activities.ScheduleAct"/>
         <activity android:name=".views.activities.LivePublisher"/>
         <receiver android:name=".BootCompleteReceiver">
             <intent-filter>

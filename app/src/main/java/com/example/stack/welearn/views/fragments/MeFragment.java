@@ -7,12 +7,15 @@ import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.TextView;
 
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.tasks.AccTask;
 import com.example.stack.welearn.utils.ThreadPoolManager;
+import com.example.stack.welearn.views.activities.MyGradeAct;
+import com.example.stack.welearn.views.activities.ScheduleAct;
 import com.example.stack.welearn.views.activities.SignUpLoginAct;
 import com.example.stack.welearn.views.activities.iactivity.StaticBaseAct;
 import com.example.stack.welearn.views.fragments.ifrag.BaseFragment;
@@ -21,6 +24,7 @@ import com.example.stack.welearn.views.fragments.ifrag.BaseStaticFrag;
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
 import org.greenrobot.eventbus.ThreadMode;
+import org.w3c.dom.Text;
 
 import butterknife.BindView;
 
@@ -32,6 +36,11 @@ public class MeFragment extends BaseStaticFrag implements View.OnClickListener {
     public static final String TAG=MeFragment.class.getSimpleName();
     @BindView(R.id.btn_logout)
     Button btnLogout;
+
+    @BindView(R.id.me_name)
+    TextView txName;
+    @BindView(R.id.me_id)
+    TextView txId;
 
 
     /**
@@ -73,6 +82,8 @@ public class MeFragment extends BaseStaticFrag implements View.OnClickListener {
     @Override
     public void setUp() {
         btnLogout.setOnClickListener(this);
+        txName.setText(WeLearnApp.info().getUserName());
+        txId.setText(String.valueOf(WeLearnApp.info().getId()));
     }
 
     @Override
@@ -85,6 +96,12 @@ public class MeFragment extends BaseStaticFrag implements View.OnClickListener {
                        WeLearnApp.info().getPassword(),
                        WeLearnApp.info().getUserType()
                ));break;
+           case R.id.btn_my_grade:
+               MyGradeAct.startAct(getContext());
+               break;
+           case R.id.btn_my_schedule:
+               ScheduleAct.startAct(getContext());
+               break;
                default:break;
        }
     }

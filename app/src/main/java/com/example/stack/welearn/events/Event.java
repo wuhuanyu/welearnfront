@@ -78,6 +78,8 @@ public class Event<T>{
     public static final int UNRESERVE_LIVE_OK=51;
     public static final int UNRESERVE_LIVE_FAIL=52;
 
+    public static final int FETCH_GRADE_OK=53;
+    public static final int FETCH_GRADE_FAIL=54;
 
 
 
