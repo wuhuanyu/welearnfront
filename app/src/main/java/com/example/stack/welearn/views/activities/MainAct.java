@@ -10,11 +10,13 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.anthonycr.grant.PermissionsManager;
 import com.anthonycr.grant.PermissionsResultAction;
 import com.example.stack.welearn.MQTTService;
 import com.example.stack.welearn.R;
+import com.example.stack.welearn.utils.ToastUtils;
 import com.example.stack.welearn.views.IView;
 import com.example.stack.welearn.views.activities.iactivity.DynamicBaseAct;
 import com.example.stack.welearn.views.fragments.ChatFragment;
@@ -34,6 +36,8 @@ import q.rorbin.badgeview.QBadgeView;
  */
 
 public class MainAct extends DynamicBaseAct {
+
+
     public static final String TAG= MainAct.class.getSimpleName();
     private HashMap<String,Fragment> fragmentHashMap=new HashMap<>();
     @BindView(R.id.bottom)BottomNavigationViewEx bottomNav;
@@ -186,5 +190,16 @@ public class MainAct extends DynamicBaseAct {
         ((IView)currentFragment).refresh();
     }
 
+    private long lastBackPressed=0;
+    private static final long INTERVAL=500;
 
+    public void onBackPressed(){
+        long current=System.currentTimeMillis();
+        if(current-lastBackPressed>INTERVAL){
+            lastBackPressed=current;
+            Toast.makeText(getApplicationContext(),"Another press will exit app",Toast.LENGTH_SHORT).show();
+            return;
+        }
+        System.exit(0);
+    }
 }
