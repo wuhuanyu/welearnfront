@@ -1,10 +1,15 @@
 package com.example.stack.welearn.views.activities;
 
 
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
 import android.content.Intent;
+import android.graphics.Canvas;
 import android.os.Bundle;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.app.DialogFragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.NavUtils;
 import android.support.v4.widget.SwipeRefreshLayout;
@@ -24,6 +29,7 @@ import android.widget.Toast;
 
 import com.bumptech.glide.Glide;
 import com.chad.library.adapter.base.BaseQuickAdapter;
+import com.chad.library.adapter.base.listener.OnItemSwipeListener;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.WeLearnApp;
 import com.example.stack.welearn.adapters.CommentQuickAdapter;
@@ -43,6 +49,7 @@ import com.example.stack.welearn.utils.ToastUtils;
 import com.example.stack.welearn.views.activities.iactivity.DynamicBaseAct;
 import com.example.stack.welearn.views.dialogs.LiveReserveDialog;
 import com.example.stack.welearn.views.dialogs.CommentDialog;
+import com.stfalcon.chatkit.dialogs.DialogsListAdapter;
 
 import org.greenrobot.eventbus.EventBus;
 import org.greenrobot.eventbus.Subscribe;
@@ -112,6 +119,34 @@ public class CourseDetailAct extends DynamicBaseAct implements SwipeRefreshLayou
     private LiveTask mLiveTask=LiveTask.instance();
     //live stop here
 
+
+
+    OnItemSwipeListener onLiveReserveSwipeListener=new OnItemSwipeListener() {
+        @Override
+        public void onItemSwipeStart(RecyclerView.ViewHolder viewHolder, int i) {
+
+        }
+
+        @Override
+        public void clearView(RecyclerView.ViewHolder viewHolder, int i) {
+
+        }
+
+        @Override
+        public void onItemSwiped(RecyclerView.ViewHolder viewHolder, int i) {
+            Log.d(TAG,"Live item "+i+" swiped");
+            List<Live> liveData=mLiveAdapter.getData();
+            Live liveSwiped=liveData.get(i);
+            LiveCancelDialog dialog=LiveCancelDialog.newInstance(liveSwiped.getId(),courseId);
+            dialog.show(getSupportFragmentManager(),"livecancle");
+        }
+
+        @Override
+        public void onItemSwipeMoving(Canvas canvas, RecyclerView.ViewHolder viewHolder, float v, float v1, boolean b) {
+
+        }
+    };
+
     @Override
     public void setUp() {
 
@@ -153,23 +188,6 @@ public class CourseDetailAct extends DynamicBaseAct implements SwipeRefreshLayou
         mLiveAdapter=new LiveAdapter(R.layout.item_live);
 
 
-//        mLiveAdapter.setOnItemChildClickListener(new BaseQuickAdapter.OnItemChildClickListener() {
-//            @Override
-//            public void onItemChildClick(BaseQuickAdapter baseQuickAdapter, View view, int i) {
-//                if(!(view.getId()==R.id.hint_is_reserved)) return;
-//                Live live=(Live)(baseQuickAdapter.getData().get(i));
-//                CheckBox cbx=(CheckBox)view;
-//                if(!cbx.isChecked()){
-//                    //TODO add confirm dialog
-//                    ThreadPoolManager.getInstance().getService()
-//                            .submit(LiveTask.instance().unReserve(
-//                                    WeLearnApp.info().getAuth(),
-//                                    live.getCourseId(),
-//                                    live.getId()
-//                            ));
-//                }
-//            }
-//        });
 
         mLiveAdapter.setOnItemClickListener(new BaseQuickAdapter.OnItemClickListener() {
             @Override
@@ -315,6 +333,13 @@ public class CourseDetailAct extends DynamicBaseAct implements SwipeRefreshLayou
             case Event.SUBMIT_LIVE_FAIL:
                 ToastUtils.getInstance().showMsgShort("直播预订失败");
                 break;
+            case Event.UNRESERVE_LIVE_OK:
+                ToastUtils.getInstance().showMsgShort("Live has been canceled");
+                break;
+            case Event.UNRESERVE_LIVE_FAIL:
+                ToastUtils.getInstance().showMsgShort("Due to some reason, live has not been canceled");
+                break;
+
             default:break;
         }
     }
@@ -362,20 +387,6 @@ public class CourseDetailAct extends DynamicBaseAct implements SwipeRefreshLayou
         dialog.dismiss();
     }
 
-    private List<Video> generateVideo(int len){
-        List<Video> videos=new ArrayList<>();
-        for(int i=0;i<len;i++){
-            videos.add(
-                    new Video().setAvatar("avatar1.jpg")
-                            .setCourseId(courseId)
-                            .setId(i)
-                            .setName("第"+i+"个视频")
-                            .setLink("http://www.baidu.com")
-                            .setSize(10000L)
-            );
-        }
-        return videos;
-    }
 
     @Override
     public void refresh() {
@@ -387,6 +398,42 @@ public class CourseDetailAct extends DynamicBaseAct implements SwipeRefreshLayou
     public void onSubmit(long time, String title) {
         ThreadPoolManager.getInstance().getService().submit(mLiveTask.reserve(courseId,WeLearnApp.info().getAuth(),time,title));
     }
+
+    @SuppressLint("ValidFragment")
+    private static class LiveCancelDialog extends DialogFragment {
+        int liveId;
+        int courseId;
+        public void onCreate(Bundle savedInstanceState){
+            super.onCreate(savedInstanceState);
+            liveId=getArguments().getInt("live_id");
+            courseId=getArguments().getInt("course_id");
+
+        }
+        @Override
+        public Dialog onCreateDialog(Bundle savedInstanceState) {
+            AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
+            builder.setMessage("Comfirm to cancel live?")
+                    .setPositiveButton("Yes", (dialogInterface, i) -> {
+                        Log.i(TAG,"on livecancel dialog positive being pressed");
+                        ThreadPoolManager.getInstance().getService()
+                                .submit(LiveTask.instance()
+                                .unReserve(WeLearnApp.info().getAuth(),courseId,liveId));
+                    }).setNegativeButton("No",(dialogInterface, i) -> {
+                        LiveCancelDialog.this.dismiss();
+            });
+            return builder.create();
+        }
+        public static LiveCancelDialog newInstance(int liveId,int courseId){
+        Bundle bundle=new Bundle();
+        bundle.putInt("live_id",liveId);
+        bundle.putInt("course_id",courseId);
+        LiveCancelDialog dialog=new LiveCancelDialog();
+        dialog.setArguments(bundle);
+        return dialog;
+    }
+    }
+
+
 }
 
 

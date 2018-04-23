@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.chad.library.adapter.base.BaseQuickAdapter;
 import com.example.stack.welearn.R;
 import com.example.stack.welearn.adapters.CommentQuickAdapter;
+import com.example.stack.welearn.adapters.FileAdapter;
 import com.example.stack.welearn.adapters.ImageAdapter;
 import com.example.stack.welearn.entities.Comment;
 import com.example.stack.welearn.entities.Question;
@@ -55,10 +56,14 @@ public class QuestionDetailAct extends DynamicBaseAct {
     @BindView(R.id.text_question_feedback) TextView feedback;
     @BindView(R.id.text_question_teacher) TextView teacher;
     @BindView(R.id.rv_question_comment) RecyclerView comments;
+    @BindView(R.id.rv_files) RecyclerView rvFiles;
+
 
     private CommentsTask mCommentsTask;
     private QuestionTask mQuestionTask;
     private CommentQuickAdapter commentAdapter;
+
+    private FileAdapter mFileAdapter;
     private ImageAdapter questionImageAdapter;
 
 
@@ -85,7 +90,13 @@ public class QuestionDetailAct extends DynamicBaseAct {
         comments.setAdapter(commentAdapter);
 
 
-        questionImageAdapter=new ImageAdapter(R.layout.item_grid_image,new ArrayList<>());
+        mFileAdapter=new FileAdapter(R.layout.item_file_preview);
+        rvFiles.setLayoutManager(new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false));
+        rvFiles.setAdapter(mFileAdapter);
+
+
+        questionImageAdapter=new ImageAdapter(R.layout.item_grid_image
+        );
 
         LinearLayoutManager linearLayoutManager=new LinearLayoutManager(this,LinearLayoutManager.VERTICAL,false);
         images.setLayoutManager(linearLayoutManager);
