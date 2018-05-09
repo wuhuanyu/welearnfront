@@ -81,6 +81,12 @@ public class Event<T>{
     public static final int FETCH_GRADE_OK=53;
     public static final int FETCH_GRADE_FAIL=54;
 
+    public static final int FETCH_COURSE_TO_SELECT_OK=55;
+    public static final int FETCH_COURSE_TO_SELECT_FAIL=56;
+
+    public static final int SUBMIT_COURSE_OK=57;
+    public static final int SUBMIT_COURSE_FAIL=58;
+
 
 
     /**

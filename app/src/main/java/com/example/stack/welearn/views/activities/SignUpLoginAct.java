@@ -67,9 +67,11 @@ public class SignUpLoginAct extends StaticBaseAct {
             ToastUtils.getInstance().showMsgShort(getString(R.string.hint_no_network));
             return;
         }
+        //从输入框获取登录名，密码，用户类型
         String name=EditName.getText().toString();
         String pass=EditPass.getText().toString();
         int type=ckBoxIfTeacher.isChecked()?Constants.ACC_T_Tea:Constants.ACC_T_Stu;
+        //向线程池提交任务
         ThreadPoolManager.getInstance().getService()
                 .submit(AccTask.instance().signUp(name,pass,type));
 
@@ -104,16 +106,17 @@ public class SignUpLoginAct extends StaticBaseAct {
         int code=event.code();
         switch(code){
             case Event.LOGIN_OK:{
+                //显示登录成功
                 ToastUtils.getInstance(this).showMsgShort("Login Successfully");
                 String name=EditName.getText().toString();
                 String pass=EditPass.getText().toString();
                 int type=ckBoxIfTeacher.isChecked()?Constants.ACC_T_Tea:Constants.ACC_T_Stu;
+                //将用户名，密码存入缓存和内存
                 AccTask.instance().persist(name,pass,type,((Event<JSONObject>)event).t());
-
+                //启动主界面
                 MainAct.startAct(this);
-
+                //结束登录界面
                 this.finish();
-
             } break;
             case Event.LOGIN_FAIL:{
                 ToastUtils.getInstance().showMsgShort("Login fail,check your name or password");

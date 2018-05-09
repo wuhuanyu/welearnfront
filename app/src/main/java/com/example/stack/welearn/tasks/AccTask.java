@@ -30,7 +30,6 @@ public class AccTask {
 
     private Runnable doLoginOrLogout(String name,String password,int type,String action,Processor<JSONObject> processor){
         String url = Constants.Net.API_URL+"/acc";
-        Log.d(TAG,url);
         return  new Runnable() {
             @Override
             public void run() {
@@ -44,7 +43,6 @@ public class AccTask {
                     public void onResponse(JSONObject response) {
                         try{
                             processor.OK(response);
-//
                         }catch (Exception e){
                             e.printStackTrace();
                         }
@@ -59,14 +57,16 @@ public class AccTask {
     }
 
     public Runnable doLogin(String name,String pass,int type){
+        //调用封装的通用方法，new Processor是一个回调接口
         return doLoginOrLogout(name, pass, type, "login", new Processor<JSONObject>() {
             @Override
             public void OK(JSONObject data) {
+                //将成功的网络请求结果送入事件总线
                 EventBus.getDefault().post(new Event<JSONObject>(Event.LOGIN_OK,data));
             }
-
             @Override
             public void FAIL(Throwable error) {
+                //将失败的网络请求结果送入事件总线
                 EventBus.getDefault().post(new Event<String>(Event.LOGIN_FAIL,error.getMessage()));
             }
         });

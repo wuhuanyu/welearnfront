@@ -12,12 +12,15 @@ import com.example.stack.welearn.entities.Course;
 import com.example.stack.welearn.entities.Grade;
 import com.example.stack.welearn.events.Event;
 import com.example.stack.welearn.utils.Constants;
+import com.google.gson.JsonArray;
 
 import org.greenrobot.eventbus.EventBus;
 import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.List;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
@@ -148,6 +151,67 @@ public class MyCoursesTask extends BaseTask implements Cachable{
                 EventBus.getDefault().post(new Event(Event.FETCH_GRADE_FAIL));
             }
         });
+    }
+
+
+    public Runnable getCoursesToSelect(String auth){
+        return ()->{
+            String url=null;
+        AndroidNetworking.get(url)
+                .addHeaders("authorization",auth)
+                .build()
+                .getAsJSONObject(new JSONObjectRequestListener() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            JSONArray coursesData=response.getJSONArray("data");
+                            List<Course> courses=Course.toCourses(coursesData);
+                            EventBus.getDefault().post(new Event<List<Course>>(Event.FETCH_COURSE_TO_SELECT_OK,courses));
+                        } catch (JSONException e) {
+                            e.printStackTrace();
+                        }
+                    }
+
+                    @Override
+                    public void onError(ANError anError) {
+                        EventBus.getDefault().post(new Event(Event.FETCH_COURSE_TO_SELECT_FAIL));
+                    }
+                });
+        };
+
+    }
+
+    public Runnable submitSelectedCourse(String auth,int userId,Set<Integer> courseIds){
+        return new Runnable() {
+            @Override
+            public void run() {
+                String url=Constants.Net.API_URL+"/acc/"+String.valueOf(userId)+"/course";
+                JSONArray courseIdsJson=new JSONArray();
+                courseIds.stream().forEach(courseIdsJson::put);
+                JSONObject postData=new JSONObject();
+                try {
+                    postData.put("cs",courseIdsJson);
+                    AndroidNetworking.post(url)
+                            .addHeaders("authorization",auth)
+                            .addHeaders("content-type","application/json")
+                            .addJSONObjectBody(postData)
+                            .build()
+                            .getAsJSONObject(new JSONObjectRequestListener() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    EventBus.getDefault().post(new Event(Event.SUBMIT_COURSE_OK));
+                                }
+
+                                @Override
+                                public void onError(ANError anError) {
+                                    EventBus.getDefault().post(new Event(Event.SUBMIT_COURSE_FAIL));
+                                }
+                            });
+                } catch (JSONException e) {
+                    e.printStackTrace();
+                }
+            }
+        };
     }
 
 

@@ -46,6 +46,7 @@
         <service android:name="org.eclipse.paho.android.service.MqttService" />
         <service android:name=".MQTTService"/>
         <activity android:name=".views.activities.QuestionDetailAct"/>
+        <activity android:name=".views.activities.SelectCourseAct"/>
         <activity android:name=".views.activities.LivePlayerAct"/>
         <activity android:name=".views.activities.MyGradeAct"/>
         <activity android:name=".views.activities.ScheduleAct"/>

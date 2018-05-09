@@ -96,6 +96,7 @@ public class Course {
                 '}';
     }
 
+    //TODO check fields
     @Nullable
     public static Course toCourse(JSONObject object){
         try {
