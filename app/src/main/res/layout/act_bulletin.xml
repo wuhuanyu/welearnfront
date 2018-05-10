@@ -28,7 +28,7 @@
             app:rippleColor="@color/colorPrimary"
             app:backgroundTint="@android:color/white"
             app:elevation="1dp"
-            android:src="@drawable/ic_refresh"
+            android:src="@drawable/ic_add_attachment"
             android:layout_gravity="bottom|end"
             />
         <android.support.v4.widget.SwipeRefreshLayout

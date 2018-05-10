@@ -60,17 +60,18 @@ public class MainAct extends DynamicBaseAct {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.fragment_container,currentFragment).commit();
         }
-        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this, new PermissionsResultAction() {
-            @Override
-            public void onGranted() {
-
-            }
-
-            @Override
-            public void onDenied(String permission) {
-
-            }
-        });
+        //TODO: permission
+//        PermissionsManager.getInstance().requestAllManifestPermissionsIfNecessary(this, new PermissionsResultAction() {
+//            @Override
+//            public void onGranted() {
+//
+//            }
+//
+//            @Override
+//            public void onDenied(String permission) {
+//
+//            }
+//        });
     }
     @Override
     public void setUp() {

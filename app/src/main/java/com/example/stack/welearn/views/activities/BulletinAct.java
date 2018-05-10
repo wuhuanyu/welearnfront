@@ -8,6 +8,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.helper.ItemTouchHelper;
 import android.util.Log;
 import android.util.SparseArray;
+import android.view.View;
 import android.view.ViewGroup;
 
 import com.chad.library.adapter.base.callback.ItemDragAndSwipeCallback;
@@ -104,6 +105,9 @@ public class BulletinAct extends DynamicBaseAct implements AddBulletinDialog.New
 
         swipeRefreshLayout.setOnRefreshListener(this);
         if(WeLearnApp.info().isTeacher()){
+            BtnNewBulletin.setVisibility(View.VISIBLE);
+
+            BtnNewBulletin.setOnClickListener(view -> {
 
             List<String> courses=getCourseNames();
             String[] courseNames = new String[courses.size()];
@@ -111,7 +115,6 @@ public class BulletinAct extends DynamicBaseAct implements AddBulletinDialog.New
 
             AddBulletinDialog dialog=AddBulletinDialog.newInstance(courseNames);
 
-            BtnNewBulletin.setOnClickListener(view -> {
                 dialog.show(getSupportFragmentManager(),"addnewbulletin");
             });
         }

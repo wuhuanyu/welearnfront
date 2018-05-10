@@ -94,9 +94,10 @@ public class MyCoursesTask extends BaseTask implements Cachable{
             @Override
             public void OK(List<Course> data) {
                 List<Integer> cIds=data.stream().map(c->c.getId()).collect(Collectors.toList());
+                SparseArray<String> myCourse= WeLearnApp.info().getMyCourses();
                 for(Course c:data){
-                    SparseArray<String> myCourse= WeLearnApp.info().getMyCourses();
-                    myCourse.append(c.getId(),c.getName());
+                    if(c!=null)
+                        myCourse.put(c.getId(),c.getName());
                 }
 
                 //订阅channel
@@ -141,10 +142,10 @@ public class MyCoursesTask extends BaseTask implements Cachable{
                             }).collect(Collectors.toList());
 
                     EventBus.getDefault().post(new Event<List<Grade>>(Event.FETCH_GRADE_OK,grades));
-                    }
-                    else
-                        EventBus.getDefault().post(new Event(Event.FETCH_GRADE_FAIL));
                 }
+                else
+                    EventBus.getDefault().post(new Event(Event.FETCH_GRADE_FAIL));
+            }
             @Override
             public void FAIL(Throwable error) {
                 error.printStackTrace();
@@ -157,26 +158,26 @@ public class MyCoursesTask extends BaseTask implements Cachable{
     public Runnable getCoursesToSelect(String auth){
         return ()->{
             String url=null;
-        AndroidNetworking.get(url)
-                .addHeaders("authorization",auth)
-                .build()
-                .getAsJSONObject(new JSONObjectRequestListener() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            JSONArray coursesData=response.getJSONArray("data");
-                            List<Course> courses=Course.toCourses(coursesData);
-                            EventBus.getDefault().post(new Event<List<Course>>(Event.FETCH_COURSE_TO_SELECT_OK,courses));
-                        } catch (JSONException e) {
-                            e.printStackTrace();
+            AndroidNetworking.get(url)
+                    .addHeaders("authorization",auth)
+                    .build()
+                    .getAsJSONObject(new JSONObjectRequestListener() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try {
+                                JSONArray coursesData=response.getJSONArray("data");
+                                List<Course> courses=Course.toCourses(coursesData);
+                                EventBus.getDefault().post(new Event<List<Course>>(Event.FETCH_COURSE_TO_SELECT_OK,courses));
+                            } catch (JSONException e) {
+                                e.printStackTrace();
+                            }
                         }
-                    }
 
-                    @Override
-                    public void onError(ANError anError) {
-                        EventBus.getDefault().post(new Event(Event.FETCH_COURSE_TO_SELECT_FAIL));
-                    }
-                });
+                        @Override
+                        public void onError(ANError anError) {
+                            EventBus.getDefault().post(new Event(Event.FETCH_COURSE_TO_SELECT_FAIL));
+                        }
+                    });
         };
 
     }

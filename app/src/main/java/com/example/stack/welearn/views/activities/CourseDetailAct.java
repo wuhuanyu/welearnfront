@@ -195,19 +195,19 @@ public class CourseDetailAct extends DynamicBaseAct implements SwipeRefreshLayou
                 List<Live> lives=baseQuickAdapter.getData();
                 Live live=lives.get(i);
                 if(WeLearnApp.info().getUserType()==Constants.ACC_T_Tea){
-                    long now=System.currentTimeMillis();
-                    if(now<live.getTime()-5*60*1000){
-                        Toast.makeText(getApplicationContext(),"Too early !",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    else if(now>live.getTime()+10*60*1000){
-                        Toast.makeText(getApplicationContext(),"Too late !",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
-                    if(live.isFinish()){
-                        Toast.makeText(getApplicationContext(),"Live has finished",Toast.LENGTH_SHORT).show();
-                        return;
-                    }
+//                    long now=System.currentTimeMillis();
+//                    if(now<live.getTime()-5*60*1000){
+//                        Toast.makeText(getApplicationContext(),"Too early !",Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                    else if(now>live.getTime()+10*60*1000){
+//                        Toast.makeText(getApplicationContext(),"Too late !",Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
+//                    if(live.isFinish()){
+//                        Toast.makeText(getApplicationContext(),"Live has finished",Toast.LENGTH_SHORT).show();
+//                        return;
+//                    }
                     LivePublisher.startAct(getContext(),live.getUrl(),live.getCourseId(),live.getId());
                 }
                 else
@@ -325,6 +325,9 @@ public class CourseDetailAct extends DynamicBaseAct implements SwipeRefreshLayou
 
             case Event.SUBMIT_LIVE_OK:
                 ToastUtils.getInstance().showMsgShort("直播预订成功");
+                ThreadPoolManager.getInstance().getService().submit(
+                        mLiveTask.getLives(courseId,WeLearnApp.info().getAuth())
+                );
                 break;
             case Event.SUBMIT_LIVE_FAIL:
                 ToastUtils.getInstance().showMsgShort("直播预订失败");
@@ -392,6 +395,7 @@ public class CourseDetailAct extends DynamicBaseAct implements SwipeRefreshLayou
 
     @Override
     public void onSubmit(long time, String title) {
+        Log.d(TAG,"new reserve at "+time);
         ThreadPoolManager.getInstance().getService().submit(mLiveTask.reserve(courseId,WeLearnApp.info().getAuth(),time,title));
     }
 

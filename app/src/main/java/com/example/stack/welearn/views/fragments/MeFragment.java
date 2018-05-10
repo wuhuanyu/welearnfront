@@ -3,6 +3,7 @@ package com.example.stack.welearn.views.fragments;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.support.annotation.BinderThread;
 import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
@@ -41,6 +42,9 @@ public class MeFragment extends BaseStaticFrag implements View.OnClickListener {
     TextView txName;
     @BindView(R.id.me_id)
     TextView txId;
+
+    @BindView(R.id.btn_my_grade)
+    Button btnGrade;
 
 
     /**
@@ -82,6 +86,7 @@ public class MeFragment extends BaseStaticFrag implements View.OnClickListener {
     @Override
     public void setUp() {
         btnLogout.setOnClickListener(this);
+        btnGrade.setOnClickListener(this);
         txName.setText(WeLearnApp.info().getUserName());
         txId.setText(String.valueOf(WeLearnApp.info().getId()));
     }

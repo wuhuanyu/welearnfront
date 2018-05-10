@@ -33,7 +33,7 @@ public class AddBulletinDialog extends DialogFragment {
     public Dialog onCreateDialog(Bundle savedInstanceState) {
 
         AlertDialog.Builder builder=new AlertDialog.Builder(getActivity());
-        View root=getLayoutInflater().inflate(R.layout.dialog_add_bulletin,null);
+        View root=getActivity().getLayoutInflater().inflate(R.layout.dialog_add_bulletin,null);
         EditText editText=(EditText)root.findViewById(R.id.edit_new_bulletin);
         Spinner courseSpinner=(Spinner) root.findViewById(R.id.spinner_choose_course);
         courseSpinner.setSelection(0);
