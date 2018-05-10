@@ -105,7 +105,7 @@ public class Event<T>{
 
     public static final int SEND_MSG=93;
 
-    public static final int NEW_MESSAGE=92;
+    public static final int NEW_MESSAGE=50;
 
     public static final int NEW_LIVE_RESERVED=91;
     public static final int NEW_LIVE_STARTED=90;

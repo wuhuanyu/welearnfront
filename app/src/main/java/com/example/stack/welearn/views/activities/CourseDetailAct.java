@@ -222,12 +222,8 @@ public class CourseDetailAct extends DynamicBaseAct implements SwipeRefreshLayou
                 LiveReserveDialog dialog=new LiveReserveDialog();
                 dialog.show(fragmentManager,"LiveReserve");
             });
-
         }
-
         isRefresh=true;
-
-
     }
 
     public boolean onCreateOptionsMenu(Menu menu){

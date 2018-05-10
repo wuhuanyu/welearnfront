@@ -125,9 +125,10 @@ public class MQTTService extends Service {
                 int type=jsonObject.getInt("type");
                 JSONObject payload=jsonObject.getJSONObject("payload");
 
-                Log.d(TAG,"receive message from "+topic+" :"+payload.toString());
+                Log.d(TAG,"mqtt service  "+topic+" :"+payload.toString()+" type:"+type);
                 switch (type){
                     case Event.NEW_MESSAGE:
+                        Log.d(TAG,"Received instant message");
                         Intent msgIntent=new Intent("new_message");
                         msgIntent.putExtra("msg_json",payload.toString());
                         LocalBroadcastManager.getInstance(getApplicationContext()).sendBroadcast(msgIntent);

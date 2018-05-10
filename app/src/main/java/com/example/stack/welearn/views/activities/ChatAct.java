@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.os.Bundle;
 import android.support.v4.content.LocalBroadcastManager;
+import android.util.Log;
 import android.view.Menu;
 import android.view.ViewGroup;
 import android.widget.ImageView;
@@ -53,6 +54,7 @@ public class ChatAct extends DynamicBaseAct implements MessageInput.InputListene
     private BroadcastReceiver mMsgReceiver=new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
+            Log.d(TAG,"Received instant message");
             String dataJson=intent.getStringExtra("msg_json");
             try {
                 JSONObject messageJson=new JSONObject(dataJson);
@@ -63,13 +65,7 @@ public class ChatAct extends DynamicBaseAct implements MessageInput.InputListene
         }
     };
 
-    public void onCreate(Bundle savedInstanceState){
-        super.onCreate(savedInstanceState);
-        LocalBroadcastManager.getInstance(this).registerReceiver(
-                mMsgReceiver,new IntentFilter("new_message")
-        );
 
-    }
 
     @Override
     public void setUp() {
@@ -110,18 +106,17 @@ public class ChatAct extends DynamicBaseAct implements MessageInput.InputListene
 
     @Override
     public void register() {
-
+ LocalBroadcastManager.getInstance(this).registerReceiver(
+                mMsgReceiver,new IntentFilter("new_message")
+        );
     }
 
     @Override
     public void unRegister() {
-
-    }
-
-    public void onStop(){
         LocalBroadcastManager.getInstance(this).unregisterReceiver(mMsgReceiver);
-        super.onStop();
     }
+
+
 
     @Override
     public boolean onSubmit(CharSequence input) {
